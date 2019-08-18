@@ -1,0 +1,15 @@
+.Leaderboard{
+    background-color: #E5E5E5;
+    height: 300px;
+    width: 240px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.Leaderboard h1{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px;
+}
