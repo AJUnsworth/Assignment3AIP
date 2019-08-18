@@ -1,8 +1,10 @@
 .LeaderboardMember{
-    background-color: #ff0000;
+    background-color: #ffffff;
     clear: both;
-    height: 50px;
+    height: 35px;
     width: 200px;
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .LeaderboardMemberName{
