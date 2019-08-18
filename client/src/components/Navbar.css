@@ -5,7 +5,9 @@
 }
 
 .navbarContent {
-    padding: 18px;
+    padding: 18px 10% 18px 10%;
+    max-width: 1200px;
+    width: 80%;
 }
 
 .loginButton {
