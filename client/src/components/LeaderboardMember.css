@@ -1,0 +1,22 @@
+.LeaderboardMember{
+    background-color: #ff0000;
+    clear: both;
+    height: 50px;
+    width: 200px;
+}
+
+.LeaderboardMemberName{
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.LeaderboardMetric{
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.LeaderboardRank{
+    margin-block-start: 0;
+    margin-block-end: 0;
+    float: right;
+}
