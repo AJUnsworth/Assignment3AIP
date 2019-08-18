@@ -7,7 +7,7 @@ export class LeaderboardMember extends React.Component {
             <div class='LeaderboardMember'>
                 <div>
                 <label class='LeaderboardMemberName'>John Smith</label>
-                <label class='LeaderboardRank'>#1</label>
+                <label class='LeaderboardRank'>Rank #1</label>
                 </div>
                 <label class='LeaderboardMetric'>Test</label>
             </div>
