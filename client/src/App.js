@@ -1,14 +1,15 @@
 import React from 'react';
-import { Navbar } from './components/Navbar';
-import { ContentFrame } from './components/ContentFrame';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Home from "./components/Home";
 
-function App() {
-  return (
-    <div>
-      <Navbar/>
-      <ContentFrame/>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <Route path="/" exact component={Home}/>
+      </Router>
+    );
+  }
 }
 
 export default App;
