@@ -1,0 +1,11 @@
+.reactionCounter {
+    height: 24px;
+    width: 80px;
+    background-color: #E5E5E5;
+    border-radius: 12px;
+}
+
+.elementSpacing {
+    padding: 4px;
+    color: #7D7D7D;
+}
