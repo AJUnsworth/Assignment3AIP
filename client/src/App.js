@@ -1,12 +1,16 @@
 import React from 'react';
 import { Navbar } from './components/Navbar';
 import { LeaderboardMember } from './components/LeaderboardMember';
+import { ContentFrame } from './components/ContentFrame';
 
 function App() {
   return (
     <div>
       <Navbar/>
-      <LeaderboardMember/>
+      <ContentFrame>
+        <LeaderboardMember/>
+      </ContentFrame>
+      
     </div>
   );
 }

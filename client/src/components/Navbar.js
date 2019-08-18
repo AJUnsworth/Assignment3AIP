@@ -7,9 +7,9 @@ export class Navbar extends React.Component {
             <div class="navbar">
                 <div class="navbarContent">
                     {/* Logo */}
-                    <img src="#" alt="#"/>
+                    <img src="#" alt="logo" class="navbarSizing"/>
                     {/* log in option if user unknown, account option if logged in */}
-                    <button class="loginButton">Log in</button>
+                    <button class="loginButton navbarSizing">Log in</button>
                 </div>
             </div>
         );
