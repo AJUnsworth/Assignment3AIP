@@ -16,3 +16,5 @@ export class ReactionCounter extends React.Component {
         );
     }
 }
+
+export default ReactionCounter;

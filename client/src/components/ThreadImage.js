@@ -1,7 +1,7 @@
 import React from 'react';
 import TestImage from '../images/TestImage.jfif'
 import './ThreadImage.css';
-import {ReactionCounter} from '../components/ReactionCounter';
+import ReactionCounter from '../components/ReactionCounter';
 
 export class ThreadImage extends React.Component {
     render () {
@@ -15,3 +15,5 @@ export class ThreadImage extends React.Component {
         );
     }
 }
+
+export default ThreadImage;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Navbar } from './Navbar';
-import { ContentFrame } from './ContentFrame';
+import Navbar from './Navbar';
+import ContentFrame from './ContentFrame';
 
 function Home() {
     const members = [
