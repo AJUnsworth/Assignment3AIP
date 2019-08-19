@@ -1,3 +1,9 @@
+.badge {
+    position: absolute;
+    margin: 10px;
+    bottom: 0px;
+}
+
 .iconSpacing {
     margin-right: 5px;
 }

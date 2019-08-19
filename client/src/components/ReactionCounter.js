@@ -8,7 +8,7 @@ export class ReactionCounter extends React.Component {
     render() {
         return (
             <Badge pill variant="light">
-                <FontAwesomeIcon icon={faComments} className="iconSpacing lhsIcon text-primary"/>
+                <FontAwesomeIcon icon={faComments} className="iconSpacing text-primary"/>
                 8   
                 <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger"/>
                 57
