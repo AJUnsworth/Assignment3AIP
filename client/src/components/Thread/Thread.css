@@ -29,10 +29,13 @@
 .comments{
     padding: 30px 0px 30px 0px;
     height: auto;
+    background-color: #E5E5E5;
+    border-radius: 10px 10px 0px 0px;
 }
 
 .commentsText{
     font-family: Roboto;
+    padding-left:30px;
     font-style: normal;
     font-weight: bold;
     font-size: 36px;
