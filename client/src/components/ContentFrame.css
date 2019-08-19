@@ -7,3 +7,8 @@
 .contentFrame h2{
     margin-bottom: 60px;
 }
+
+.contentFrameGrid {
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
