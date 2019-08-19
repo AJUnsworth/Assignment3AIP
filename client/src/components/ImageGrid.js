@@ -8,7 +8,12 @@ import { ImageFrame } from './ImageFrame';
 export class ImageGrid extends React.Component {
     render() {
         return (
-            <div className="imageGrid">
+            <div class="imageGrid">
+                <ImageFrame/>
+                <ImageFrame/>
+                <ImageFrame/>
+                <ImageFrame/>
+                <ImageFrame/>
                 <ImageFrame/>
                 <ImageFrame/>
                 <ImageFrame/>
