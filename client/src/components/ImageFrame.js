@@ -9,6 +9,7 @@ export class ImageFrame extends React.Component {
         return (
             <div className="imageFrame">
                 <Link to="/thread/">
+                    {/* eslint-disable-next-line */}
                     <img src={TestImage} className="image"/>
                     <ReactionCounter/>
                 </Link>
