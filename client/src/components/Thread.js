@@ -8,8 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './Thread.css';
 
-export class Thread extends React.Component {
-    render() {
+class Thread extends React.Component {
+    render () {
         return (
             <div>
                 <Navbar />
@@ -36,3 +36,5 @@ export class Thread extends React.Component {
         );
     }
 }
+
+export default Thread;
