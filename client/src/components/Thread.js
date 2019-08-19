@@ -4,26 +4,33 @@ import ThreadImage from './ThreadImage';
 import ProfilePicture from './ProfilePicture';
 import ImageGrid from './ImageGrid';
 import ReactionGrid from './ReactionGrid';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import './Thread.css';
 
 export class Thread extends React.Component {
-    render () {
+    render() {
         return (
             <div>
-            <Navbar/>
+                <Navbar />
                 <div className="content">
-                <ThreadImage/>
-                    <div className="sidebar">
-                    <ProfilePicture className="profilePicture"/>
-                    <h1 className="profileName">Post by</h1>
-                    <h1 className="profileName">johnsmith123</h1>
-                    <ReactionGrid class="reactionGrid"/>
-                    </div>
-
-                    <div className="comments">
-                        <h2 className="commentsText">Comments</h2>
-                        <ImageGrid/>
-                        </div>
+                    <Row>
+                        <Col lg="8"><ThreadImage/></Col>
+                        <Col lg="4">
+                            <ProfilePicture className="profilePicture" />
+                            <h1 className="profileName">Post by</h1>
+                            <h1 className="profileName">johnsmith123</h1>
+                            <ReactionGrid class="reactionGrid" />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="comments">
+                                <h2 className="commentsText">Comments</h2>
+                                <ImageGrid />
+                            </div>
+                        </Col>
+                    </Row>
                 </div>
             </div>
         );
