@@ -1,12 +1,12 @@
 import React from 'react';
 import './ContentFrame.css';
-import { Leaderboard } from './Leaderboard';
-import { Welcome } from './Welcome';
+import Leaderboard from './Leaderboard';
+import Welcome from './Welcome';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { ImageGrid } from './ImageGrid';
+import ImageGrid from './ImageGrid';
 
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
@@ -24,3 +24,5 @@ export function ContentFrame(props) {
         </Container>
     );
 }
+
+export default ContentFrame;

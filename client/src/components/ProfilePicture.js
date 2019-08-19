@@ -9,3 +9,5 @@ export class ProfilePicture extends React.Component {
         );
     }
 }
+
+export default ProfilePicture;

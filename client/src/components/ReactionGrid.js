@@ -19,8 +19,9 @@ export class ReactionGrid extends React.Component {
                         <td><FontAwesomeIcon icon={faAngry} className="fa-3x"/><h1 class="reactionCount">12</h1></td>
                    </tr>
                </table>
-
             </div>
         );
     }
 }
+
+export default ReactionGrid;
