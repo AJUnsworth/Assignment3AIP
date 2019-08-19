@@ -1,8 +1,12 @@
 .imageFrame {
     width: 200px;
     height: 300px;
+    position: absolute;
+}
+
+.image {
+    width: 200px;
+    height: 300px;
     border-radius: 10px;
     position: absolute;
-    z-index: -1;
-    background-image: url("https://images.unsplash.com/photo-1565945985116-8b3eab6d6810?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80");
 }
