@@ -19,7 +19,7 @@ export function ContentFrame() {
                 <Welcome/>
             </Row>
             <Row>
-                <Col md={9}><ImageGrid/></Col>
+                <Col md={9} className="contentFrameGrid"><ImageGrid/></Col>
                 <Col md={3}><Leaderboard/></Col>
             </Row>
         </Container>
