@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ProfilePhoto from '../images/profilepic.jpg';
+import ProfilePhoto from '../../images/profilepic.jpg';
 import './ProfilePicture.css';
 
 export class ProfilePicture extends React.Component {

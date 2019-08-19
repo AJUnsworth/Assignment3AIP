@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Home from "./components/Home";
-import Thread from "./components/Thread";
-import Login from "./components/LogIn";
-import User from "./components/User";
+import Home from "../Home/Home";
+import Thread from "../Thread/Thread";
+import Login from "../Login/LogIn";
+import User from "../User/User";
 
 class App extends React.Component {
   render() {

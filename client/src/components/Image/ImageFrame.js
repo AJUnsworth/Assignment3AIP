@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ImageFrame.css';
-import ReactionCounter from './ReactionCounter';
-import TestImage from '../images/TestImage.jfif'
+import ReactionCounter from '../Thread/ReactionCounter';
+import TestImage from '../../images/TestImage.jfif'
 
 export class ImageFrame extends React.Component {
     render() {

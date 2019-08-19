@@ -1,6 +1,6 @@
 import React from 'react';
 import './Welcome.css';
-import { ProfilePicture } from './ProfilePicture';
+import { ProfilePicture } from './User/ProfilePicture';
 
 export class Welcome extends React.Component {
     render () {

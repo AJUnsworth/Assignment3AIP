@@ -1,7 +1,7 @@
 import React from 'react';
 import './ContentFrame.css';
-import Leaderboard from './Leaderboard';
-import Welcome from './Welcome';
+import Leaderboard from '../Leaderboard/Leaderboard';
+import Welcome from '../Welcome';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
