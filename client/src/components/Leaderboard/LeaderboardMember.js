@@ -1,7 +1,7 @@
 import React from 'react';
 import './LeaderboardMember.css';
 
-export class LeaderboardMember extends React.Component {
+class LeaderboardMember extends React.Component {
     render () {
         return (
             <div class='LeaderboardMember'>

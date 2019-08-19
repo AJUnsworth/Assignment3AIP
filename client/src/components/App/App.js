@@ -6,16 +6,16 @@ import Login from "../Login/LogIn";
 import User from "../User/User";
 
 class App extends React.Component {
-  render() {
-    return (
-      <Router>
-        <Route path="/" exact component={Home}/>
-        <Route path="/thread" component={Thread}/>
-        <Route path="/login" component={Login}/>
-        <Route path="/user" component={User}/>
-      </Router>
-    );
-  }
+    render() {
+        return (
+            <Router>
+                <Route path="/" exact component={Home}/>
+                <Route path="/thread" component={Thread}/>
+                <Route path="/login" component={Login}/>
+                <Route path="/user" component={User}/>
+            </Router>
+        );
+    }
 }
 
 export default App;

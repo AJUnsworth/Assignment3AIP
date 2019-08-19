@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faHeart } from '@fortawesome/free-solid-svg-icons'
 import Badge from 'react-bootstrap/Badge'
 
-export class ReactionCounter extends React.Component {
+class ReactionCounter extends React.Component {
     render() {
         return (
             <Badge pill variant="light">

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Logo from '../../images/Logo-01.png';
 import Button from 'react-bootstrap/Button';
 
-export class Navbar extends React.Component {
+class Navbar extends React.Component {
     render() {
         return (
             <div class="navbar">

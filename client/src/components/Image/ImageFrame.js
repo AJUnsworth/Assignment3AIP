@@ -4,7 +4,7 @@ import './ImageFrame.css';
 import ReactionCounter from '../Thread/ReactionCounter';
 import TestImage from '../../images/TestImage.jfif'
 
-export class ImageFrame extends React.Component {
+class ImageFrame extends React.Component {
     render() {
         return (
             <Link to="/thread/">

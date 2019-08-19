@@ -3,7 +3,7 @@ import './ReactionGrid.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp} from '@fortawesome/free-solid-svg-icons'
 
-export class ReactionGrid extends React.Component {
+class ReactionGrid extends React.Component {
     render () {
         return (
            <div className="reactionGrid">

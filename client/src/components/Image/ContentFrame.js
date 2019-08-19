@@ -11,7 +11,7 @@ import ImageGrid from './ImageGrid';
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
 
-export function ContentFrame(props) {
+function ContentFrame(props) {
     return (
         <Container className="contentFrame">
             <Row>

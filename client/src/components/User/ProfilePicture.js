@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ProfilePhoto from '../../images/profilepic.jpg';
 import './ProfilePicture.css';
 
-export class ProfilePicture extends React.Component {
+class ProfilePicture extends React.Component {
     render () {
         return (
             <Link to="/user/">
