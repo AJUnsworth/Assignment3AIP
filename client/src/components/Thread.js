@@ -6,7 +6,7 @@ import ImageGrid from './ImageGrid';
 import ReactionGrid from './ReactionGrid';
 import './Thread.css';
 
-export class Thread extends React.Component {
+class Thread extends React.Component {
     render () {
         return (
             <div>
@@ -29,3 +29,5 @@ export class Thread extends React.Component {
         );
     }
 }
+
+export default Thread;
