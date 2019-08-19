@@ -1,6 +1,7 @@
 import React from 'react';
 import './ContentFrame.css';
 import { Leaderboard } from './Leaderboard';
+import { Welcome } from './Welcome';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -15,7 +16,7 @@ export function ContentFrame() {
 
         <Container className="contentFrame">
             <Row>
-                <Col><h2 >Welcome MrTutor</h2></Col>
+                <Welcome/>
             </Row>
             <Row>
                 <Col md={9}><ImageGrid/></Col>
