@@ -6,7 +6,12 @@ import { ReactionCounter } from './ReactionCounter';
 export class ThreadImage extends React.Component {
     render () {
         return (
-            <img src={TestImage} className="threadImage"/>
+            <div class="threadImageContainer">
+                <ReactionCounter/>
+                {/* eslint-disable-next-line */}
+                <img src={TestImage} className="threadImage"/>
+            </div>
+            
         );
     }
 }
