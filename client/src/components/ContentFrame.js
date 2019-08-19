@@ -12,7 +12,11 @@ import { ImageGrid } from './ImageGrid';
 
 export function ContentFrame() {
     return (
+
         <Container className="contentFrame">
+            <Row>
+                <Col><h2 >Welcome MrTutor</h2></Col>
+            </Row>
             <Row>
                 <Col md={9}><ImageGrid/></Col>
                 <Col md={3}><Leaderboard/></Col>

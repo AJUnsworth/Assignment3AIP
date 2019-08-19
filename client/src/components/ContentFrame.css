@@ -3,3 +3,7 @@
     height: auto;
     margin: 5% 10% 0% 10%;
 }
+
+.contentFrame h2{
+    margin-bottom: 60px;
+}
