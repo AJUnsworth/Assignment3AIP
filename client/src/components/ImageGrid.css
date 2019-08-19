@@ -1,0 +1,4 @@
+.imageGrid {
+    flex-wrap: wrap;
+    display: flex;
+}

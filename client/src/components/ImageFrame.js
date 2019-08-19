@@ -5,15 +5,15 @@ import { ReactionCounter } from './ReactionCounter';
 import TestImage from '../images/TestImage.jfif'
 
 export class ImageFrame extends React.Component {
-    render () {
+    render() {
         return (
-            <div className="imageFrame">
-                <Link to="/thread/">
+            <Link to="/thread/">
+                <div className="imageFrame">
+                    <ReactionCounter />
                     {/* eslint-disable-next-line */}
-                    <img src={TestImage} className="image"/>
-                    <ReactionCounter/>
-                </Link>
-            </div>
+                    <img src={TestImage} className="image" />
+                </div>
+            </Link>
         );
     }
 }
