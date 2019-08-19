@@ -5,11 +5,8 @@ export class LeaderboardMember extends React.Component {
     render () {
         return (
             <div class='LeaderboardMember'>
-                <div>
                 <label class='LeaderboardMemberName'>John Smith</label>
                 <label class='LeaderboardRank'>Rank #1</label>
-                </div>
-                <label class='LeaderboardMetric'>Test</label>
             </div>
         );
     }

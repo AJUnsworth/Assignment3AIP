@@ -13,17 +13,11 @@
     font-style: normal;
     font-weight: bold;
     font-size: 12px;
+    float: left;
     margin-block-start: 0;
     margin-block-end: 0;
 }
 
-.LeaderboardMetric{
-    margin-block-start: 0;
-    margin-block-end: 0;
-    font-family: Roboto;
-    font-style: normal;
-    font-size: 12px;
-}
 
 .LeaderboardRank{
     margin-block-start: 0;
