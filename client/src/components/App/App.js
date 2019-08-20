@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Thread from "../Thread/Thread";
-import Login from "../Login/LogIn";
+import Login from "../Login/Login";
 import User from "../User/User";
 
 class App extends React.Component {
