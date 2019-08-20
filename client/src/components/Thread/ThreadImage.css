@@ -1,9 +1,8 @@
 .threadImage {
-    max-width: 65%;
+    max-width: 100%;
     height: auto;
     border-radius: 10px;
     z-index: -1;
-    position: relative;
 }
 
 .threadImageContainer {

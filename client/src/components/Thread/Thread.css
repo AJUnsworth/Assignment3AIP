@@ -40,3 +40,14 @@
     font-weight: bold;
     font-size: 36px;
 }
+
+.threadTop {
+    background-color: #e5e5e5;
+    padding: 20px;
+    margin: 0px 5px 20px 5px;
+    border-radius: 10px;
+}
+
+.threadDesc{
+    text-align: center;
+}
