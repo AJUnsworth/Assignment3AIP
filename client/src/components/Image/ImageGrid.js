@@ -64,6 +64,10 @@ class ImageGrid extends React.Component {
                 <ImageFrame />
                 <ImageFrame />
                 <ImageFrame />
+                
+                <div className="showMoreBtnContainer">
+                    <Button variant="info">Show More</Button>
+                </div>
 
             </div>
         );
