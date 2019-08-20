@@ -6,6 +6,8 @@ import ImageGrid from '../Image/ImageGrid';
 import ReactionGrid from './ReactionGrid';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Button from 'react-bootstrap/Button';
 import './Thread.css';
 
 class Thread extends React.Component {
@@ -21,6 +23,13 @@ class Thread extends React.Component {
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName">johnsmith123</h1>
                             <ReactionGrid class="reactionGrid" />
+                            <div className="quickActions">
+                                <h6>Quick Actions</h6>
+                                <ButtonGroup>
+                                    <Button variant="secondary">Delete</Button>
+                                    <Button variant="info">Replace Image</Button>
+                                </ButtonGroup>
+                            </div>
                         </Col>
                     </Row>
                     <Row>
