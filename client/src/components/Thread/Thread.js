@@ -15,7 +15,7 @@ class Thread extends React.Component {
                 <Navbar />
                 <div className="content">
                     <Row className="threadTop">
-                        <Col lg="8" ><ThreadImage/></Col>
+                        <Col lg="8" className="threadImg"><ThreadImage/></Col>
                         <Col lg="4" className="threadDesc">
                             <ProfilePicture className="profilePicture" />
                             <h1 className="profileName">Post by</h1>
