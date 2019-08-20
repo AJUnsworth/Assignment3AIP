@@ -36,14 +36,6 @@ class ImageGrid extends React.Component {
                     </div>
 
                     <div>
-                        <h6>Quick Actions</h6>
-                        <ButtonGroup>
-                            <Button variant="secondary">Delete</Button>
-                            <Button variant="info">Replace Image</Button>
-                        </ButtonGroup>
-                    </div>
-
-                    <div>
                         <h6>Sort by</h6>
                         <ButtonGroup>
                             <Button variant="info">Latest</Button>
