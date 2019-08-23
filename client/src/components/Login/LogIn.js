@@ -1,13 +1,21 @@
 import React from 'react';
-import Navbar from '../Navbar/Navbar';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
+import Authentication from './Authentication';
+import Registration from './Registration';
+import './Login.css';
 
 class Login extends React.Component {
-    render () {
+    render() {
         return (
-            <div>
-                <Navbar/>
-                To be completed.
-            </div>
+            <Row>
+                <Col className="loginColumn panel">
+                    <Authentication />
+                </Col>
+                <Col className="loginColumn col-md-8 col-lg-8 col-xl-9">
+                    <Registration />
+                </Col>
+            </Row>
         );
     }
 }
