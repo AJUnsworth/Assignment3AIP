@@ -3,9 +3,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
 import Authentication from './Authentication';
 import Registration from './Registration';
-import './Login.css';
+import './LoginContainer.css';
 
-class Login extends React.Component {
+class LoginContainer extends React.Component {
     render() {
         return (
             <Row>
@@ -20,4 +20,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default LoginContainer;

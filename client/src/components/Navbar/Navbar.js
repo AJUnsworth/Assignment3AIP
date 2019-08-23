@@ -12,7 +12,7 @@ class Navbar extends React.Component {
                     <Link to="/">
                         <img src={ Logo } alt="logo" class="navbarSizing"/>
                     </Link>
-                    <Link to="/login/">
+                    <Link to="/loginContainer/">
                         <Button variant="outline-light" className="loginButton">Log in</Button>
                     </Link>
                 </div>
