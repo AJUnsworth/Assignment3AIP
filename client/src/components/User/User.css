@@ -1,0 +1,44 @@
+.UserContainer{
+    width: 80%;
+    margin: 5% 10% 0% 10%;
+    background-color: #E5E5E5;
+    height: auto;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.ProfilePic{
+    float: left;
+    margin: auto 0px;
+}
+
+.ProfilePic img{
+    float: left;
+    width: 100%;
+    margin: 50px;
+}
+
+.rightColumn{
+    width: 70%;
+    height: 100%;
+    padding: 100px;
+    text-align: center;
+}
+
+
+.rightInfo{
+    text-align: center;
+    margin: 0 auto;
+}
+
+.rightInfo td{
+    padding: 0px 30px 0px 30px;
+}
+
+.rightColumn h1{
+font-style: normal;
+font-weight: bold;
+font-size: 48px;
+text-align: center;
+padding-bottom: 50px;
+}
