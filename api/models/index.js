@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+var mongoose = require('mongoose');
 
-import User from './user';
+var User = require('./user');
 
 const connectDb = () => {
   return mongoose.connect('mongodb+srv://user:123ILoveAIP@sceenit-cluster-1foic.mongodb.net/test?retryWrites=true&w=majority');
