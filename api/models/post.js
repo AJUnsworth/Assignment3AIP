@@ -1,6 +1,6 @@
 const Schema = mongoose.schema;
 
-const userSchema = new Schema({
+const postSchema = new Schema({
     username: {
         type: String,
         unique: true,
@@ -14,6 +14,6 @@ const userSchema = new Schema({
     timestamps: true,
 });
 
-const User = mongoose.model('User', userSchema);
+const Post = mongoose.model('Post', postSchema);
 
-module.exports = User;
+module.exports = Post;
