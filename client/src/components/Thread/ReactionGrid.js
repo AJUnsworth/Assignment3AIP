@@ -13,11 +13,12 @@ class ReactionGrid extends React.Component {
             wowReactions: 0,
             tearsReactions: 0,
             angryReactions: 0,
+            isActive: false,
         };
     }
 
     addLikeReaction = () => {
-        this.setState({likeReactions: this.state.likeReactions + 1});
+        this.setState({isActive: !this.state.isActive, likeReactions: this.state.likeReactions + 1});
     }
 
     addLaughReaction = () => {
@@ -45,7 +46,7 @@ class ReactionGrid extends React.Component {
            <div className="reactionGrid">
                <table className="reactionTable">
                    <tr>
-                       <td><FontAwesomeIcon icon={faThumbsUp} className="fa-3x" onClick={this.addLikeReaction}/><h1 class="reactionCount">{this.state.likeReactions}</h1></td>
+                       <td><FontAwesomeIcon icon={faThumbsUp} className={this.state.isActive ? "fa-3x active" : "fa-3x"} onClick={this.addLikeReaction}/><h1 class="reactionCount">{this.state.likeReactions}</h1></td>
                        <td><FontAwesomeIcon icon={faGrinSquint} className="fa-3x" onClick={this.addLaughReaction}/><h1 class="reactionCount">{this.state.laughReactions}</h1></td>
                        <td><FontAwesomeIcon icon={faGrinHearts} className="fa-3x" onClick={this.addLoveReaction}/><h1 class="reactionCount">{this.state.loveReactions}</h1></td>
                    </tr>
