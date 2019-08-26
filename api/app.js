@@ -1,24 +1,33 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cors = require('cors');
+const express = require('express');
+const logger = require('morgan');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var leaderboardRouter = require('./routes/leaderboard');
+require('dotenv').config();
 
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const leaderboardRouter = require('./routes/leaderboard');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/leaderboard', leaderboardRouter);
+
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true })
+  .catch(err => console.log(err));
+
+const connection = mongoose.connection;
+connection.once('open', () => {
+  console.log('MongoDB successfully connected.');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
