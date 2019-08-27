@@ -4,9 +4,9 @@ import './LeaderboardMember.css';
 class LeaderboardMember extends React.Component {
     render () {
         return (
-            <div class='LeaderboardMember'>
-                <label class='LeaderboardMemberName'>{this.props.member.name}</label>
-                <label class='LeaderboardRank'>{this.props.member.rank}</label>
+            <div className='LeaderboardMember'>
+                <label className='LeaderboardMemberName'>{this.props.member.name}</label>
+                <label className='LeaderboardRank'>{this.props.member.rank}</label>
             </div>
         );
     }

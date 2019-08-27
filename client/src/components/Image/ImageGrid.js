@@ -9,7 +9,7 @@ class ImageGrid extends React.Component {
     render() {
         return (
             <div>
-                <div class="imageGrid">
+                <div className="imageGrid">
                     <ButtonToolbar className="justify-content-between imageGridToolbar">
                         <div>
                             <h6>Add a thread...</h6>

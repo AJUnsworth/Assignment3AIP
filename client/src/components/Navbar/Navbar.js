@@ -7,10 +7,10 @@ import Button from 'react-bootstrap/Button';
 class Navbar extends React.Component {
     render() {
         return (
-            <div class="navbar">
-                <div class="navbarContent">
+            <div className="navbar">
+                <div className="navbarContent">
                     <Link to="/">
-                        <img src={ Logo } alt="logo" class="navbarSizing"/>
+                        <img src={ Logo } alt="logo" className="navbarSizing"/>
                     </Link>
                     <Link to="/loginContainer/">
                         <Button variant="outline-light" className="loginButton">Log in</Button>
