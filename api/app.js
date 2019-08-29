@@ -1,7 +1,8 @@
 const express = require('express');
-const logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const passport = require('passport');
 
 require('dotenv').config();
 
@@ -11,10 +12,12 @@ const leaderboardRouter = require('./routes/leaderboard');
 
 const app = express();
 
-app.use(logger('dev'));
-app.use(express.json());
 app.use(cors());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+
+require('./config/passport') (passport);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -44,5 +47,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-app.listen(4000, ()=>console.log("Listening on port 4000")) //hardcoding port for now
-module.exports = app;
+
+const port = process.env.PORT || 4000;
+
+app.listen(port, () => console.log('Listening on port ' + port));
