@@ -15,20 +15,77 @@ import "./Authentication.css";
 // https://react-bootstrap.github.io/components/forms/#forms-validation-native
 
 class Authentication extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: "",
+            password: "",
+            errors: {}
+        };
+    }
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        const self = this;
+        fetch("/users/login", {
+            method: "POST",
+            body: JSON.stringify(this.state),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (response) {
+                if (response.status !== 200) {
+                    response.json().then(function (data) {
+                        self.setState({ errors: data });
+                    });
+                } else {
+                    response.json().then(function (data) {
+                        console.log(data);
+                    });
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
     render() {
         return (
             <Container>
                 <Row className="justify-content-md-center">
                     <Col md="10">
                         <img src={Logo} alt="logo" className="loginLogo" />
-                        <Form>
-                            <Form.Group controlID="emailFormGroup" className="text-left text-white">
-                                <Form.Label >Email Address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" />
+                        <Form noValidate onSubmit={this.handleSubmit}>
+                            <Form.Group controlID="usernameFormGroup" className="text-left text-white">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="username"
+                                    placeholder="Enter username"
+                                    onChange={this.handleChange}
+                                    value={this.state.username}
+                                    isInvalid={this.state.errors.username}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.errors.username}
+                                </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="emailFormGroup" className="text-left text-white">
+                            <Form.Group controlID="passwordFormGroup" className="text-left text-white">
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
+                                <Form.Control
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    onChange={this.handleChange}
+                                    value={this.state.password}
+                                    isInvalid={this.state.errors.password}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.errors.password}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
                                 <Button variant="outline-light" type="submit" block>

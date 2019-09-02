@@ -43,9 +43,7 @@ class Registration extends React.Component {
             .then(function (response) {
                 if (response.status === 400) {
                     response.json().then(function (data) {
-                        console.log(data);
                         self.setState({ errors: data });
-                        console.log(self.state.errors);
                     });
                 }
                 else if (response.status === 200) {
@@ -93,7 +91,7 @@ class Registration extends React.Component {
                                     {this.state.errors.email}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="passFormGroup">
+                            <Form.Group controlID="passwordFormGroup">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"
