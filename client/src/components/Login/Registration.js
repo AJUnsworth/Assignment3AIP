@@ -16,11 +16,10 @@ class Registration extends React.Component {
     constructor(props) {
         super(props);
         this.initialState = {
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
-            firstName: '',
-            lastName: '',
             errors: {}
         };
 
@@ -65,41 +64,21 @@ class Registration extends React.Component {
                 </Row>
                 <Form noValidate onSubmit={this.handleSubmit}>
                     <Row>
-                        <Col md="4">
-                            <Form.Group>
-                                <Form.Label>First name</Form.Label>
-                                <Form.Control 
-                                    type="text"
-                                    name="firstName" 
-                                    placeholder="Enter first name"
-                                    onChange={this.handleChange}
-                                    value={this.state.firstName}
-                                    isInvalid={this.state.errors.firstName}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {this.state.errors.firstName}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                        <Col md="4">
-                            <Form.Group>
-                                <Form.Label>Last name</Form.Label>
+                        <Col md="6">
+                        <Form.Group controlID="usernameFormGroup">
+                                <Form.Label>Username</Form.Label>
                                 <Form.Control 
                                     type="text" 
-                                    name="lastName"
-                                    placeholder="Enter last name"
+                                    name="username"
+                                    placeholder="Enter username" 
                                     onChange={this.handleChange}
-                                    value={this.state.lastName}
-                                    isInvalid={this.state.errors.lastName}
+                                    value={this.state.username}
+                                    isInvalid={this.state.errors.username}
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    {this.state.errors.lastName}
+                                    {this.state.errors.username}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md="6">
                             <Form.Group controlID="emailFormGroup">
                                 <Form.Label>Email Address</Form.Label>
                                 <Form.Control 

@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
 
-const User = require('../models/user')
+const User = require('../models/user');
 
 require('dotenv').config();
 
@@ -16,32 +16,38 @@ require('dotenv').config();
 // @access Public
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
-  
+
   // Check validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
   
-  User.findOne({ email: req.body.email }).then(user => {
+  User.findOne({username: req.body.username}).then(user => {
     if (user) {
-      return res.status(400).json({ email: "Email is already registered" });
+      return res.status(400).json({ username: "Username is already registered" });
     } else {
-      const newUser = new User({
-        email: req.body.email,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
-      });
-      // Hash password before saving in database
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => res.json(user))
-            .catch(err => console.log(err));
-        });
+      User.findOne({email: req.body.email}).then(user => {
+        if (user) {
+          return res.status(400).json({ email: "Email is already registered" });
+        } else {
+          const newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+          });
+
+          // Hash password before saving in database
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newUser.password, salt, (err, hash) => {
+              if (err) throw err;
+              newUser.password = hash;
+              newUser
+                .save()
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
+            });
+          });
+        }
       });
     }
   });
