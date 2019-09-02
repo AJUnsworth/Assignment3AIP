@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import ProfilePhoto from '../../images/profilepic.jpg';
-import './ProfilePicture.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import ProfilePhoto from "../../images/profilepic.jpg";
+import "./ProfilePicture.css";
 
 class ProfilePicture extends React.Component {
-    render () {
+    render() {
         return (
             <Link to="/user/">
-                <img src={ProfilePhoto} className="profilePicture" alt="profile"/>
+                <img src={ProfilePhoto} className="profilePicture" alt="profile" />
             </Link>
         );
     }

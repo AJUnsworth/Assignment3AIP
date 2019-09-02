@@ -1,14 +1,14 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import React from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col"
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import Logo from '../../images/Logo-01.png';
-import './Authentication.css';
+import Logo from "../../images/Logo-01.png";
+import "./Authentication.css";
 
 
 // Form uses skeleton code & logic from React Bootstrap Documentation
@@ -20,7 +20,7 @@ class Authentication extends React.Component {
             <Container>
                 <Row className="justify-content-md-center">
                     <Col md="10">
-                        <img src={Logo} alt="logo" className="loginLogo"/>
+                        <img src={Logo} alt="logo" className="loginLogo" />
                         <Form>
                             <Form.Group controlID="emailFormGroup" className="text-left text-white">
                                 <Form.Label >Email Address</Form.Label>

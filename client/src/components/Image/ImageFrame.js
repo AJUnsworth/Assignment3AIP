@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './ImageFrame.css';
-import ReactionCounter from '../Thread/ReactionCounter';
-import TestImage from '../../images/TestImage.jfif'
+import React from "react";
+import { Link } from "react-router-dom";
+import "./ImageFrame.css";
+import ReactionCounter from "../Thread/ReactionCounter";
+import TestImage from "../../images/TestImage.jfif"
 
 class ImageFrame extends React.Component {
     render() {

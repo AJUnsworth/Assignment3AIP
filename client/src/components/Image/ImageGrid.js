@@ -1,9 +1,9 @@
-import React from 'react';
-import './ImageGrid.css';
-import ImageFrame from './ImageFrame';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
+import React from "react";
+import "./ImageGrid.css";
+import ImageFrame from "./ImageFrame";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar"
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
 
 class ImageGrid extends React.Component {
     render() {

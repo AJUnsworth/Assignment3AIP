@@ -1,9 +1,9 @@
-import React from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import Authentication from './Authentication';
-import Registration from './Registration';
-import './LoginContainer.css';
+import React from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col"
+import Authentication from "./Authentication";
+import Registration from "./Registration";
+import "./LoginContainer.css";
 
 class LoginContainer extends React.Component {
     render() {

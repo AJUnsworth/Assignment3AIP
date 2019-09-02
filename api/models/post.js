@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
@@ -6,15 +6,15 @@ const postSchema = new Schema({
         type: String,
         unique: true,
         required: true,
-    }, 
+    },
     password: {
         type: String,
         required: true,
-    }, 
+    },
 }, {
-    timestamps: true,
-});
+        timestamps: true,
+    });
 
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
