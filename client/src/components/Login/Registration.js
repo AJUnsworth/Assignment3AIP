@@ -44,7 +44,9 @@ class Registration extends React.Component {
                         self.setState({ errors: data });
                         console.log(self.state.errors);
                     });
-                    //self.setState({ errors: response.json() });
+                }
+                else if (response.status === 200) {
+                    self.setState({ errors: {} });
                 }
             })
             .then(response => console.log("Success:", JSON.stringify(response)))
