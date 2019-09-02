@@ -1,4 +1,6 @@
 import React from 'react';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -13,7 +15,7 @@ import './Registration.css';
 class Registration extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.initialState = {
             email: '',
             password: '',
             confirmPassword: '',
@@ -21,6 +23,8 @@ class Registration extends React.Component {
             lastName: '',
             errors: {}
         };
+
+        this.state = this.initialState;
     }
 
     handleChange = e => {
@@ -46,11 +50,11 @@ class Registration extends React.Component {
                     });
                 }
                 else if (response.status === 200) {
-                    self.setState({ errors: {} });
+                    self.setState(self.initialState);
+                    NotificationManager.success("Account created successfully", "Account Registered");
                 }
             })
-            .then(response => console.log("Success:", JSON.stringify(response)))
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error("Error:", error));
     }
 
     render() {
@@ -69,6 +73,7 @@ class Registration extends React.Component {
                                     name="firstName" 
                                     placeholder="Enter first name"
                                     onChange={this.handleChange}
+                                    value={this.state.firstName}
                                     isInvalid={this.state.errors.firstName}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -84,6 +89,7 @@ class Registration extends React.Component {
                                     name="lastName"
                                     placeholder="Enter last name"
                                     onChange={this.handleChange}
+                                    value={this.state.lastName}
                                     isInvalid={this.state.errors.lastName}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -101,6 +107,7 @@ class Registration extends React.Component {
                                     name="email"
                                     placeholder="Enter email" 
                                     onChange={this.handleChange}
+                                    value={this.state.email}
                                     isInvalid={this.state.errors.email}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -114,6 +121,7 @@ class Registration extends React.Component {
                                     name="password"
                                     placeholder="Password"
                                     onChange={this.handleChange}
+                                    value={this.state.password}
                                     isInvalid={this.state.errors.password}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -127,6 +135,7 @@ class Registration extends React.Component {
                                     name="confirmPassword"
                                     placeholder="Password"
                                     onChange={this.handleChange}
+                                    value={this.state.confirmPassword}
                                     isInvalid={this.state.errors.confirmPassword}
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -141,6 +150,8 @@ class Registration extends React.Component {
                         </Col>
                     </Row>
                 </Form>
+
+                <NotificationContainer/>
             </Container>
         );
     };
