@@ -21,9 +21,9 @@ class Leaderboard extends React.Component {
 
     displayLeaderboard(start, limit) {
         const self = this;
-        fetch(`/leaderboard?start=${start}&limit=${limit}`) //https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+        fetch(`/leaderboard?start=${start}&limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
             .then(
-                //handling error
+                //Below is handling error
                 function (response) {
                     if (response.status !== 200) {
                         console.log("Looks like there was a problem. Status Code: " +
@@ -31,7 +31,7 @@ class Leaderboard extends React.Component {
                         return;
                     }
 
-                    // Converts the response to json and set members to the data
+                    // Below converts the response to json and set members to the data
                     response.json().then(function (data) {
                         self.setState({ members: data });
                     });
