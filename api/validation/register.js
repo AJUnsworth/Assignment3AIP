@@ -1,4 +1,4 @@
-const Validator = require('validator');
+const validator = require('validator');
 const isEmpty = require('is-empty');
 
 module.exports = function validateRegisterInput(data) {
@@ -12,31 +12,31 @@ module.exports = function validateRegisterInput(data) {
     data.firstName = !isEmpty(data.firstName) ? data.firstName : '';
     data.lastName = !isEmpty(data.lastName) ? data.lastName : '';
 
-    if (Validator.isEmpty(data.email)) {
-        errors.email = 'Email field is required';
+    if (!validator.isEmail(data.email)) {
+        errors.email = 'Please enter a valid email address'
     }
 
-    if (Validator.isEmpty(data.password)) {
+    if (validator.isEmpty(data.password)) {
         errors.password = 'Password field is required';
     }
 
-    if (Validator.isEmpty(data.confirmPassword)) {
+    if (validator.isEmpty(data.confirmPassword)) {
         errors.confirmPassword = 'Confirm password field is required';
     }
 
-    if (!Validator.isLength(data.password, {min: 6})) {
+    if (!validator.isLength(data.password, {min: 6})) {
         errors.password = 'Password must be at least 6 characters long';
     }
 
-    if (!Validator.equals(data.password, data.confirmPassword)) {
+    if (!validator.equals(data.password, data.confirmPassword)) {
         errors.confirmPassword = 'Passwords must be identical';
     }
 
-    if (Validator.isEmpty(data.firstName)) {
+    if (validator.isEmpty(data.firstName)) {
         errors.firstName = 'First name field is required';
     }
 
-    if (Validator.isEmpty(data.lastName)) {
+    if (validator.isEmpty(data.lastName)) {
         errors.lastName = 'Last name field is required';
     }
 

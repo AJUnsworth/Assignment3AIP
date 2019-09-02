@@ -21,8 +21,7 @@ class Leaderboard extends React.Component {
 
     displayLeaderboard(start, limit) {
         const self = this;
-        console.log("this is working")
-        fetch(`http://localhost:4000/leaderboard?start=${start}&limit=${limit}`) //https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+        fetch(`/leaderboard?start=${start}&limit=${limit}`) //https://developers.google.com/web/updates/2015/03/introduction-to-fetch
             .then(
                 //handling error
                 function (response) {
