@@ -1,7 +1,8 @@
 import React from "react";
-import TestImage from "../../images/TestImage.jfif"
-import "./ThreadImage.css";
+
 import ReactionCounter from "./ReactionCounter";
+import TestImage from "../../images/TestImage.jfif";
+import "./ThreadImage.css";
 
 class ThreadImage extends React.Component {
     render() {

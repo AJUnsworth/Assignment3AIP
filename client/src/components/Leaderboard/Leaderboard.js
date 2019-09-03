@@ -1,11 +1,10 @@
 import React from "react";
-
-import "./Leaderboard.css";
-
-import LeaderboardMember from "./LeaderboardMember";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar"
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
+
+import LeaderboardMember from "./LeaderboardMember";
+import "./Leaderboard.css";
 
 class Leaderboard extends React.Component {
     constructor(props) {

@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./LeaderboardMember.css";
 
 class LeaderboardMember extends React.Component {

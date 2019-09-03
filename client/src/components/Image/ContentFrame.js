@@ -1,12 +1,12 @@
 import React from "react";
-import "./ContentFrame.css";
-import Leaderboard from "../Leaderboard/Leaderboard";
-import ProfilePicture from "../User/ProfilePicture";
-
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
+import Leaderboard from "../Leaderboard/Leaderboard";
+import ProfilePicture from "../User/ProfilePicture";
 import ImageGrid from "./ImageGrid";
+import "./ContentFrame.css";
 
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html

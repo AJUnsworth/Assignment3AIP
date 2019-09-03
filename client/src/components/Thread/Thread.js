@@ -1,13 +1,14 @@
 import React from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./ThreadImage";
 import ProfilePicture from "../User/ProfilePicture";
 import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
 import "./Thread.css";
 
 class Thread extends React.Component {

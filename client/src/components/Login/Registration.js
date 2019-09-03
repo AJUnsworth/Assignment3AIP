@@ -1,12 +1,12 @@
 import React from "react";
 import { NotificationContainer, NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
-
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+
 import "./Registration.css";
 
 // Form uses skeleton code & logic from React Bootstrap Documentation

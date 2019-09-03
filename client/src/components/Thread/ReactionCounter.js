@@ -1,8 +1,10 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments, faHeart } from "@fortawesome/free-solid-svg-icons";
+import Badge from "react-bootstrap/Badge";
+
 import "./ReactionCounter.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faComments, faHeart } from "@fortawesome/free-solid-svg-icons"
-import Badge from "react-bootstrap/Badge"
+
 
 class ReactionCounter extends React.Component {
     render() {

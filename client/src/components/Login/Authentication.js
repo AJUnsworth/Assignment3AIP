@@ -1,15 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col"
+import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-import { Link } from "react-router-dom";
-
 import Logo from "../../images/Logo-01.png";
 import "./Authentication.css";
-
 
 // Form uses skeleton code & logic from React Bootstrap Documentation
 // https://react-bootstrap.github.io/components/forms/#forms-validation-native

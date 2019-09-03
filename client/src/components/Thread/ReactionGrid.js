@@ -1,7 +1,8 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+
 import "./ReactionGrid.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 
 class ReactionGrid extends React.Component {
     constructor(props) {

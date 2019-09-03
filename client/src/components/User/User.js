@@ -1,8 +1,9 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments, faHeart, faUpload } from "@fortawesome/free-solid-svg-icons";
+
 import Navbar from "../Navbar/Navbar";
 import ProfilePicture from "../User/ProfilePicture";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faComments, faHeart, faUpload } from "@fortawesome/free-solid-svg-icons"
 import "./User.css";
 
 class User extends React.Component {
