@@ -45,18 +45,19 @@ class ImageGrid extends React.Component {
                             </ButtonGroup>
                         </div>
                     </ButtonToolbar>
-
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
+                    <div className="justify-content-between">
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                        <ImageFrame />
+                    </div>
                 </div>
                 <div className="showMoreBtnContainer">
                     <Button variant="info">Show More</Button>

@@ -18,3 +18,8 @@ To start the frontend only - npm run start:client
 * Comments should only be used to explain code where necessary
 * If code can be resused elsewhere, it should be made as a component or separate method
 * Tabs must be equal to 4 spaces
+* Use double quotes for strings
+* Break up import statements by external statements then internal statements
+* Use arrow functions whereever possible
+* Always attribute code if taken from an external source using comments
+* Always use const static variables and let for dynamic variables
