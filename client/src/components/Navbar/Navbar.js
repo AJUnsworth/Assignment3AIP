@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-import Logo from "../../images/Logo-01.png";
+import Logo from "../../images/Seenit Logo_white.png";
 import "./Navbar.css";
 
 class Navbar extends React.Component {

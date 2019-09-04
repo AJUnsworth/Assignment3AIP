@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-import Logo from "../../images/Logo-01.png";
+import Logo from "../../images/Seenit Logo_white.png";
 import "./Authentication.css";
 
 // Form uses skeleton code & logic from React Bootstrap Documentation

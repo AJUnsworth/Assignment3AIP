@@ -45,7 +45,7 @@ class ImageGrid extends React.Component {
                             </ButtonGroup>
                         </div>
                     </ButtonToolbar>
-                    <div className="justify-content-between">
+                    <div className="justify-content-between width">
                         <ImageFrame />
                         <ImageFrame />
                         <ImageFrame />

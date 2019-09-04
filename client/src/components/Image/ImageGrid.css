@@ -13,6 +13,10 @@
     margin: 1vw 1.8vw 0vw 1.5vw;
 }
 
+.width {
+    margin: 1vw 1.8vw 0vw 1.5vw;
+}
+
 .badgePill {
     position: static !important;
     margin: 0px 15px 0px 0px !important;
