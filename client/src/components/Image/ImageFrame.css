@@ -1,12 +1,13 @@
 .imageFrame {
-    width: 20vw;
+    max-width: 24.5vw;
     height: auto;
     position: relative;
     z-index: 1;
+    margin-top: 2vw;
 }
 
 .image {
-    width: 20vw;
+    width: 100%;
     height: auto;
     border-radius: 10px;
     position: relative;

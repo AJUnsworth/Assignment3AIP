@@ -5,6 +5,7 @@
     height: auto;
     border-radius: 10px;
     padding: 10px;
+    margin-bottom: 5vw;
 }
 
 .imageGridToolbar{
@@ -14,7 +15,9 @@
 }
 
 .width {
-    margin: 1vw 1.8vw 0vw 1.5vw;
+    margin: 1vw 1.8vw 1vw 1.5vw;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .badgePill {
@@ -24,6 +27,5 @@
 }
 
 .showMoreBtnContainer {
-    margin-left: 44.7%;
-    margin-right: 44.7%;
+    margin: 2vw auto 1vw auto;
 }
