@@ -6,7 +6,7 @@ const passport = require("passport");
 
 require("dotenv").config();
 
-const indexRouter = require("./routes/index");
+const postRouter = require("./routes/post");
 const usersRouter = require("./routes/users");
 const leaderboardRouter = require("./routes/leaderboard");
 
@@ -17,9 +17,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
-require("./config/passport")(passport);
+require("./services/passport")(passport);
 
-app.use("/", indexRouter);
+app.use("/post", postRouter);
 app.use("/users", usersRouter);
 app.use("/leaderboard", leaderboardRouter);
 
