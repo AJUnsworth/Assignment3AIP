@@ -15,16 +15,18 @@ function ContentFrame(props) {
     return (
         <Container className="contentFrame">
             <Row>
-                <div className="container">
+                <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                     <h1 className="welcomeMessage">Welcome johnsmith123</h1>
-                    <div className="welcomeImage">
-                        <ProfilePicture />
-                    </div>
-                </div>
+                    <h4>Start a new conversation today</h4>
+                </Col>
+                <Col xs={12} sm={12} md={4} lg={4} xl={4}>
+                    <ProfilePicture/>
+                </Col>
+                    
             </Row>
             <Row>
-                <Col md={9} className="contentFrameGrid"><ImageGrid /></Col>
-                <Col md={3}><Leaderboard /></Col>
+                <Col xs={12} sm={12} md={8} lg={8} xl={8} className="contentFrameGrid"><ImageGrid/></Col>
+                <Col xs={12} sm={12} md={4} lg={4} xl={4}><Leaderboard/></Col>
             </Row>
         </Container>
     );

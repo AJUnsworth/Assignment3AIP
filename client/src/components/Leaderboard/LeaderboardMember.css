@@ -2,10 +2,10 @@
     background-color: #ffffff;
     clear: both;
     height: 35px;
-    width: 200px;
-    border-radius: 10px;
+    width: 98%;
+    border-radius: 5px;
     padding: 10px;
-    margin: 10px;
+    margin-top: 10px;
 }
 
 .LeaderboardMemberName{
