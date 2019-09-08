@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const passport = require("passport");
 
 require("dotenv").config();
@@ -13,8 +13,9 @@ const leaderboardRouter = require("./routes/leaderboard");
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(passport.initialize());
 
 require("./services/passport")(passport);

@@ -8,8 +8,6 @@ const validateLoginInput = require("../validation/login");
 
 const User = require("../models/user");
 
-require("dotenv").config();
-
 //From https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
 // @route POST api/users/register
 // @desc Register user
@@ -76,23 +74,19 @@ router.post("/login", (req, res) => {
             if (isMatch) {
                 // Create JWT Payload
                 const payload = {
-                    id: user.id,
-                    name: user.email
+                    id: user._id
                 };
                 // Sign token
-                jwt.sign(
+                const token = jwt.sign(
                     payload,
                     process.env.SECRET_OR_KEY,
                     {
                         expiresIn: 3600 // 1 hour in seconds
                     },
-                    (err, token) => {
-                        res.json({
-                            success: true,
-                            token: "Bearer " + token
-                        });
-                    }
                 );
+                return res
+                    .cookie("token", token, { httpOnly: true })
+                    .sendStatus(200);
             } else {
                 return res
                     .status(400)
