@@ -61,7 +61,7 @@ class Authentication extends React.Component {
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="username"
+                                    name="loginUsername"
                                     placeholder="Enter username"
                                     onChange={this.handleChange}
                                     value={this.state.username}
@@ -75,7 +75,7 @@ class Authentication extends React.Component {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"
-                                    name="password"
+                                    name="loginPassword"
                                     placeholder="Password"
                                     onChange={this.handleChange}
                                     value={this.state.password}

@@ -120,7 +120,7 @@ class Registration extends React.Component {
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
-                                <Button variant="primary" type="submit">
+                                <Button variant="primary" type="submit" name="registerBtn">
                                     Register Account
                                 </Button>
                             </Form.Group>
