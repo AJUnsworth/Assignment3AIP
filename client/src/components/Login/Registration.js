@@ -1,11 +1,11 @@
 import React from "react";
-import { NotificationContainer, NotificationManager } from "react-notifications";
-import "react-notifications/lib/notifications.css";
+import { NotificationManager } from "react-notifications";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+
 
 import "./Registration.css";
 
@@ -127,8 +127,6 @@ class Registration extends React.Component {
                         </Col>
                     </Row>
                 </Form>
-
-                <NotificationContainer />
             </Container>
         );
     };
