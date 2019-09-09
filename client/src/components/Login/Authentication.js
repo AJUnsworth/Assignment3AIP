@@ -23,7 +23,7 @@ class Authentication extends React.Component {
     }
 
     handleChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({ [e.target.id]: e.target.value });
     }
 
     handleSubmit = e => {
@@ -53,7 +53,7 @@ class Authentication extends React.Component {
                     <Col md="10">
                         <img src={Logo} alt="logo" className="loginLogo" />
                         <Form noValidate onSubmit={this.handleSubmit}>
-                            <Form.Group controlID="usernameFormGroup" className="text-left text-white">
+                            <Form.Group controlId="username" className="text-left text-white">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -67,7 +67,7 @@ class Authentication extends React.Component {
                                     {this.state.errors.username}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="passwordFormGroup" className="text-left text-white">
+                            <Form.Group controlId="password" className="text-left text-white">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"

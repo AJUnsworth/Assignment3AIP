@@ -27,7 +27,7 @@ class Registration extends React.Component {
     }
 
     handleChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({ [e.target.id]: e.target.value });
     }
 
     handleSubmit = e => {
@@ -63,7 +63,7 @@ class Registration extends React.Component {
                 <Form noValidate onSubmit={this.handleSubmit}>
                     <Row>
                         <Col md="6">
-                            <Form.Group controlID="usernameFormGroup">
+                            <Form.Group controlId="username">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -77,7 +77,7 @@ class Registration extends React.Component {
                                     {this.state.errors.username}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="emailFormGroup">
+                            <Form.Group controlId="email">
                                 <Form.Label>Email Address</Form.Label>
                                 <Form.Control
                                     type="email"
@@ -91,7 +91,7 @@ class Registration extends React.Component {
                                     {this.state.errors.email}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="passwordFormGroup">
+                            <Form.Group controlId="password">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"
@@ -105,7 +105,7 @@ class Registration extends React.Component {
                                     {this.state.errors.password}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlID="confirmPassFormGroup">
+                            <Form.Group controlId="confirmPassword">
                                 <Form.Label>Confirm Password</Form.Label>
                                 <Form.Control
                                     type="password"
