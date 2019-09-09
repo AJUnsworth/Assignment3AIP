@@ -1,4 +1,5 @@
-//run 'npx cypress open'. Wait until crypress app opens. Open the Assignment3AIP/test/client/ folder. Run 'init.spec.js' file.
+/// <reference types="Cypress" />
+
 describe('Sceneit Registration', () => {
   const username = "test123";  
   const email = "test123@test.com";

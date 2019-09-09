@@ -16,7 +16,7 @@ function ContentFrame(props) {
         <Container className="contentFrame">
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
-                    <h1 className="welcomeMessage">Welcome johnsmith123</h1>
+                    <h1 className="welcomeMessage">Welcome {props.username}</h1>
                     <h4>Start a new conversation today</h4>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4} xl={4}>

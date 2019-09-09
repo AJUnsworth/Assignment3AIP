@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const auth = require("../services/auth");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
@@ -86,6 +87,7 @@ router.post("/login", (req, res) => {
                 );
                 return res
                     .cookie("token", token, { httpOnly: true })
+                    .json({username: user.username, email: user.email})
                     .sendStatus(200);
             } else {
                 return res
@@ -95,5 +97,9 @@ router.post("/login", (req, res) => {
         });
     });
 });
+
+router.get('/test', auth, function(req, res) {
+    res.json({ message: 'The password is potato'});
+  });
 
 module.exports = router;

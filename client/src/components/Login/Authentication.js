@@ -41,6 +41,10 @@ class Authentication extends React.Component {
                     response.json().then(function (data) {
                         self.setState({ errors: data });
                     });
+                } else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        localStorage.setItem("User", JSON.stringify(data));
+                    })
                 }
             })
             .catch(error => console.error("Error:", error));
