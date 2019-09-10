@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -29,6 +29,7 @@ class Authentication extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         const self = this;
+
         fetch("/users/login", {
             method: "POST",
             body: JSON.stringify(this.state),
@@ -44,6 +45,7 @@ class Authentication extends React.Component {
                 } else if (response.status === 200) {
                     response.json().then(function (data) {
                         localStorage.setItem("User", JSON.stringify(data));
+                        self.props.history.push("/");
                     })
                 }
             })
@@ -101,4 +103,4 @@ class Authentication extends React.Component {
     };
 }
 
-export default Authentication;
+export default withRouter(Authentication);

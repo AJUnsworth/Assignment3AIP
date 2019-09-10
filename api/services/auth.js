@@ -14,7 +14,9 @@ const auth = function(req, res, next) {
     } else {
         jwt.verify(token, process.env.SECRET_OR_KEY, function(err, decoded) {
             if (err) {
-                return res.status(401).send("Unauthorized: Invalid token");
+                return res
+                    .clearCookie("token")
+                    .status(401).send("Unauthorized: Invalid token");
             } else {
                 req.username = decoded.username;
                 next();

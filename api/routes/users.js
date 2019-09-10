@@ -87,19 +87,17 @@ router.post("/login", (req, res) => {
                 );
                 return res
                     .cookie("token", token, { httpOnly: true })
-                    .json({username: user.username, email: user.email})
+                    .json({id: user._id, username: user.username, email: user.email})
                     .sendStatus(200);
             } else {
-                return res
-                    .status(400)
-                    .json({ password: "Password incorrect" });
+                return res.status(400).json({ password: "Password incorrect" });
             }
         });
     });
 });
 
-router.get('/test', auth, function(req, res) {
-    res.json({ message: 'The password is potato'});
-  });
+router.post("/logout", function(req, res) {
+    res.clearCookie("token").sendStatus(200);
+});
 
 module.exports = router;
