@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments, faHeart, faUpload } from "@fortawesome/free-solid-svg-icons";
 
 import Navbar from "../Navbar/Navbar";
+import ImageGrid from "../Image/ImageGrid";
 import ProfilePicture from "../User/ProfilePicture";
 import "./User.css";
 
@@ -11,28 +12,34 @@ class User extends React.Component {
         return (
             <div>
                 <Navbar />
-                <div className="UserContainer">
-                    <table>
-                        <tr>
-                            <td><div className="ProfilePic"><ProfilePicture /></div></td>
-                            <td className="rightColumn"><h1>johnsmith123</h1>
-                                <table className="rightInfo">
-                                    <tr>
-                                        <td><h2>12</h2></td>
-                                        <td><h2>12</h2></td>
-                                        <td><h2>12</h2></td>
-                                    </tr >
-                                    <tr>
-                                        <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts</td>
-                                        <td><FontAwesomeIcon icon={faComments} className="iconSpacing text-primary" />Comments</td>
-                                        <td><FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />Reacts</td>
-                                    </tr>
+                <div className="content">
+                    <div className="UserContainer">
+                        <table>
+                            <tr>
+                                <td><div className="ProfilePic"><ProfilePicture /></div></td>
+                                <td className="rightColumn"><h1>johnsmith123</h1>
+                                    <table className="rightInfo">
+                                        <tr>
+                                            <td><h2>12</h2></td>
+                                            <td><h2>12</h2></td>
+                                            <td><h2>12</h2></td>
+                                        </tr >
+                                        <tr>
+                                            <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts</td>
+                                            <td><FontAwesomeIcon icon={faComments} className="iconSpacing text-primary" />Comments</td>
+                                            <td><FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />Reacts</td>
+                                        </tr>
 
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
+                    <div className="myPosts">
+                        <h2 className="myPostsText">My Posts</h2>
+                        <ImageGrid />
+                    </div>
                 </div>
             </div>
         );

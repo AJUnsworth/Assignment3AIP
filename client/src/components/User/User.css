@@ -1,10 +1,8 @@
 .UserContainer{
-    width: 80%;
-    margin: 5% 10% 0% 10%;
     background-color: #E5E5E5;
     height: auto;
     border-radius: 10px;
-    padding: 10px;
+    margin-bottom: 60px;
 }
 
 .ProfilePic{
@@ -41,4 +39,24 @@ font-weight: bold;
 font-size: 48px;
 text-align: center;
 padding-bottom: 50px;
+}
+
+.myPosts{
+    padding: 30px 0px 30px 0px;
+    height: auto;
+    background-color: #E5E5E5;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.myPostsText{
+    padding-left:30px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.content{
+    width: 80%;
+    height: auto;
+    margin: 5% 10% 0% 10%;
 }
