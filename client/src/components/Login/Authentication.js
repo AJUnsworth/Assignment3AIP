@@ -88,7 +88,7 @@ class Authentication extends React.Component {
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
-                                <Button variant="outline-light" type="submit" block>
+                                <Button name="loginBtn" variant="outline-light" type="submit" block>
                                     Login
                                 </Button>
                             </Form.Group>
