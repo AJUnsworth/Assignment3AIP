@@ -8,11 +8,11 @@ const User = require("../models/user");
 
 const singleUpload = upload.single("image");
 
-router.post("/create", function(req, res) {
+router.post("/create", function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
-    singleUpload(req, res, function(err) {
-        if (err) throw err;
-        
+    singleUpload(req, res, function (err) {
+        if (err) next(err);
+
         const newPost = new Post({
             userId: req.body.userId,
             imageUrl: req.file.location,
@@ -27,8 +27,12 @@ router.post("/create", function(req, res) {
         newPost
             .save()
             .then(post => res.json(post))
-            .catch(err => console.log(err));
-    });
+            .catch(err => {
+                console.log(err);
+                res.json(err);
+            })
+    }
+    )
 });
 
 router.post("/react", function(req, res) {

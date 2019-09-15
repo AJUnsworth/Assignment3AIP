@@ -6,11 +6,11 @@ describe('Sceneit Registration', () => {
   const pass = "123test"
 
   beforeEach(() => {
-    cy.visit('/loginContainer');
+    cy.visit('/login');
   })
 
     it('visits the registration/login page', () => {
-      cy.visit('/loginContainer')
+      cy.visit('/login')
     })
 
     it('should contain register header', () => {
@@ -79,3 +79,39 @@ describe('Sceneit Registration', () => {
       cy.contains('Passwords must be identical')
     })
   })
+
+  describe('Sceneit Login', () => {
+    const username = "chloetest";  
+    const pass = "test123"
+  
+    beforeEach(() => {
+      cy.visit('/login');
+    })
+  
+      it('visits the home page after a correct login', () => {
+        cy.visit('/login')
+        cy.get('input[name=loginUsername]').type(username);
+        cy.get('input[name=loginPassword]').type(pass);
+        cy.get('button[name=loginBtn]').click();
+        //displays text that is only on the home page
+        cy.contains('Welcome chloetest')
+      })
+
+      it('should throw an error if user attempts log in with incorrect password', () => {
+        cy.visit('/login')
+        cy.get('input[name=loginUsername]').type(username);
+        cy.get('input[name=loginPassword]').type("wrongpassword");
+        cy.get('button[name=loginBtn]').click();
+        cy.contains('Password incorrect')
+      })
+
+      it('should throw an error if user attempts log in with incorrect username', () => {
+        cy.visit('/login')
+        cy.get('input[name=loginUsername]').type("wrongusername");
+        cy.get('input[name=loginPassword]').type(pass);
+        cy.get('button[name=loginBtn]').click();
+        cy.contains('Username not found')
+      })
+  
+  
+    })
