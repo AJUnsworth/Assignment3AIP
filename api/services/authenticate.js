@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 // From https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0#f07a
-const auth = function(req, res, next) {
+const authenticate = function(req, res, next) {
     //Look for token in request body, query string, headers, or cookie
     const token =
         req.body.token ||
@@ -25,4 +25,4 @@ const auth = function(req, res, next) {
     }
 }
 
-module.exports = auth;
+module.exports = authenticate;

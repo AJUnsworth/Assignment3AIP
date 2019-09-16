@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const auth = require("../services/auth");
+const authenticate = require("../services/authenticate");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
@@ -98,6 +98,10 @@ router.post("/login", (req, res) => {
 
 router.post("/logout", function(req, res) {
     res.clearCookie("token").sendStatus(200);
+});
+
+router.get('/checkToken', authenticate, function(req, res) {
+    res.sendStatus(200);
 });
 
 module.exports = router;

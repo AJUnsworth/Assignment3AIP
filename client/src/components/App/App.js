@@ -4,7 +4,6 @@ import { NotificationContainer } from "react-notifications";
 import "./App.css";
 import "react-notifications/lib/notifications.css";
 
-
 import Home from "../Home/Home";
 import Thread from "../Thread/Thread";
 import LoginContainer from "../Login/LoginContainer";
