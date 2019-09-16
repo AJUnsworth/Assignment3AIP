@@ -31,7 +31,7 @@ router.post("/create", function (req, res, next) {
                 console.log(err);
                 res.json(err);
             })
-    }
+        }
     )
 });
 
@@ -86,6 +86,81 @@ router.post("/react", function(req, res) {
                     }
                 }
             });
+        }
+    });
+});
+
+router.post("/react", function(req, res) {
+    const userId = req.body.userId;
+    const postId = req.body.postId;
+    const reactionType = req.body.reactionType;
+
+    User.findOne({ _id: userId }).then(user => {
+        if (!user) {
+            return res.status(404).send();
+        } else {
+            Post.findOne({ _id: postId }).then(post => {
+                if (!post) {
+                    return res.status(404).send();
+                } else {
+                    //For future refactor: Is really inneficient looping through the same array twice
+                    //Check if the user has already reacted to the post and is simply changing their desired reaction
+                    const likedPosts = user.likedPosts;
+                    if (likedPosts.some(likedPost => likedPost.postId == postId)) {
+                        for (let likedPost of likedPosts) {
+                            if(postId == likedPost.postId) {
+                                const originalReactionType = likedPost.reactionType;
+                                likedPost.reactionType = reactionType;
+                                post[originalReactionType + "Reactions"]--;
+                                post[reactionType + "Reactions"]++;
+                                break;
+                            }
+                        };
+                        //WIP: Determine what to return when saving changes to schemas and then refactor accordingly
+                        user
+                            .save()
+                            .catch(err => console.log(err));;
+                        post
+                            .save()
+                            .catch(err => console.log(err));;
+                    } else {
+                        user.likedPosts.push({ 
+                            postId: postId,
+                            reactionType: reactionType
+                        });
+                        user
+                            .save()
+                            .then(console.log("user updated"))
+                            .catch(err => console.log(err));
+                        
+                        post[reactionType + "Reactions"]++;
+                        post
+                            .save()
+                            .then(console.log("reaction incremented"))
+                            .catch(err => console.log(err));
+                    }
+                }
+            });
+        }
+    });
+});
+
+router.get("/getReactionCount", function(req, res) {
+    const postId = req.body.postId;
+
+    Post.findOne({ _id: postId }).then(post => {
+        if (!post) {
+            return res.status(404).send();
+        } else {
+            const count = 
+                post.likeReactions
+                + post.laughReactions 
+                + post.loveReactions
+                + post.wowReactions
+                + post.tearsReactions
+                + post.angryReactions;
+
+            return res.status(200).json({ reactionCount: count });
         }
     });
 });
