@@ -28,9 +28,10 @@ class ImageGrid extends React.Component {
 
     handleFileUpload() {
         const self = this;
+        const userId = JSON.parse(localStorage.getItem("User")).id;
         var formData = new FormData();
         formData.append('image', this.state.imgFile);
-        formData.append('userId', localStorage.getItem('User').id);
+        formData.append('userId', userId);
 
         fetch('/post/create',
             {
@@ -50,7 +51,6 @@ class ImageGrid extends React.Component {
             })
             .catch(error => console.error("Error:", error));
     }
-
 
 
 render() {
