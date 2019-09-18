@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-
+import {Animated} from "react-animated-css";
 
 import "./Registration.css";
 
@@ -58,7 +58,9 @@ class Registration extends React.Component {
         return (
             <Container>
                 <Row>
-                    <h1 className="titlePadding">Register for an account today!</h1>
+                    <Animated animationIn="shake" animationOut="zoomOutDown" animationInDuration={1000} animationOutDuration={1000} isVisible={true}>
+                        <h1 className="titlePadding">Register for an account today!</h1>
+                    </Animated>
                 </Row>
                 <Form noValidate onSubmit={this.handleSubmit}>
                     <Row>
