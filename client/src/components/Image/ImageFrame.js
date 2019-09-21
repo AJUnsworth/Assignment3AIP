@@ -2,17 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import ReactionCounter from "../Thread/ReactionCounter";
-import TestImage from "../../images/TestImage.jfif";
 import "./ImageFrame.css";
 
 class ImageFrame extends React.Component {
     render() {
         return (
-            <Link to="/thread/">
+            <Link to={"/thread/" + this.props.post._id}>
                 <div className="imageFrame">
                     <ReactionCounter />
                     {/* eslint-disable-next-line */}
-                    <img src={TestImage} className="image" />
+                    <img src={this.props.post.imageUrl} className="image" />
                 </div>
             </Link>
         );
