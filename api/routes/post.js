@@ -50,6 +50,19 @@ router.get("/getThumbnail", function (req, res) {
         });
 })
 
+router.get("/:postId", function (req, res) {
+    const postId = req.params.postId;
+ 
+     Post.findOne({ _id: postId}).then(post => {
+             if (!post) {
+                return res.status(404).send();
+             } else {
+                 return res.json(post);
+             }
+         })
+
+ })
+
 router.post("/react", function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;

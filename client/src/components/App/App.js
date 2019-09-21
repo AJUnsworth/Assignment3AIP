@@ -15,7 +15,7 @@ class App extends React.Component {
             <div>
             <Router>
                 <Route path="/" exact component={Home} />
-                <Route path="/thread" component={Thread} />
+                <Route path="/thread/:postId" component={Thread} />
                 <Route path="/login" component={LoginContainer} />
                 <Route path="/user" component={User} />
             </Router>

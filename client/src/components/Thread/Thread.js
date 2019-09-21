@@ -12,13 +12,36 @@ import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
 
 class Thread extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            post: {}
+        }
+    }
+
+    componentDidMount() {
+        const self = this;
+        const { postId } = this.props.match.params;
+        fetch("/post/" + postId, {
+            method: "GET"
+        })
+            .then(function(response) {
+                response.json().then(function (data) {
+                    self.setState({ post: data})
+                })
+            })
+    }
+
     render() {
         return (
             <div>
                 <Navbar />
                 <div className="content">
                     <Row className="threadTop">
-                        <Col lg="8" className="threadImg"><ThreadImage /></Col>
+                        <Col lg="8" className="threadImg">
+                            <ThreadImage imageUrl={this.state.post.imageUrl}/>
+                        </Col>
                         <Col lg="4" className="threadDesc">
                             <ProfilePicture className="profilePicture" />
                             <h1 className="profileName">Post by</h1>
