@@ -65,7 +65,7 @@ render() {
                             {/*https://mdbootstrap.com/docs/react/forms/file-input/*/}
                             <div className="input-group">
                             <Form.Group>
-                                <Button variant="primary" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
+                                <Button variant="secondary" type="submit" id="uploadButton" name="uploadBtn" onClick={this.handleFileUpload}>
                                     Upload
                                 </Button>
                             </Form.Group>

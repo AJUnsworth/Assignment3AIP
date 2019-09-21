@@ -29,3 +29,8 @@
 .showMoreBtnContainer {
     margin: 2vw auto 1vw auto;
 }
+
+#uploadButton {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
