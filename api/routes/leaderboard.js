@@ -25,7 +25,7 @@ const members = [
 ];
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
+router.get("/", function (req, res) {
     let start = req.query.start || 0;
     let limit = req.query.limit || 10;
     let topMembers = members.slice(start, limit); //for top limit

@@ -14,19 +14,37 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor() {
         super()
-        this.initialState = { imgFile: null, filename: "Choose file" }
-        this.handleFileBrowse = this.handleFileBrowse.bind(this);
-        this.handleFileUpload = this.handleFileUpload.bind(this);
+        this.initialState = { imgFile: null, filename: "Choose file" };
         this.state = this.initialState;
     }
 
-    handleFileBrowse(e) {
+    componentDidMount() {
+        const self = this;
+
+        fetch('/post/getThumbnail',
+            {
+                method: 'GET'
+            }).then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        self.setState({ posts: data });
+                    });
+                }
+            })
+    }
+
+    handleFileBrowse = e => {
         e.preventDefault();
         // eslint-disable-next-line
         this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') })
     }
 
-    handleFileUpload() {
+    handleFileUpload = () => {
         const self = this;
         const userId = JSON.parse(localStorage.getItem("User")).id;
         var formData = new FormData();
@@ -53,67 +71,63 @@ class ImageGrid extends React.Component {
     }
 
 
-render() {
-    return (
-        <div>
-            <div className="imageGrid">
-                <Container>
-                    <Row>
-                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
-                            <h6>Add a thread...</h6>
-                            {/*upload button function taken from the following website:*/}
-                            {/*https://mdbootstrap.com/docs/react/forms/file-input/*/}
-                            <div className="input-group">
-                            <Form.Group>
-                                <Button variant="secondary" type="submit" id="uploadButton" name="uploadBtn" onClick={this.handleFileUpload}>
-                                    Upload
-                                </Button>
-                            </Form.Group>
-                                <div className="custom-file">
-                                    <input
-                                        type="file"
-                                        className="custom-file-input"
-                                        id="inputGroupFile01"
-                                        aria-describedby="inpStGroupFileAddon01"
-                                        onChange={this.handleFileBrowse}
-                                    />
-                                    <label className="custom-file-label" htmlFor="inputGroupFile01">
-                                        {this.state.filename}
-                                    </label>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
-                            <h6>Sort by</h6>
-                            <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
-                                <ToggleButton value={1} variant="secondary">Latest</ToggleButton>
-                                <ToggleButton value={2} variant="secondary">Most Popular</ToggleButton>
-                                <ToggleButton value={3} variant="secondary">Trending</ToggleButton>
-                            </ToggleButtonGroup>
-                        </Col>
-                    </Row>
-                </Container>
+    render() {
+        //Checks if posts first exist, then maps them to an ImageFrame if they do
+        const posts = this.state.posts && this.state.posts.map((post, index) => {
+            return <ImageFrame key={index} post={post} />
+        });
 
-                <div className="justify-content-between width">
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                    <ImageFrame />
-                </div>
-                <div className="showMoreBtnContainer">
-                    <Button variant="info">Show More</Button>
+        return (
+            <div>
+                <div className="imageGrid">
+                    <Container>
+                        <Row>
+                            <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+                                <h6>Add a thread...</h6>
+                                {/*upload button function taken from the following website:*/}
+                                {/*https://mdbootstrap.com/docs/react/forms/file-input/*/}
+                                <div className="input-group">
+                                    <Form.Group>
+                                        <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
+                                            Upload
+                                </Button>
+                                    </Form.Group>
+                                    <div className="custom-file">
+                                        <input
+                                            type="file"
+                                            className="custom-file-input"
+                                            id="inputGroupFile01"
+                                            aria-describedby="inpStGroupFileAddon01"
+                                            onChange={this.handleFileBrowse}
+                                        />
+                                        <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                            {this.state.filename}
+                                        </label>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+                                <h6>Sort by</h6>
+                                <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
+                                    <ToggleButton value={1} variant="secondary">Latest</ToggleButton>
+                                    <ToggleButton value={2} variant="secondary">Most Popular</ToggleButton>
+                                    <ToggleButton value={3} variant="secondary">Trending</ToggleButton>
+                                </ToggleButtonGroup>
+                            </Col>
+                        </Row>
+                    </Container>
+
+                    <div className="justify-content-between width">
+                        {posts}
+                    </div>
+                    <div className="showMoreBtnContainer">
+                        <Button variant="info">Show More</Button>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
 
-}
+    }
 }
 
 export default ImageGrid;
