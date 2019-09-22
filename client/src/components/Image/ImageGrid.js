@@ -14,17 +14,18 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor() {
         super()
-        this.initialState = { imgFile: null, filename: "Choose file" };
+        this.initialState = { imgFile: null, filename: "Choose file", posts: [], isShowMoreDisabled: false };
         this.state = this.initialState;
     }
 
     componentDidMount() {
-        const self = this;
+        this.displayPosts(0);
+    }
 
-        fetch('/post/getThumbnail',
-            {
-                method: 'GET'
-            }).then(function (response) {
+    displayPosts(skippedPosts) {
+        const self = this;
+        fetch(`/post/getThumbnail?skippedPosts=${skippedPosts}`)
+            .then(function (response) {
                 if (response.status === 404) {
                     response.json().then(function (data) {
                         //self.setState({ errors: data });
@@ -32,7 +33,10 @@ class ImageGrid extends React.Component {
                 }
                 else if (response.status === 200) {
                     response.json().then(function (data) {
-                        self.setState({ posts: data });
+                        self.setState(prevState => ({
+                            posts: [...prevState.posts, ...data.results],
+                            isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
+                        }))
                     });
                 }
             })
@@ -121,7 +125,7 @@ class ImageGrid extends React.Component {
                         {posts}
                     </div>
                     <div className="showMoreBtnContainer">
-                        <Button variant="info">Show More</Button>
+                        <Button variant="info" disabled={this.state.isShowMoreDisabled} onClick={() => { this.displayPosts(this.state.posts.length) }}>Show More</Button>
                     </div>
                 </div>
             </div>
