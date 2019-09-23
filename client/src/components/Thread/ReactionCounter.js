@@ -7,13 +7,32 @@ import "./ReactionCounter.css";
 
 
 class ReactionCounter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            reactions: 0
+        }
+    }
+
+    componentDidMount() {
+        const self = this;
+        fetch("/post/getReactionCount?post_id=" + this.props.postId, {
+            method: "GET"
+        })
+            .then(response => {
+                response.json().then(data => {
+                    self.setState({ data });
+                })
+            })
+    }
+
     render() {
         return (
             <Badge pill variant="light">
                 <FontAwesomeIcon icon={faComments} className="iconSpacing text-primary" />
                 8
                 <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
-                57
+                {this.state.reactions}
             </Badge>
         );
     }

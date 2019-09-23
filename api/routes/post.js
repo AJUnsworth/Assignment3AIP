@@ -31,15 +31,15 @@ router.post("/create", function (req, res, next) {
                 console.log(err);
                 res.json(err);
             })
-    }
+        }
     )
 });
 
-router.get("/getThumbnail", function (req, res) {
-   const skippedPosts = req.body.skippedPosts || 0;
+router.get("/getThumbnails", function (req, res) {
+    const skippedPosts = req.query.skippedPosts || 0;
 
     Post
-        .find({})
+        .find()
         .limit(10)
         .skip(skippedPosts)
         .sort({ createdAt: -1 })
@@ -48,25 +48,13 @@ router.get("/getThumbnail", function (req, res) {
             if (!posts) return res.status(404);
             return res.json(posts);
         });
-})
+});
 
-router.get("/:postId", function (req, res) {
-    const postId = req.params.postId;
- 
-     Post.findOne({ _id: postId}).then(post => {
-             if (!post) {
-                return res.status(404).send();
-             } else {
-                 return res.json(post);
-             }
-         })
-
- })
-
-router.post("/react", function (req, res) {
+router.post("/addReaction", function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;
+    console.log(req.body);
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
@@ -89,29 +77,62 @@ router.post("/react", function (req, res) {
                                 break;
                             }
                         };
-                        //WIP: Determine what to return when saving changes to schemas and then refactor accordingly
-                        user
-                            .save()
-                            .catch(err => console.log(err));;
-                        post
-                            .save()
-                            .catch(err => console.log(err));;
                     } else {
                         user.likedPosts.push({
                             postId: postId,
                             reactionType: reactionType
                         });
-                        user
-                            .save()
-                            .then(console.log("user updated"))
-                            .catch(err => console.log(err));
-
                         post[reactionType + "Reactions"]++;
-                        post
-                            .save()
-                            .then(console.log("reaction incremented"))
-                            .catch(err => console.log(err));
                     }
+
+                    user
+                        .save()
+                        .catch(err => console.log(err));;
+
+                    post
+                        .save()
+                        .then(updatedPost => {
+                            return res.send(updatedPost);
+                        })
+                        .catch(err => console.log(err));;
+                }
+            });
+        }
+    });
+});
+
+router.post("/removeReaction", function (req, res) {
+    const userId = req.body.userId;
+    const postId = req.body.postId;
+    const reactionType = req.body.reactionType;
+
+    User.findOne({ _id: userId }).then(user => {
+        if (!user) {
+            return res.status(404).send();
+        } else {
+            Post.findOne({ _id: postId }).then(post => {
+                if (!post) {
+                    return res.status(404).send();
+                } else {
+                    const likedPosts = user.likedPosts;
+                    for (let likedPost of likedPosts) {
+                        if (postId == likedPost.postId) {
+                            likedPosts.splice(likedPosts.indexOf(likedPost));
+                            post[reactionType + "Reactions"]--;
+                            break;
+                        }
+                    };
+
+                    user
+                        .save()
+                        .catch(err => console.log(err));;
+
+                    post
+                        .save()
+                        .then(updatedPost => {
+                            return res.json(updatedPost);
+                        })
+                        .catch(err => console.log(err));;
                 }
             });
         }
@@ -119,7 +140,7 @@ router.post("/react", function (req, res) {
 });
 
 router.get("/getReactionCount", function (req, res) {
-    const postId = req.body.postId;
+    const postId = req.query.post_id;
 
     Post.findOne({ _id: postId }).then(post => {
         if (!post) {
@@ -133,9 +154,21 @@ router.get("/getReactionCount", function (req, res) {
                 + post.tearsReactions
                 + post.angryReactions;
 
-            return res.status(200).json({ reactionCount: count });
+            return res.json({ reactions: count });
         }
     });
+});
+
+router.get("/:postId", function (req, res) {
+    const postId = req.params.postId;
+ 
+    Post.findOne({ _id: postId}).then(post => {
+            if (!post) {
+               return res.status(404).send();
+            } else {
+                return res.json(post);
+            }
+        });
 });
 
 module.exports = router;

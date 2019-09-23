@@ -28,7 +28,7 @@ class Thread extends React.Component {
         })
             .then(function(response) {
                 response.json().then(function (data) {
-                    self.setState({ post: data})
+                    self.setState({ post: data });
                 })
             })
     }
@@ -46,7 +46,7 @@ class Thread extends React.Component {
                             <ProfilePicture className="profilePicture" />
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName">johnsmith123</h1>
-                            <ReactionGrid class="reactionGrid" />
+                            <ReactionGrid post={this.state.post} className="reactionGrid" />
                             <div className="quickActions">
                                 <h6>Quick Actions</h6>
                                 <ButtonGroup>

@@ -9,7 +9,7 @@ class ImageFrame extends React.Component {
         return (
             <Link to={"/thread/" + this.props.post._id}>
                 <div className="imageFrame">
-                    <ReactionCounter />
+                    <ReactionCounter postId={this.props.post._id} />
                     {/* eslint-disable-next-line */}
                     <img src={this.props.post.imageUrl} className="image" />
                 </div>

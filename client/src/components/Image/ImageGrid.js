@@ -21,7 +21,7 @@ class ImageGrid extends React.Component {
     componentDidMount() {
         const self = this;
 
-        fetch('/post/getThumbnail',
+        fetch('/post/getThumbnails',
             {
                 method: 'GET'
             }).then(function (response) {
