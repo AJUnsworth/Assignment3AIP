@@ -74,19 +74,16 @@ router.post("/addReaction", function (req, res) {
                 if (!post) {
                     return res.status(404).send();
                 } else {
-                    //For future refactor: Is really inneficient looping through the same array twice
-                    //Check if the user has already reacted to the post and is simply changing their desired reaction
                     const likedPosts = user.likedPosts;
-                    if (likedPosts.some(likedPost => likedPost.postId == postId)) {
-                        for (let likedPost of likedPosts) {
-                            if (postId == likedPost.postId) {
-                                const originalReactionType = likedPost.reactionType;
-                                likedPost.reactionType = reactionType;
-                                post[originalReactionType + "Reactions"]--;
-                                post[reactionType + "Reactions"]++;
-                                break;
-                            }
-                        };
+                    const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
+                    if(indexOfPost != -1) {
+                        //Swap reactionType if user is changing to a different reaction
+                        const likedPost = likedPosts[indexOfPost];
+                        const originalReactionType = likedPost.reactionType;
+                        likedPost.reactionType = reactionType;
+
+                        post[originalReactionType + "Reactions"]--;
+                        post[reactionType + "Reactions"]++;
                     } else {
                         user.likedPosts.push({
                             postId: postId,
@@ -125,14 +122,12 @@ router.post("/removeReaction", function (req, res) {
                     return res.status(404).send();
                 } else {
                     const likedPosts = user.likedPosts;
-                    for (let likedPost of likedPosts) {
-                        if (postId == likedPost.postId) {
-                            likedPosts.splice(likedPosts.indexOf(likedPost));
-                            post[reactionType + "Reactions"]--;
-                            break;
-                        }
-                    };
-
+                    const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
+                    if(indexOfPost != -1) {
+                        //Removing likedPost from user
+                        likedPosts.splice(likedPosts[indexOfPost]);
+                        post[reactionType + "Reactions"]--;
+                    }
                     user
                         .save()
                         .catch(err => console.log(err));;
