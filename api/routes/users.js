@@ -100,8 +100,29 @@ router.post("/logout", function(req, res) {
     res.clearCookie("token").sendStatus(200);
 });
 
-router.get('/checkToken', authenticate, function(req, res) {
+router.get("/checkToken", authenticate, function(req, res) {
     res.sendStatus(200);
+});
+
+router.get("/getPostReaction", function(req, res) {
+    const postId = req.query.post_id;
+    const userId = req.query.user_id;
+    console.log(req.query);
+
+    User.findOne({ _id: userId }).then(user => {
+        if (!user) {
+            return res.status(404).send();
+        } else {
+            const likedPosts = user.likedPosts;
+            if (likedPosts.some(likedPost => likedPost.postId == postId)) {
+                for (let likedPost of likedPosts) {
+                    if (postId == likedPost.postId) {
+                        return res.json({ activeReaction: likedPost.reactionType });
+                    }
+                };
+            }
+        }
+    });
 });
 
 module.exports = router;

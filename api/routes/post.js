@@ -65,7 +65,6 @@ router.post("/addReaction", function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;
-    console.log(req.body);
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
@@ -103,7 +102,7 @@ router.post("/addReaction", function (req, res) {
                     post
                         .save()
                         .then(updatedPost => {
-                            return res.send(updatedPost);
+                            return res.json(updatedPost);
                         })
                         .catch(err => console.log(err));;
                 }

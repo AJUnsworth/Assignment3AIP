@@ -14,7 +14,7 @@ class ReactionGrid extends React.Component {
             wowReactions: 0,
             tearsReactions: 0,
             angryReactions: 0,
-            activeReaction: props.reactionType
+            activeReaction: ""
         };
     }
 
@@ -26,22 +26,35 @@ class ReactionGrid extends React.Component {
             loveReactions: post.loveReactions,
             wowReactions: post.wowReactions,
             tearsReactions: post.tearsReactions,
-            angryReactions: post.angryReactions,
-            activeReaction: nextProps.reactionType
+            angryReactions: post.angryReactions
         });
+
+        const self = this;
+        const userId = JSON.parse(localStorage.getItem("User")).id;
+        fetch("/users/getPostReaction?user_id=" + userId + "&post_id=" + post._id, {
+            method: "GET"
+        })
+            .then(response => {
+                response.json().then(data => {
+                    self.setState(data);
+                })
+            });
     }
 
     addReaction = e => {
         const self = this;
+        const originalReactionType = this.state.activeReaction;
+        const originalReactionState = originalReactionType + "Reactions";
         const reactionType = e.currentTarget.id;
         const reactionState = reactionType + "Reactions";
+
         const requestBody = JSON.stringify({
             userId: JSON.parse(localStorage.getItem("User")).id,
-            postId: this.props.postId,
+            postId: this.props.post._id,
             reactionType: reactionType
         });
         
-        if (reactionType === this.state.activeReaction) {
+        if (reactionType === originalReactionType) {
             fetch("/post/removeReaction", {
                 method: "POST", 
                 body: requestBody,
@@ -67,10 +80,18 @@ class ReactionGrid extends React.Component {
             })
                 .then(response => {
                     response.json().then(data => {
-                        self.setState({
-                            activeReaction: reactionType, 
-                            [reactionState]: data[reactionState]
-                        });
+                            if (originalReactionType) {
+                                self.setState({
+                                    activeReaction: reactionType, 
+                                    [reactionState]: data[reactionState],
+                                    [originalReactionState]: data[originalReactionState]
+                                });
+                            } else {
+                                self.setState({
+                                    activeReaction: reactionType, 
+                                    [reactionState]: data[reactionState]
+                            });
+                        }
                     });
                 });
         }
