@@ -36,18 +36,29 @@ router.post("/create", function (req, res, next) {
 });
 
 router.get("/getThumbnails", function (req, res) {
-    const skippedPosts = req.query.skippedPosts || 0;
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
-    Post
-        .find()
-        .limit(10)
+    Post.aggregate([{$sort: {
+        createdAt: -1
+        }},
+        {$facet: {
+            metadata: [{ $count: "totalCount" }],
+            results: [ { $skip: skippedPosts }, { $limit: 10 } ]
+        }}])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+    /*Post
+        .find({})
         .skip(skippedPosts)
+        .limit(10)
         .sort({ createdAt: -1 })
         .exec(function (err, posts) {
             if (err) return res.status(404);
             if (!posts) return res.status(404);
             return res.json(posts);
-        });
+        });*/
 });
 
 router.post("/addReaction", function (req, res) {
