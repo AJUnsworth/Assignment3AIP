@@ -34,3 +34,8 @@
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
 }
+
+.custom-file-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
