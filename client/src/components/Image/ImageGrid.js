@@ -14,32 +14,15 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor() {
         super()
-        this.initialState = { imgFile: null, filename: "Choose file", posts: [], isShowMoreDisabled: false };
+        this.initialState = { 
+            imgFile: null, 
+            filename: "Choose file" 
+        };
         this.state = this.initialState;
     }
 
     componentDidMount() {
-        this.displayPosts(0);
-    }
-
-    displayPosts(skippedPosts) {
-        const self = this;
-        fetch(`/post/getThumbnails?skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            posts: [...prevState.posts, ...data.results],
-                            isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
-                        }))
-                    });
-                }
-            })
+        this.props.displayPosts(0);
     }
 
     handleFileBrowse = e => {
@@ -52,8 +35,12 @@ class ImageGrid extends React.Component {
         const self = this;
         const userId = JSON.parse(localStorage.getItem("User")).id;
         var formData = new FormData();
-        formData.append('image', this.state.imgFile);
-        formData.append('userId', userId);
+        formData.append("image", this.state.imgFile);
+        formData.append("userId", userId);
+
+        if(this.props.replyTo) {
+            formData.append("replyTo", this.props.replyTo._id);
+        }
 
         fetch('/post/create',
             {
@@ -76,8 +63,8 @@ class ImageGrid extends React.Component {
 
 
     render() {
-        //Checks if posts first exist, then maps them to an ImageFrame if they do
-        const posts = this.state.posts && this.state.posts.map((post, index) => {
+        //Display thumbnails for each post
+        const posts = this.props.posts.map((post, index) => {
             return <ImageFrame key={index} post={post} />
         });
 
@@ -125,7 +112,7 @@ class ImageGrid extends React.Component {
                         {posts}
                     </div>
                     <div className="showMoreBtnContainer">
-                        <Button variant="info" disabled={this.state.isShowMoreDisabled} onClick={() => { this.displayPosts(this.state.posts.length) }}>Show More</Button>
+                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.props.displayPosts}>Show More</Button>
                     </div>
                 </div>
             </div>

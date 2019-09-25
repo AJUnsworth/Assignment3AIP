@@ -21,7 +21,7 @@ class ReactionCounter extends React.Component {
         })
             .then(response => {
                 response.json().then(data => {
-                    self.setState({ data });
+                    self.setState({ reactions: data });
                 })
             })
     }

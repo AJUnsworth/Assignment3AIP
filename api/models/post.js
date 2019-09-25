@@ -7,6 +7,10 @@ const postSchema = new Schema({
         ref: "User",
         required: true,
     },
+    replyTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    },
     imageUrl: {
         type: String,
         unique: true,
@@ -35,10 +39,17 @@ const postSchema = new Schema({
     angryReactions: {
         type: Number,
         required: true,
-    },
+    }
 }, {
         timestamps: true,
-    });
+});
+
+//Allows for population without writing to MongoDB
+postSchema.virtual("replies", {
+    ref: "Post",
+    localField: "_id",
+    foreignField: "replyTo"
+});
 
 const Post = mongoose.model("Post", postSchema);
 

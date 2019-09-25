@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { NotificationContainer } from "react-notifications";
 import "./App.css";
 import "react-notifications/lib/notifications.css";
@@ -14,10 +14,12 @@ class App extends React.Component {
         return (
             <div>
             <Router>
-                <Route path="/" exact component={Home} />
-                <Route path="/thread/:postId" component={Thread} />
-                <Route path="/login" component={LoginContainer} />
-                <Route path="/user" component={User} />
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/thread/:postId" component={Thread} />
+                    <Route path="/login" component={LoginContainer} />
+                    <Route path="/user" component={User} />
+                </Switch>
             </Router>
             <NotificationContainer/>
             </div>

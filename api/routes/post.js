@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
 
 const upload = require("../services/image-upload");
 const Post = require("../models/post");
@@ -23,6 +22,11 @@ router.post("/create", function (req, res, next) {
             tearsReactions: 0,
             angryReactions: 0
         });
+        
+        //Checks if the post is a reply, otherwise it is a main post
+        if(req.body.replyTo) {
+            newPost.replyTo = req.body.replyTo;
+        }
 
         newPost
             .save()
@@ -108,6 +112,18 @@ router.post("/addReaction", function (req, res) {
     });
 });
 
+router.get("/replies", function (req, res) {
+    const postId = req.query.post_id;
+
+    Post.findOne({ _id: postId }).populate("replies").then(post => {
+        if(!post) {
+            return res.status(404).send();
+        } else {
+            return res.json(post.replies);
+        }
+    })
+});
+
 router.post("/removeReaction", function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;
@@ -159,7 +175,7 @@ router.get("/getReactionCount", function (req, res) {
                 + post.tearsReactions
                 + post.angryReactions;
 
-            return res.json({ reactions: count });
+            return res.json(count);
         }
     });
 });

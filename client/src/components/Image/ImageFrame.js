@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import ReactionCounter from "../Thread/ReactionCounter";
 import "./ImageFrame.css";
@@ -7,13 +6,15 @@ import "./ImageFrame.css";
 class ImageFrame extends React.Component {
     render() {
         return (
-            <Link to={"/thread/" + this.props.post._id}>
+            //Using 'a' instead of 'Link' so page refreshes when visiting replies from a parent thread
+            //Otherwise, the page does not reload the component
+            <a href={"/thread/" + this.props.post._id}>
                 <div className="imageFrame">
                     <ReactionCounter postId={this.props.post._id} />
                     {/* eslint-disable-next-line */}
                     <img src={this.props.post.imageUrl} className="image" />
                 </div>
-            </Link>
+            </a>
         );
     }
 }

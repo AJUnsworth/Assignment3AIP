@@ -16,20 +16,47 @@ class Thread extends React.Component {
     constructor() {
         super();
         this.state = {
-            post: {}
+            post: {},
+            replies: []
         }
     }
 
     componentDidMount() {
         const self = this;
+        console.log(this.props.postId);
         const { postId } = this.props.match.params;
         fetch("/post/" + postId, {
             method: "GET"
         })
             .then(function(response) {
+                console.log(response.body);
                 response.json().then(function (data) {
                     self.setState({ post: data });
                 })
+            })
+    }
+
+    displayReplies = () => {
+        //Todo: Currently throws an exception but still works as expected, need to look into this further
+        const self = this;
+        const { postId } = this.props.match.params;
+        fetch("/post/replies?post_id=" + postId, {
+            method: "GET"
+        })
+            .then(function (response) {
+                if (response.status === 404) {
+                    self.setState({replies: []});
+                }
+                else if (response.status === 200) {
+                    console.log(response);
+                    response.json().then(function (data) {
+                        console.log(...data);
+                        self.setState(prevState => ({
+                            replies: [...prevState.replies, ...data],
+                            //isShowMoreDisabled: prevState.replies.length + data.length === data.metadata[0].totalCount
+                        }));
+                    });
+                }
             })
     }
 
@@ -60,7 +87,7 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
-                                <ImageGrid />
+                                <ImageGrid displayPosts={this.displayReplies} replyTo={this.state.post} posts={this.state.replies} />
                             </div>
                         </Col>
                     </Row>
