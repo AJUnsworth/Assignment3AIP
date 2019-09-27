@@ -15,12 +15,14 @@ router.post("/create", function (req, res, next) {
         const newPost = new Post({
             userId: req.body.userId,
             imageUrl: req.file.location,
-            likeReactions: 0,
-            laughReactions: 0,
-            loveReactions: 0,
-            wowReactions: 0,
-            tearsReactions: 0,
-            angryReactions: 0
+            reactions: {
+                like: 0,
+                laugh: 0,
+                love: 0,
+                wow: 0,
+                tears: 0,
+                angry: 0
+            }
         });
         
         //Checks if the post is a reply, otherwise it is a main post
@@ -86,14 +88,14 @@ router.post("/addReaction", function (req, res) {
                         const originalReactionType = likedPost.reactionType;
                         likedPost.reactionType = reactionType;
 
-                        post[originalReactionType + "Reactions"]--;
-                        post[reactionType + "Reactions"]++;
+                        post.reactions[originalReactionType]--;
+                        post.reactions[reactionType]++;
                     } else {
                         user.likedPosts.push({
                             postId: postId,
                             reactionType: reactionType
                         });
-                        post[reactionType + "Reactions"]++;
+                        post.reactions[reactionType]++;
                     }
 
                     user
@@ -103,7 +105,7 @@ router.post("/addReaction", function (req, res) {
                     post
                         .save()
                         .then(updatedPost => {
-                            return res.json(updatedPost);
+                            return res.json(updatedPost.reactions);
                         })
                         .catch(err => console.log(err));;
                 }
@@ -142,7 +144,7 @@ router.post("/removeReaction", function (req, res) {
                     if(indexOfPost != -1) {
                         //Removing likedPost from user
                         likedPosts.splice(likedPosts[indexOfPost]);
-                        post[reactionType + "Reactions"]--;
+                        post.reactions[reactionType]--;
                     }
                     user
                         .save()
@@ -151,7 +153,7 @@ router.post("/removeReaction", function (req, res) {
                     post
                         .save()
                         .then(updatedPost => {
-                            return res.json(updatedPost);
+                            return res.json(updatedPost.reactions);
                         })
                         .catch(err => console.log(err));;
                 }
@@ -167,15 +169,7 @@ router.get("/getReactionCount", function (req, res) {
         if (!post) {
             return res.status(404).send();
         } else {
-            const count =
-                post.likeReactions
-                + post.laughReactions
-                + post.loveReactions
-                + post.wowReactions
-                + post.tearsReactions
-                + post.angryReactions;
-
-            return res.json(count);
+            return res.json(post.totalReactions);
         }
     });
 });

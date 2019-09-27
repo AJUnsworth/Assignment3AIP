@@ -1,6 +1,33 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const reactionsSchema = new Schema({
+    like: {
+        type: Number,
+        required: true,
+    },
+    laugh: {
+        type: Number,
+        required: true,
+    },
+    love: {
+        type: Number,
+        required: true,
+    },
+    wow: {
+        type: Number,
+        required: true,
+    },
+    tears: {
+        type: Number,
+        required: true,
+    },
+    angry: {
+        type: Number,
+        required: true,
+    }
+});
+
 const postSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -16,30 +43,7 @@ const postSchema = new Schema({
         unique: true,
         required: true,
     },
-    likeReactions: {
-        type: Number,
-        required: true,
-    },
-    laughReactions: {
-        type: Number,
-        required: true,
-    },
-    loveReactions: {
-        type: Number,
-        required: true,
-    },
-    wowReactions: {
-        type: Number,
-        required: true,
-    },
-    tearsReactions: {
-        type: Number,
-        required: true,
-    },
-    angryReactions: {
-        type: Number,
-        required: true,
-    }
+    reactions: reactionsSchema
 }, {
         timestamps: true,
 });
@@ -50,6 +54,10 @@ postSchema.virtual("replies", {
     localField: "_id",
     foreignField: "replyTo"
 });
+
+postSchema.virtual("totalReactions").get(function () {
+    return this.reactions.like + this.reactions.laugh + this.reactions.love + this.reactions.wow + this.reactions.tears + this.reactions.angry;
+  });
 
 const Post = mongoose.model("Post", postSchema);
 

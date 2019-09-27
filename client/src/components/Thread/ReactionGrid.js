@@ -19,19 +19,19 @@ class ReactionGrid extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const post = nextProps.post;
+        const reactions = nextProps.post.reactions;
         this.setState({
-            likeReactions: post.likeReactions,
-            laughReactions: post.laughReactions,
-            loveReactions: post.loveReactions,
-            wowReactions: post.wowReactions,
-            tearsReactions: post.tearsReactions,
-            angryReactions: post.angryReactions
+            likeReactions: reactions.like,
+            laughReactions: reactions.laugh,
+            loveReactions: reactions.love,
+            wowReactions: reactions.wow,
+            tearsReactions: reactions.tears,
+            angryReactions: reactions.angry
         });
 
         const self = this;
         const userId = JSON.parse(localStorage.getItem("User")).id;
-        fetch("/users/getPostReaction?user_id=" + userId + "&post_id=" + post._id, {
+        fetch("/users/getPostReaction?user_id=" + userId + "&post_id=" + nextProps.post._id, {
             method: "GET"
         })
             .then(response => {
@@ -53,10 +53,10 @@ class ReactionGrid extends React.Component {
             postId: this.props.post._id,
             reactionType: reactionType
         });
-        
+
         if (reactionType === originalReactionType) {
             fetch("/post/removeReaction", {
-                method: "POST", 
+                method: "POST",
                 body: requestBody,
                 headers: {
                     "Content-Type": "application/json"
@@ -66,30 +66,30 @@ class ReactionGrid extends React.Component {
                     response.json().then(data => {
                         self.setState({
                             activeReaction: "",
-                            [reactionState]: data[reactionState]
+                            [reactionState]: data[reactionType]
                         });
                     });
                 });
         } else {
             fetch("/post/addReaction", {
                 method: "POST",
-                body: requestBody, 
+                body: requestBody,
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
                 .then(response => {
                     response.json().then(data => {
-                            if (originalReactionType) {
-                                self.setState({
-                                    activeReaction: reactionType, 
-                                    [reactionState]: data[reactionState],
-                                    [originalReactionState]: data[originalReactionState]
-                                });
-                            } else {
-                                self.setState({
-                                    activeReaction: reactionType, 
-                                    [reactionState]: data[reactionState]
+                        if (originalReactionType) {
+                            self.setState({
+                                activeReaction: reactionType,
+                                [reactionState]: data[reactionType],
+                                [originalReactionState]: data[originalReactionType]
+                            });
+                        } else {
+                            self.setState({
+                                activeReaction: reactionType,
+                                [reactionState]: data[reactionType]
                             });
                         }
                     });
@@ -101,34 +101,36 @@ class ReactionGrid extends React.Component {
         return (
             <div className="reactionGrid">
                 <table className="reactionTable">
-                    <tr>
-                        <td>
-                            <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.likeReactions}</h1>
-                        </td>
-                        <td>
-                            <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.laughReactions}</h1>
-                        </td>
-                        <td>
-                            <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.loveReactions}</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.wowReactions}</h1>
-                        </td>
-                        <td>
-                            <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.tearsReactions}</h1>
-                        </td>
-                        <td>
-                            <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
-                            <h1 className="reactionCount">{this.state.angryReactions}</h1>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.likeReactions}</h1>
+                            </td>
+                            <td>
+                                <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.laughReactions}</h1>
+                            </td>
+                            <td>
+                                <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.loveReactions}</h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.wowReactions}</h1>
+                            </td>
+                            <td>
+                                <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.tearsReactions}</h1>
+                            </td>
+                            <td>
+                                <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x active" : "fa-3x"} onClick={this.addReaction} />
+                                <h1 className="reactionCount">{this.state.angryReactions}</h1>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         );
