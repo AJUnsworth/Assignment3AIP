@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const aws = require("aws-sdk");
 
 const upload = require("../services/image-upload");
 const Post = require("../models/post");
@@ -41,6 +42,53 @@ router.post("/create", function (req, res, next) {
     )
 });
 
+router.post("/delete", async (req, res, next) => {
+    const postId = req.body.postId;
+    const userId = req.body.userId;
+
+    Post.findOne({_id: postId}).populate("replies").then(post => {
+        if (!post) {
+            return res.sendStatus(404);
+        } else {
+            console.log(post.userId);
+            console.log(userId);
+            console.log(post);
+            //User should only be able to delete their posts
+            if (post.userId != userId) {
+                return res.sendStatus(403);
+            }
+            const s3 = new aws.S3();
+            const key = post.imageUrl.split(".com/")[1];
+            
+            const params = {
+                Bucket: process.env.S3_BUCKET,
+                Key: key
+            };
+
+            //Delete image to save space in S3 Bucket, then remove the actual image
+            s3.deleteObject(params, function (err, data) {
+                if (err) {
+                    return res.sendStatus(500);
+                }
+
+                if (!post.replies) {
+                    post.remove(err => {
+                        if(err) {
+                            return res.sendStatus(500);
+                        }
+                    });
+                } else {
+                    //Remove only the image if the post has replies to replace with a placeholder
+                    post.imageUrl = null;
+                    post.save();
+                }
+
+                return res.sendStatus(200);
+            });
+        }
+    });
+});
+
 router.get("/getThumbnails", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
@@ -74,11 +122,11 @@ router.post("/addReaction", function (req, res) {
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
-            return res.status(404).send();
+            return res.sendStatus(404);
         } else {
             Post.findOne({ _id: postId }).then(post => {
                 if (!post) {
-                    return res.status(404).send();
+                    return res.sendStatus(404);
                 } else {
                     const likedPosts = user.likedPosts;
                     const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
@@ -119,7 +167,7 @@ router.get("/replies", function (req, res) {
 
     Post.findOne({ _id: postId }).populate("replies").then(post => {
         if(!post) {
-            return res.status(404).send();
+            return res.sendStatus(404);
         } else {
             return res.json(post.replies);
         }
@@ -133,11 +181,11 @@ router.post("/removeReaction", function (req, res) {
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
-            return res.status(404).send();
+            return res.sendStatus(404);
         } else {
             Post.findOne({ _id: postId }).then(post => {
                 if (!post) {
-                    return res.status(404).send();
+                    return res.sendStatus(404);
                 } else {
                     const likedPosts = user.likedPosts;
                     const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
@@ -167,7 +215,7 @@ router.get("/getReactionCount", function (req, res) {
 
     Post.findOne({ _id: postId }).then(post => {
         if (!post) {
-            return res.status(404).send();
+            return res.sendStatus(404);
         } else {
             return res.json(post.totalReactions);
         }
@@ -179,7 +227,7 @@ router.get("/:postId", function (req, res) {
  
     Post.findOne({ _id: postId}).then(post => {
             if (!post) {
-               return res.status(404).send();
+               return res.sendStatus(404);
             } else {
                 return res.json(post);
             }

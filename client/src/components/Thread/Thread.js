@@ -1,4 +1,5 @@
 import React from "react";
+import { NotificationManager } from "react-notifications";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -40,11 +41,33 @@ class Thread extends React.Component {
     }
 
     handleShowDelete = () => {
-        this.setState({showDelete: true});
+        this.setState({ showDelete: true });
     }
 
     handleCloseDelete = () => {
-        this.setState({showDelete: false});
+        this.setState({ showDelete: false });
+    }
+
+    handleDeletePost = () => {
+        this.setState({ showDelete: false });
+
+        const requestBody = JSON.stringify({
+            userId: JSON.parse(localStorage.getItem("User")).id,
+            postId: this.state.post._id
+        });
+
+        fetch("/post/delete", {
+            method: "POST",
+            body: requestBody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (response) {
+                if (response.status === 200) {
+                    NotificationManager.success("Post removed successfully", "Post Deleted");
+                }
+            })
     }
 
     displayReplies = () => {
@@ -109,7 +132,7 @@ class Thread extends React.Component {
                         <Button variant="secondary" onClick={this.handleCloseDelete}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={this.handleCloseDelete}>
+                        <Button variant="primary" onClick={this.handleDeletePost}>
                             Delete
                         </Button>
                     </Modal.Footer>

@@ -41,7 +41,6 @@ const postSchema = new Schema({
     imageUrl: {
         type: String,
         unique: true,
-        required: true,
     },
     reactions: reactionsSchema
 }, {
@@ -57,7 +56,7 @@ postSchema.virtual("replies", {
 
 postSchema.virtual("totalReactions").get(function () {
     return this.reactions.like + this.reactions.laugh + this.reactions.love + this.reactions.wow + this.reactions.tears + this.reactions.angry;
-  });
+});
 
 const Post = mongoose.model("Post", postSchema);
 
