@@ -11,7 +11,7 @@ class User extends React.Component {
     render() {
         return (
             <div>
-                <Navbar />
+                <Navbar {...this.props} />
                 <div className="content">
                     <div className="UserContainer">
                         <table>

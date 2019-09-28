@@ -11,7 +11,7 @@ class LoginContainer extends React.Component {
         return (
             <Row>
                 <Col className="loginColumn panel">
-                    <Authentication />
+                    <Authentication {...this.props} />
                 </Col>
                 <Col className="loginColumn col-md-8 col-lg-8 col-xl-9">
                     <Registration />

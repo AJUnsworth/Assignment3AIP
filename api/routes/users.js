@@ -75,7 +75,9 @@ router.post("/login", (req, res) => {
             if (isMatch) {
                 // Create JWT Payload
                 const payload = {
-                    id: user._id
+                    id: user._id,
+                    username: user.username,
+                    email: user.email
                 };
                 // Sign token
                 const token = jwt.sign(
@@ -102,6 +104,20 @@ router.post("/logout", function(req, res) {
 
 router.get("/checkToken", authenticate, function(req, res) {
     res.sendStatus(200);
+});
+
+router.get("/getCurrentUser", authenticate, function(req, res) {
+    //Look for token in request body, query string, headers, or cookie
+    const token =
+        req.body.token ||
+        req.query.token ||
+        req.headers["x-access-token"] ||
+        req.cookies.token;
+
+    //Decode because authenticate middleware has confirmed the token is valid
+    const userData = jwt.decode(token);
+
+    res.send(userData);
 });
 
 router.get("/getPostReaction", function(req, res) {

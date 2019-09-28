@@ -94,7 +94,7 @@ class Thread extends React.Component {
     render() {
         return (
             <div>
-                <Navbar />
+                <Navbar {...this.props} />
                 <div className="content">
                     <Row className="threadTop">
                         <Col lg="8" className="threadImg">

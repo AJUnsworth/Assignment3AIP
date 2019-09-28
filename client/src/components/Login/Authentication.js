@@ -44,12 +44,11 @@ class Authentication extends React.Component {
                     });
                 } else if (response.status === 200) {
                     response.json().then(function (data) {
-                        localStorage.setItem("User", JSON.stringify(data));
+                        self.props.setUser(data);
                         self.props.history.push("/");
                     })
                 }
-            })
-            .catch(error => console.error("Error:", error));
+            });
     }
 
     render() {

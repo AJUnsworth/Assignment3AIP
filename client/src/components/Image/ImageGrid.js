@@ -14,9 +14,9 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor() {
         super()
-        this.initialState = { 
-            imgFile: null, 
-            filename: "Choose file" 
+        this.initialState = {
+            imgFile: null,
+            filename: "Choose file"
         };
         this.state = this.initialState;
     }
@@ -38,7 +38,7 @@ class ImageGrid extends React.Component {
         formData.append("image", this.state.imgFile);
         formData.append("userId", userId);
 
-        if(this.props.replyTo) {
+        if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
         }
 
@@ -61,6 +61,36 @@ class ImageGrid extends React.Component {
             .catch(error => console.error("Error:", error));
     }
 
+    renderFileUpload() {
+        if (this.props.currentUser) {
+            console.log(this.props.currentUser);
+            return (
+                <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+                    <h6>Add a thread...</h6>
+                    <div className="input-group">
+                        <Form.Group>
+                            <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
+                                Upload
+                        </Button>
+                        </Form.Group>
+                        <div className="custom-file">
+                            <input
+                                type="file"
+                                className="custom-file-input"
+                                id="inputGroupFile01"
+                                aria-describedby="inpStGroupFileAddon01"
+                                onChange={this.handleFileBrowse}
+                            />
+                            <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                {this.state.filename}
+                            </label>
+                        </div>
+                    </div>
+                </Col>
+            );
+        }
+    }
+
 
     render() {
         //Display thumbnails for each post
@@ -73,30 +103,8 @@ class ImageGrid extends React.Component {
                 <div className="imageGrid">
                     <Container>
                         <Row>
-                            <Col xs={12} sm={12} md={12} lg={6} xl={6}>
-                                <h6>Add a thread...</h6>
-                                {/*upload button function taken from the following website:*/}
-                                {/*https://mdbootstrap.com/docs/react/forms/file-input/*/}
-                                <div className="input-group">
-                                    <Form.Group>
-                                        <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
-                                            Upload
-                                </Button>
-                                    </Form.Group>
-                                    <div className="custom-file">
-                                        <input
-                                            type="file"
-                                            className="custom-file-input"
-                                            id="inputGroupFile01"
-                                            aria-describedby="inpStGroupFileAddon01"
-                                            onChange={this.handleFileBrowse}
-                                        />
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">
-                                            {this.state.filename}
-                                        </label>
-                                    </div>
-                                </div>
-                            </Col>
+                            {/*Render upload button only if there is a current user set*/}
+                            {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                                 <h6>Sort by</h6>
                                 <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
