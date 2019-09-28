@@ -1,10 +1,10 @@
 const validator = require("validator");
 const isEmpty = require("is-empty");
 
-const User = require("../models/user")
+//Based on tutorial from Rishi Prasad on Medium.com
+//See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 
 module.exports = function validateRegisterInput(data) {
-    //From https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
     let errors = {};
 
     //Change empty fields to empty strings to use with validator functions

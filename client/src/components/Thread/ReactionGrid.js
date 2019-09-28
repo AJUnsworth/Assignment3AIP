@@ -20,25 +20,28 @@ class ReactionGrid extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const reactions = nextProps.post.reactions;
-        this.setState({
-            likeReactions: reactions.like,
-            laughReactions: reactions.laugh,
-            loveReactions: reactions.love,
-            wowReactions: reactions.wow,
-            tearsReactions: reactions.tears,
-            angryReactions: reactions.angry
-        });
+        if (Object.keys(nextProps.post).length !== 0) {
+            this.setState({
+                likeReactions: reactions.like,
+                laughReactions: reactions.laugh,
+                loveReactions: reactions.love,
+                wowReactions: reactions.wow,
+                tearsReactions: reactions.tears,
+                angryReactions: reactions.angry
+            });
+        }
 
         const self = this;
-        const userId = JSON.parse(localStorage.getItem("User")).id;
-        fetch("/users/getPostReaction?user_id=" + userId + "&post_id=" + nextProps.post._id, {
-            method: "GET"
-        })
-            .then(response => {
-                response.json().then(data => {
-                    self.setState(data);
-                })
-            });
+        if (this.props.currentUser) {
+            fetch("/users/getPostReaction?user_id=" + this.props.currentUser.id + "&post_id=" + nextProps.post._id, {
+                method: "GET"
+            })
+                .then(response => {
+                    response.json().then(data => {
+                        self.setState(data);
+                    })
+                });
+        }
     }
 
     addReaction = e => {
@@ -49,7 +52,7 @@ class ReactionGrid extends React.Component {
         const reactionState = reactionType + "Reactions";
 
         const requestBody = JSON.stringify({
-            userId: JSON.parse(localStorage.getItem("User")).id,
+            userId: this.props.currentUser.id,
             postId: this.props.post._id,
             reactionType: reactionType
         });

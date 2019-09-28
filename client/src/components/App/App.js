@@ -19,17 +19,32 @@ class App extends React.Component {
 
     componentDidMount() {
         const self = this;
+        const storedUser = JSON.parse(localStorage.getItem("User"));
         if (!this.state.currentUser) {
-            fetch("/users/getCurrentUser", {
-                method: "GET"
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            self.setUser(data);
-                        });
-                    }
-                });
+            //Get user by token if there is none stored in localStorage
+            if (!storedUser) {
+                fetch("/users/getCurrentUser", {
+                    method: "GET"
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            response.json().then(data => {
+                                self.setUser(data);
+                            });
+                        }
+                    });
+            }
+            //Check that token is still valid then assign stored user as the current user
+            else {
+                fetch("/users/checkToken", {
+                    method: "GET"
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            self.setUser(storedUser);
+                        }
+                    });
+            }
         }
     }
 
@@ -53,6 +68,8 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
+                    {/*Code for passing props to routes is based on an example by Tyler McGinnis. 
+                        See https://tylermcginnis.com/react-router-pass-props-to-components/*/}
                     <Route path="/" exact render={(props) => <Home {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/thread/:postId" render={(props) => <Thread {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/login" render={(props) => <LoginContainer {...props} setUser={this.setUser} logout={this.logout} />} />

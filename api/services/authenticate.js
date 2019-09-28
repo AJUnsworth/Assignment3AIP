@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-// From https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0#f07a
+
+//Based on authentication tutorial by Faizan Virani on Medium.com
+//See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0#f07a
 const authenticate = function(req, res, next) {
     //Look for token in request body, query string, headers, or cookie
     const token =
@@ -18,7 +20,6 @@ const authenticate = function(req, res, next) {
                     .clearCookie("token")
                     .status(401).send("Unauthorized: Invalid token");
             } else {
-                req.username = decoded.username;
                 next();
             }
         });

@@ -2,6 +2,9 @@ const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 
+//This file is based off a tutorial from Medium.com that can no longer be located
+//A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
+
 //Setup keys for AWS bucket
 aws.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

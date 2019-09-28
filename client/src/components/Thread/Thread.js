@@ -27,13 +27,11 @@ class Thread extends React.Component {
 
     componentDidMount() {
         const self = this;
-        console.log(this.props.postId);
         const { postId } = this.props.match.params;
         fetch("/post/" + postId, {
             method: "GET"
         })
             .then(function(response) {
-                console.log(response.body);
                 response.json().then(function (data) {
                     self.setState({ post: data });
                 })
@@ -52,7 +50,7 @@ class Thread extends React.Component {
         this.setState({ showDelete: false });
 
         const requestBody = JSON.stringify({
-            userId: JSON.parse(localStorage.getItem("User")).id,
+            userId: this.props.currentUser.id,
             postId: this.state.post._id
         });
 
@@ -104,7 +102,7 @@ class Thread extends React.Component {
                             <ProfilePicture className="profilePicture" />
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName">johnsmith123</h1>
-                            <ReactionGrid post={this.state.post} className="reactionGrid" />
+                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
                             <div className="quickActions">
                                 <h6>Quick Actions</h6>
                                 <ButtonGroup>
@@ -118,7 +116,11 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
-                                <ImageGrid displayPosts={this.displayReplies} replyTo={this.state.post} posts={this.state.replies} />
+                                <ImageGrid displayPosts={this.displayReplies} 
+                                    replyTo={this.state.post} 
+                                    posts={this.state.replies} 
+                                    currentUser={this.props.currentUser} 
+                                />
                             </div>
                         </Col>
                     </Row>

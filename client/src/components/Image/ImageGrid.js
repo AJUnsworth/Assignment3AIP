@@ -71,7 +71,7 @@ class ImageGrid extends React.Component {
                         <Form.Group>
                             <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
                                 Upload
-                        </Button>
+                            </Button>
                         </Form.Group>
                         <div className="custom-file">
                             <input

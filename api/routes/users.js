@@ -9,10 +9,8 @@ const validateLoginInput = require("../validation/login");
 
 const User = require("../models/user");
 
-//From https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
-// @route POST api/users/register
-// @desc Register user
-// @access Public
+//Register and login routes are based on a tutorial by Rishi Prasad
+//See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
 router.post("/register", (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -52,9 +50,6 @@ router.post("/register", (req, res) => {
     });
 });
 
-// @route POST api/users/login
-// @desc Login user and return JWT token
-// @access Public
 router.post("/login", (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
 
@@ -102,6 +97,8 @@ router.post("/logout", function(req, res) {
     res.clearCookie("token").sendStatus(200);
 });
 
+//CheckToken route is based on tutorial by Faizan Virani from Medium.com
+//See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 router.get("/checkToken", authenticate, function(req, res) {
     res.sendStatus(200);
 });
@@ -130,7 +127,7 @@ router.get("/getPostReaction", function(req, res) {
         } else {
             const likedPosts = user.likedPosts;
             const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
-            
+
             //Only return reactionType when a likedPost exists for a user
             if(indexOfPost != -1) {
                 return res.json({ activeReaction: likedPosts[indexOfPost].reactionType });

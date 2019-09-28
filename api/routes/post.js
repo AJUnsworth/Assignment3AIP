@@ -8,6 +8,8 @@ const User = require("../models/user");
 
 const singleUpload = upload.single("image");
 
+//The create route is based off a tutorial from Medium.com that can no longer be located
+//A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
 router.post("/create", function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
     singleUpload(req, res, function (err) {
@@ -50,9 +52,6 @@ router.post("/delete", async (req, res, next) => {
         if (!post) {
             return res.sendStatus(404);
         } else {
-            console.log(post.userId);
-            console.log(userId);
-            console.log(post);
             //User should only be able to delete their posts
             if (post.userId != userId) {
                 return res.sendStatus(403);
