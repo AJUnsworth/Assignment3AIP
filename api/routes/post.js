@@ -120,32 +120,43 @@ router.get("/getThumbnails", function (req, res) {
 
 });
 
-router.get("/getPopular"), function (req, res) {
+router.get("/getPopular", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
     Post.aggregate([
         {
-            $addFields: {
-                'totalReactions': {$sum: [$likeReactions, $wowReactions, $tearsReactions, $laughReactions, $loveReactions, $angryReactions ]
-                }
+          '$match': {
+            'imageUrl': {
+              '$ne': null
+            }, 
+            'replyTo': {
+              '$exists': false
             }
-        }, 
-        {
-            $sort: {'totalReactions': -1 }
-        }, 
-        {
-            $skip: skippedPosts
-        }, 
-        {
-            $limit: 10
+          }
+        }, {
+          '$addFields': {
+            'totalReactions': {
+              '$sum': [
+                '$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'
+              ]
+            }
+          }
+        }, {
+          '$sort': {
+            'totalReactions': -1
+          }
+        }, {
+          '$skip': 0
+        }, {
+          '$limit': 10
         }
-    ])
+      ])
 
         .exec(function (err, posts) {
             if (err) return res.status(404);
-            return res.json(posts[0]);
+            return res.json(posts);
         });
-}
+});
 
 router.post("/addReaction", function (req, res) {
     const userId = req.body.userId;
