@@ -39,3 +39,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.my-masonry-grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: -30px;
+    width: 105%;
+    padding: 0 15px 0 15px;
+  }
+  .my-masonry-grid_column {
+    padding-left: 30px;
+    background-clip: padding-box;
+  }

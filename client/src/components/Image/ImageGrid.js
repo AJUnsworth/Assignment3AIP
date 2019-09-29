@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
+import Masonry from 'react-masonry-css';
 
 import ImageFrame from "./ImageFrame";
 import "./ImageGrid.css";
@@ -116,9 +117,15 @@ class ImageGrid extends React.Component {
                         </Row>
                     </Container>
 
-                    <div className="justify-content-between width">
+
+                    {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
+                    <Masonry
+                        breakpointCols={3}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column"
+                    >
                         {posts}
-                    </div>
+                    </Masonry>
                     <div className="showMoreBtnContainer">
                         <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.props.displayPosts}>Show More</Button>
                     </div>

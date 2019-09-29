@@ -1,5 +1,5 @@
 .threadImage {
-    max-width: 100%;
+    width: 50vw;
     height: auto;
     border-radius: 10px;
     z-index: -1;
