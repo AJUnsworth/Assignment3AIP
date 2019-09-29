@@ -54,6 +54,7 @@
     "chai-http": "^4.3.0",
     "cypress": "^3.4.1",
     "mocha": "^6.2.0",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "react-masonry-css": "^1.0.12"
   }
 }
