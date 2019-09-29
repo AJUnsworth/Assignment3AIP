@@ -12,6 +12,7 @@ import ProfilePicture from "../User/ProfilePicture";
 import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
+import ReplyBreadcrumb from "./ReplyBreadcrumb";
 
 class Thread extends React.Component {
 
@@ -94,6 +95,7 @@ class Thread extends React.Component {
             <div>
                 <Navbar {...this.props} />
                 <div className="content">
+                    <Row><ReplyBreadcrumb/></Row>
                     <Row className="threadTop">
                         <Col lg="8" className="threadImg">
                             <ThreadImage imageUrl={this.state.post.imageUrl}/>
