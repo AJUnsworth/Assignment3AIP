@@ -91,28 +91,59 @@ router.post("/delete", async (req, res, next) => {
 router.get("/getThumbnails", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
-    Post.aggregate([{$sort: {
-        createdAt: -1
-        }},
-        {$facet: {
+    Post.aggregate([{
+        $sort: {
+            createdAt: -1
+        }
+    },
+    {
+        $facet: {
             metadata: [{ $count: "totalCount" }],
-            results: [ { $skip: skippedPosts }, { $limit: 10 } ]
-        }}])
+            results: [{
+                '$match': {
+                  'imageUrl': {
+                    '$ne': null
+                  }, 
+                  'replyTo': {
+                    '$exists': false
+                  }
+                }
+              }, { $skip: skippedPosts }, { $limit: 10 }]
+        }
+    }])
         .exec(function (err, posts) {
             if (err) return res.status(404);
             return res.json(posts[0]);
         });
-    /*Post
-        .find({})
-        .skip(skippedPosts)
-        .limit(10)
-        .sort({ createdAt: -1 })
+
+});
+
+router.get("/getPopular"), function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+
+    Post.aggregate([
+        {
+            $addFields: {
+                'totalReactions': {$sum: [$likeReactions, $wowReactions, $tearsReactions, $laughReactions, $loveReactions, $angryReactions ]
+                }
+            }
+        }, 
+        {
+            $sort: {'totalReactions': -1 }
+        }, 
+        {
+            $skip: skippedPosts
+        }, 
+        {
+            $limit: 10
+        }
+    ])
+
         .exec(function (err, posts) {
             if (err) return res.status(404);
-            if (!posts) return res.status(404);
-            return res.json(posts);
-        });*/
-});
+            return res.json(posts[0]);
+        });
+}
 
 router.post("/addReaction", function (req, res) {
     const userId = req.body.userId;
