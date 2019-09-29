@@ -91,24 +91,26 @@ router.post("/delete", async (req, res, next) => {
 router.get("/getThumbnails", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
-    Post.aggregate([{
-        $sort: {
-            createdAt: -1
-        }
-    },
+    Post.aggregate([
+        {
+            '$match': {
+              'imageUrl': {
+                '$ne': null
+              }, 
+              'replyTo': {
+                '$exists': false
+              }
+            }
+          }, {
+            '$sort': {
+              'createdAt': -1
+            }
+          },
+
     {
         $facet: {
             metadata: [{ $count: "totalCount" }],
-            results: [{
-                '$match': {
-                  'imageUrl': {
-                    '$ne': null
-                  }, 
-                  'replyTo': {
-                    '$exists': false
-                  }
-                }
-              }, { $skip: skippedPosts }, { $limit: 10 }]
+            results: [{ $skip: skippedPosts }, { $limit: 10 }]
         }
     }])
         .exec(function (err, posts) {
