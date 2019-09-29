@@ -39,8 +39,7 @@ const postSchema = new Schema({
         ref: "Post"
     },
     imageUrl: {
-        type: String,
-        unique: true,
+        type: String
     },
     reactions: reactionsSchema
 }, {

@@ -70,16 +70,16 @@ router.post("/delete", async (req, res, next) => {
                     return res.sendStatus(500);
                 }
 
-                if (!post.replies) {
+                if (Array.isArray(post.replies) && post.replies.length) {
+                    //Remove only the image if the post has replies to replace with a placeholder
+                    post.imageUrl = null;
+                    post.save();
+                } else {
                     post.remove(err => {
                         if(err) {
                             return res.sendStatus(500);
                         }
                     });
-                } else {
-                    //Remove only the image if the post has replies to replace with a placeholder
-                    post.imageUrl = null;
-                    post.save();
                 }
 
                 return res.sendStatus(200);
