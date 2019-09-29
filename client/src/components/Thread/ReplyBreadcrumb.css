@@ -1,0 +1,14 @@
+.breadcrumbImage {
+    height: auto;
+    width: 100px;
+    border-radius: 10px;
+}
+
+.breadcrumb {
+    border-radius: 10px;
+    margin: 0px 20px 20px 20px;
+}
+
+.breadcrumbTitle {
+    margin-left: 20px;
+}

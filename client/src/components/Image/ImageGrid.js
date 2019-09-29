@@ -17,7 +17,8 @@ class ImageGrid extends React.Component {
         super()
         this.initialState = {
             imgFile: null,
-            filename: "Choose file"
+            filename: "Choose file",
+            activeState: true
         };
         this.state = this.initialState;
     }
@@ -29,7 +30,8 @@ class ImageGrid extends React.Component {
     handleFileBrowse = e => {
         e.preventDefault();
         // eslint-disable-next-line
-        this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') })
+        this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
+        this.setState({activeState: false});
     }
 
     handleFileUpload = () => {
@@ -38,6 +40,7 @@ class ImageGrid extends React.Component {
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
         formData.append("userId", userId);
+        this.setState({activeState: true});
 
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
@@ -70,7 +73,7 @@ class ImageGrid extends React.Component {
                     <h6>Add a thread...</h6>
                     <div className="input-group">
                         <Form.Group>
-                            <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" onClick={this.handleFileUpload}>
+                            <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
                                 Upload
                             </Button>
                         </Form.Group>
