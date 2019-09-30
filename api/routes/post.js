@@ -93,18 +93,11 @@ router.get("/getThumbnails", function (req, res) {
 
     Post.aggregate([
         {
-            '$match': {
-              'imageUrl': {
-                '$ne': null
-              }, 
-              'replyTo': {
-                '$exists': false
-              }
+            '$match': {'imageUrl': {'$ne': null}, 
+              'replyTo': {'$exists': false}
             }
           }, {
-            '$sort': {
-              'createdAt': -1
-            }
+            '$sort': {'createdAt': -1}
           },
 
     {
@@ -125,36 +118,27 @@ router.get("/getPopular", function (req, res) {
 
     Post.aggregate([
         {
-          '$match': {
-            'imageUrl': {
-              '$ne': null
-            }, 
-            'replyTo': {
-              '$exists': false
+          '$match': {'imageUrl': {'$ne': null}, 'replyTo': {'$exists': false}}
+        }, 
+
+        {'$addFields': {'totalReactions': {'$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry']}}
+        }, 
+
+        {
+          '$sort': {'totalReactions': -1}
+        },
+
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
             }
-          }
-        }, {
-          '$addFields': {
-            'totalReactions': {
-              '$sum': [
-                '$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'
-              ]
-            }
-          }
-        }, {
-          '$sort': {
-            'totalReactions': -1
-          }
-        }, {
-          '$skip': 0
-        }, {
-          '$limit': 10
         }
       ])
 
         .exec(function (err, posts) {
             if (err) return res.status(404);
-            return res.json(posts);
+            return res.json(posts[0]);
         });
 });
 

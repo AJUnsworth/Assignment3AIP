@@ -18,13 +18,29 @@ class ImageGrid extends React.Component {
         this.initialState = {
             imgFile: null,
             filename: "Choose file",
-            activeState: true
+            activeState: true,
+            sortBy: "latest"
         };
+        this.tradeInput = React.createRef();
         this.state = this.initialState;
+        this.handleSortBy = this.handleSortBy.bind(this)
+        this.handleShowMore = this.handleShowMore.bind(this)
     }
 
     componentDidMount() {
-        this.props.displayPosts(0);
+        this.props.displayPosts(true);
+    }
+
+    handleSortBy(value) {
+        this.setState({sortBy : value})
+    } 
+
+    handleShowMore() {
+        if (this.state.sortBy === 'latest'){
+            this.props.displayPosts(false);
+        } else if (this.state.sortBy === 'popular'){
+            this.props.displayPopular(false);
+        }
     }
 
     handleFileBrowse = e => {
@@ -98,7 +114,7 @@ class ImageGrid extends React.Component {
 
     render() {
         //Display thumbnails for each post
-        const posts = this.props.posts.map((post, index) => {
+        const posts = this.props.posts && this.props.posts.map((post, index) => {
             return <ImageFrame key={index} post={post} />
         });
 
@@ -111,10 +127,9 @@ class ImageGrid extends React.Component {
                             {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                                 <h6>Sort by</h6>
-                                <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
-                                    <ToggleButton value={1} variant="secondary">Latest</ToggleButton>
-                                    <ToggleButton value={2} variant="secondary">Most Popular</ToggleButton>
-                                    <ToggleButton value={3} variant="secondary">Trending</ToggleButton>
+                                <ToggleButtonGroup type="radio" name="sortBy" value={this.state.sortBy} onChange={this.handleSortBy}>
+                                    <ToggleButton value="latest" variant="secondary" onClick={()=> this.props.displayPosts(true)}>Latest</ToggleButton>
+                                    <ToggleButton value="popular" variant="secondary" onClick={()=> this.props.displayPopular(true)}>Most Popular</ToggleButton>
                                 </ToggleButtonGroup>
                             </Col>
                         </Row>
@@ -130,7 +145,7 @@ class ImageGrid extends React.Component {
                         {posts}
                     </Masonry>
                     <div className="showMoreBtnContainer">
-                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.props.displayPosts}>Show More</Button>
+                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
                     </div>
                 </div>
             </div>
