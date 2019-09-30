@@ -52,7 +52,7 @@ class ImageGrid extends React.Component {
 
     handleFileUpload = () => {
         const self = this;
-        const userId = JSON.parse(localStorage.getItem("User")).id;
+        const userId = this.props.currentUser.id;
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
         formData.append("userId", userId);
@@ -60,6 +60,13 @@ class ImageGrid extends React.Component {
 
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
+
+            //Check the depth of the parent, if it doesn't have a depth assigned then it is the first reply
+            if(this.props.replyTo.depth !== null) {
+                formData.append("depth", this.props.replyTo.depth + 1);
+            } else {
+                formData.append("depth", 1);
+            }
         }
 
         fetch('/post/create',
@@ -83,7 +90,6 @@ class ImageGrid extends React.Component {
 
     renderFileUpload() {
         if (this.props.currentUser) {
-            console.log(this.props.currentUser);
             return (
                 <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                     <h6>Add a thread...</h6>

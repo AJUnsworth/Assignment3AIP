@@ -38,6 +38,9 @@ const postSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post"
     },
+    depth: {
+        type: Number
+    },
     imageUrl: {
         type: String
     },
