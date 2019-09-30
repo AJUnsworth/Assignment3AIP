@@ -31,6 +31,7 @@ router.post("/create", function (req, res, next) {
         //Checks if the post is a reply, otherwise it is a main post
         if(req.body.replyTo) {
             newPost.replyTo = req.body.replyTo;
+            newPost.depth = req.body.depth;
         }
 
         newPost
@@ -268,7 +269,7 @@ router.get("/getReactionCount", function (req, res) {
 router.get("/:postId", function (req, res) {
     const postId = req.params.postId;
  
-    Post.findOne({ _id: postId}).then(post => {
+    Post.findOne({ _id: postId}).populate("userId").then(post => {
             if (!post) {
                return res.sendStatus(404);
             } else {
