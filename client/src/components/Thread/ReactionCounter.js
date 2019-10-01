@@ -15,15 +15,25 @@ class ReactionCounter extends React.Component {
     }
 
     componentDidMount() {
+        this.loadReactionCount();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.postId != this.props.postId) {
+            this.loadReactionCount();
+        }
+    }
+
+    loadReactionCount() {
         const self = this;
-        fetch("/post/getReactionCount?post_id=" + this.props.postId, {
-            method: "GET"
-        })
-            .then(response => {
-                response.json().then(data => {
-                    self.setState({ reactions: data });
-                })
+            fetch("/post/getReactionCount?post_id=" + this.props.postId, {
+                method: "GET"
             })
+                .then(response => {
+                    response.json().then(data => {
+                        self.setState({ reactions: data });
+                    })
+                })
     }
 
     render() {
