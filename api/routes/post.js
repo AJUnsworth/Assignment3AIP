@@ -99,7 +99,6 @@ router.post("/edit", function (req, res, next) {
             if (!post) {
                 return res.sendStatus(404);
             } else if (!post.replies.length && !post.totalReactions) {
-                console.log("check");
                 //singleUpload(req, res, function (err) {
                 if (err) next(err);
                 //User should only be able to delete their posts

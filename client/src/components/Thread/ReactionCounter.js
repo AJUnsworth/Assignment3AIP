@@ -21,7 +21,7 @@ class ReactionCounter extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.postId != this.props.postId) {
+        if (prevProps.postId !== this.props.postId) {
             this.loadRepliesCount();
             this.loadReactionCount();
         }

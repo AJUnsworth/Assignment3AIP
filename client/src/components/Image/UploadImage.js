@@ -19,21 +19,31 @@ class UploadImage extends React.Component {
         e.preventDefault();
         // eslint-disable-next-line
         this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
-        this.setState({activeState: false});
+        this.setState({ activeState: false });
     }
 
     handleFileUpload = () => {
-        const self = this;
-        const userId = JSON.parse(localStorage.getItem("User")).id;
+        const userId = this.props.currentUser.id;
+
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
         formData.append("userId", userId);
-        this.setState({activeState: true});
+        this.setState({ activeState: true });
 
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
         }
 
+        if (this.props.post) {
+            formData.append("postId", this.props.post._id)
+            this.editPost(formData);
+        } else {
+            this.createPost(formData);
+        }
+    }
+
+    createPost(formData) {
+        const self = this;
         fetch('/post/create',
             {
                 method: 'POST',
@@ -51,7 +61,27 @@ class UploadImage extends React.Component {
                 }
             })
             .catch(error => console.error("Error:", error));
-        this.setState({activeState: false});
+    }
+
+    editPost(formData) {
+        const self = this;
+        fetch('/post/edit',
+            {
+                method: 'POST',
+                body: formData
+            }).then(function (response) {
+
+                if (response.status === 400) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    self.setState(self.initialState);
+                    NotificationManager.success("Your image has been posted!", "Post successful");
+                }
+            })
+            .catch(error => console.error("Error:", error));
     }
 
     render() {

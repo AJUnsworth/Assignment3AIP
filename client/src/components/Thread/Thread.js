@@ -141,6 +141,7 @@ class Thread extends React.Component {
                         </Col>
                     </Row>
                 </div>
+
                 <Modal show={this.state.showDelete} onHide={this.handleCloseDelete}>
                     <Modal.Header closeButton>
                         <Modal.Title>Delete Post</Modal.Title>
@@ -155,13 +156,14 @@ class Thread extends React.Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
+
                 <Modal show={this.state.showEdit} onHide={this.handleCloseEdit}>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <h5>Select an image to replace your post</h5>
-                        <UploadImage/>
+                        <UploadImage currentUser={this.props.currentUser} post={this.state.post}/>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.handleCloseEdit}>
