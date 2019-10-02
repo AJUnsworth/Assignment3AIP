@@ -3,6 +3,7 @@ const router = express.Router();
 const aws = require("aws-sdk");
 
 const upload = require("../services/image-upload");
+const checkImageAppropriateness = require("../services/cloud-vision");
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -34,15 +35,20 @@ router.post("/create", function (req, res, next) {
             newPost.depth = req.body.depth;
         }
 
-        newPost
-            .save()
-            .then(post => res.json(post))
-            .catch(err => {
-                console.log(err);
-                res.json(err);
-            })
-    }
-    )
+        checkImageAppropriateness(newPost.imageUrl).then(result => {
+            if (result) {
+                newPost.flagged = true;
+            }
+
+            newPost
+                .save()
+                .then(post => res.json(post))
+                .catch(err => {
+                    console.log(err);
+                    res.json(err);
+                })
+        });
+    });
 });
 
 router.post("/delete", function (req, res) {
@@ -120,12 +126,16 @@ router.post("/edit", function (req, res, next) {
                     } else {
                         //Remove only the image if the post has replies to replace with a placeholder
                         post.imageUrl = req.file.location;
-                        post
-                            .save()
-                            .then(updatedPost => res.json(updatedPost));
+                        checkImageAppropriateness(post.imageUrl).then(result => {
+                            if (result) {
+                                newPost.flagged = true;
+                            }
+                            post
+                                .save()
+                                .then(updatedPost => res.json(updatedPost));
+                        });
                     }
                 });
-                //});
             } else {
                 return res.sendStatus(500);
             }

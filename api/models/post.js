@@ -44,6 +44,10 @@ const postSchema = new Schema({
     imageUrl: {
         type: String
     },
+    flagged: {
+        type: Boolean,
+        default: false
+    },
     reactions: reactionsSchema
 }, {
         timestamps: true,

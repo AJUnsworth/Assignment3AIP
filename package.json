@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.21",
     "@fortawesome/free-solid-svg-icons": "^5.10.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
+    "@google-cloud/vision": "^1.4.0",
     "acorn": "^7.0.0",
     "aws-sdk": "^2.524.0",
     "axios": "^0.19.0",
@@ -39,11 +40,13 @@
     "validator": "^11.1.0"
   },
   "scripts": {
-    "test:server": "set NODE_ENV=test && mocha --timeout 10000",
-    "test:client": "cd test/client && cypress run",
+    "start": "node api/app.js",
     "start:server": "nodemon api/app.js",
     "start:client": "cd client && npm start",
-    "start": "concurrently \"npm run start:server\" \"npm run start:client\""
+    "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "build": "cd client && react-scripts build",
+    "test:server": "set NODE_ENV=test && mocha --timeout 10000",
+    "test:client": "cd test/client && cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
