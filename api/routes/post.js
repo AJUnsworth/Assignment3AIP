@@ -27,9 +27,9 @@ router.post("/create", function (req, res, next) {
                 angry: 0
             }
         });
-        
+
         //Checks if the post is a reply, otherwise it is a main post
-        if(req.body.replyTo) {
+        if (req.body.replyTo) {
             newPost.replyTo = req.body.replyTo;
             newPost.depth = req.body.depth;
         }
@@ -41,15 +41,15 @@ router.post("/create", function (req, res, next) {
                 console.log(err);
                 res.json(err);
             })
-        }
+    }
     )
 });
 
-router.post("/delete", async (req, res, next) => {
+router.post("/delete", function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
-    Post.findOne({_id: postId}).populate("replies").then(post => {
+    Post.findOne({ _id: postId }).populate("replies").then(post => {
         if (!post) {
             return res.sendStatus(404);
         } else {
@@ -59,7 +59,7 @@ router.post("/delete", async (req, res, next) => {
             }
             const s3 = new aws.S3();
             const key = post.imageUrl.split(".com/")[1];
-            
+
             const params = {
                 Bucket: process.env.S3_BUCKET,
                 Key: key
@@ -77,7 +77,7 @@ router.post("/delete", async (req, res, next) => {
                     post.save();
                 } else {
                     post.remove(err => {
-                        if(err) {
+                        if (err) {
                             return res.sendStatus(500);
                         }
                     });
@@ -89,24 +89,70 @@ router.post("/delete", async (req, res, next) => {
     });
 });
 
+router.post("/edit", function (req, res, next) {
+    //Fix later by implementing with Multer
+    singleUpload(req, res, function (err) {
+        const postId = req.body.postId;
+        const userId = req.body.userId;
+
+        Post.findOne({ _id: postId }).populate("replies").then(post => {
+            if (!post) {
+                return res.sendStatus(404);
+            } else if (!post.replies.length && !post.totalReactions) {
+                console.log("check");
+                //singleUpload(req, res, function (err) {
+                if (err) next(err);
+                //User should only be able to delete their posts
+                if (post.userId != userId) {
+                    return res.sendStatus(403);
+                }
+                const s3 = new aws.S3();
+                const key = post.imageUrl.split(".com/")[1];
+
+                const params = {
+                    Bucket: process.env.S3_BUCKET,
+                    Key: key
+                };
+
+                //Delete image to save space in S3 Bucket, then remove the actual image
+                s3.deleteObject(params, function (err, data) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    } else {
+                        //Remove only the image if the post has replies to replace with a placeholder
+                        post.imageUrl = req.file.location;
+                        post
+                            .save()
+                            .then(updatedPost => res.json(updatedPost));
+                    }
+                });
+                //});
+            } else {
+                return res.sendStatus(500);
+            }
+        });
+    });
+});
+
 router.get("/getThumbnails", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
     Post.aggregate([
         {
-            '$match': {'imageUrl': {'$ne': null}, 
-              'replyTo': {'$exists': false}
+            '$match': {
+                'imageUrl': { '$ne': null },
+                'replyTo': { '$exists': false }
             }
-          }, {
-            '$sort': {'createdAt': -1}
-          },
+        }, {
+            '$sort': { 'createdAt': -1 }
+        },
 
-    {
-        $facet: {
-            metadata: [{ $count: "totalCount" }],
-            results: [{ $skip: skippedPosts }, { $limit: 10 }]
-        }
-    }])
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
         .exec(function (err, posts) {
             if (err) return res.status(404);
             return res.json(posts[0]);
@@ -119,14 +165,15 @@ router.get("/getPopular", function (req, res) {
 
     Post.aggregate([
         {
-          '$match': {'imageUrl': {'$ne': null}, 'replyTo': {'$exists': false}}
-        }, 
-
-        {'$addFields': {'totalReactions': {'$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry']}}
-        }, 
+            '$match': { 'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false } }
+        },
 
         {
-          '$sort': {'totalReactions': -1}
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+
+        {
+            '$sort': { 'totalReactions': -1 }
         },
 
         {
@@ -135,7 +182,7 @@ router.get("/getPopular", function (req, res) {
                 results: [{ $skip: skippedPosts }, { $limit: 10 }]
             }
         }
-      ])
+    ])
 
         .exec(function (err, posts) {
             if (err) return res.status(404);
@@ -158,7 +205,7 @@ router.post("/addReaction", function (req, res) {
                 } else {
                     const likedPosts = user.likedPosts;
                     const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
-                    if(indexOfPost != -1) {
+                    if (indexOfPost != -1) {
                         //Swap reactionType if user is changing to a different reaction
                         const likedPost = likedPosts[indexOfPost];
                         const originalReactionType = likedPost.reactionType;
@@ -194,7 +241,7 @@ router.get("/replies", function (req, res) {
     const postId = req.query.post_id;
 
     Post.findOne({ _id: postId }).populate("replies").then(post => {
-        if(!post) {
+        if (!post) {
             return res.sendStatus(404);
         } else {
             return res.json(post.replies);
@@ -217,7 +264,7 @@ router.post("/removeReaction", function (req, res) {
                 } else {
                     const likedPosts = user.likedPosts;
                     const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
-                    if(indexOfPost != -1) {
+                    if (indexOfPost != -1) {
                         //Removing likedPost from user
                         likedPosts.splice(likedPosts[indexOfPost]);
                         post.reactions[reactionType]--;
@@ -264,14 +311,14 @@ router.get("/getRepliesCount", function (req, res) {
 
 router.get("/:postId", function (req, res) {
     const postId = req.params.postId;
- 
-    Post.findOne({ _id: postId}).populate("userId").then(post => {
-            if (!post) {
-               return res.sendStatus(404);
-            } else {
-                return res.json(post);
-            }
-        });
+
+    Post.findOne({ _id: postId }).populate("userId").then(post => {
+        if (!post) {
+            return res.sendStatus(404);
+        } else {
+            return res.json(post);
+        }
+    });
 });
 
 module.exports = router;
