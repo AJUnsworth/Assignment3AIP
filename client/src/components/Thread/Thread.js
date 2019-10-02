@@ -13,6 +13,7 @@ import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
 import ReplyBreadcrumb from "./ReplyBreadcrumb";
+import UploadImage from "../Image/UploadImage";
 
 class Thread extends React.Component {
 
@@ -45,6 +46,14 @@ class Thread extends React.Component {
 
     handleCloseDelete = () => {
         this.setState({ showDelete: false });
+    }
+
+    handleEditPost = () => {
+        this.setState({ showEdit: true });
+    }
+
+    handleCloseEdit = () => {
+        this.setState({ showEdit: false });
     }
 
     handleDeletePost = () => {
@@ -109,7 +118,7 @@ class Thread extends React.Component {
                                 <h6>Quick Actions</h6>
                                 <ButtonGroup>
                                     <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                                    <Button variant="info">Replace Image</Button>
+                                    <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
                                 </ButtonGroup>
                             </div>
                         </Col>
@@ -138,6 +147,20 @@ class Thread extends React.Component {
                         </Button>
                         <Button variant="primary" onClick={this.handleDeletePost}>
                             Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={this.state.showEdit} onHide={this.handleCloseEdit}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Post</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h5>Select an image to replace your post</h5>
+                        <UploadImage/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.handleCloseEdit}>
+                            Close
                         </Button>
                     </Modal.Footer>
                 </Modal>
