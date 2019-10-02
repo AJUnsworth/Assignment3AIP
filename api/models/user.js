@@ -26,6 +26,16 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    lastIpAddress: {
+        type: String
+    },
+    lastLoggedIn: {
+        type: Date
+    },
+    flagged: {
+        type: Boolean,
+        default: false
+    },
     likedPosts: [likedPostSchema],
 }, {
         timestamps: true,

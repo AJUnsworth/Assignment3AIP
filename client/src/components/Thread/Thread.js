@@ -100,11 +100,16 @@ class Thread extends React.Component {
     }
 
     render() {
+        //Check if user has been loaded
+        const username = this.state.post.userId && this.state.post.userId.username;
+
         return (
             <div>
                 <Navbar {...this.props} />
                 <div className="content">
-                    <Row><ReplyBreadcrumb/></Row>
+                    <Row>
+                        <ReplyBreadcrumb post={this.state.post}/>
+                    </Row>
                     <Row className="threadTop">
                         <Col lg="8" className="threadImg">
                             <ThreadImage imageUrl={this.state.post.imageUrl}/>
@@ -112,7 +117,7 @@ class Thread extends React.Component {
                         <Col lg="4" className="threadDesc">
                             <ProfilePicture className="profilePicture" />
                             <h1 className="profileName">Post by</h1>
-                            <h1 className="profileName">johnsmith123</h1>
+                            <h1 className="profileName">{username}</h1>
                             <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
                             <div className="quickActions">
                                 <h6>Quick Actions</h6>
