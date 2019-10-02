@@ -10,39 +10,54 @@ class ReactionCounter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            reactions: 0
+            repliesCount: 0,
+            reactionsCount: 0
         }
     }
 
     componentDidMount() {
+        this.loadRepliesCount();
         this.loadReactionCount();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.postId != this.props.postId) {
+            this.loadRepliesCount();
             this.loadReactionCount();
         }
     }
 
+    loadRepliesCount() {
+        const self = this;
+        fetch("/post/getRepliesCount?post_id=" + this.props.postId, {
+            method: "GET"
+        })
+            .then(response => {
+                response.json().then(data => {
+                    self.setState({ repliesCount: data })
+                });
+            });
+    }
+
     loadReactionCount() {
         const self = this;
-            fetch("/post/getReactionCount?post_id=" + this.props.postId, {
-                method: "GET"
-            })
-                .then(response => {
-                    response.json().then(data => {
-                        self.setState({ reactions: data });
-                    })
+        fetch("/post/getReactionCount?post_id=" + this.props.postId, {
+            method: "GET"
+        })
+            .then(response => {
+                response.json().then(data => {
+                    self.setState({ reactionsCount: data });
                 })
+            })
     }
 
     render() {
         return (
             <Badge pill variant="light">
                 <FontAwesomeIcon icon={faComments} className="iconSpacing text-primary" />
-                8
+                {this.state.repliesCount}
                 <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
-                {this.state.reactions}
+                {this.state.reactionsCount}
             </Badge>
         );
     }

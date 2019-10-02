@@ -58,6 +58,13 @@ postSchema.virtual("replies", {
     foreignField: "replyTo"
 });
 
+postSchema.virtual("repliesCount", {
+    ref: "Post",
+    localField: "_id",
+    foreignField: "replyTo",
+    count: true
+});
+
 postSchema.virtual("totalReactions").get(function () {
     return this.reactions.like 
         + this.reactions.laugh 
