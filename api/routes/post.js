@@ -35,7 +35,7 @@ router.post("/create", function (req, res, next) {
             newPost.depth = req.body.depth;
         }
 
-        checkImageAppropriateness(newPost.imageUrl).then(result => {
+        checkImageAppropriateness(req.file.location).then(result => {
             if (result) {
                 newPost.flagged = true;
             }
