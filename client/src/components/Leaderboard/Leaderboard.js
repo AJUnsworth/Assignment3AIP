@@ -15,7 +15,7 @@ class Leaderboard extends React.Component {
     }
 
     componentDidMount() {
-        this.displayLeaderboard(0, 5);
+        this.displayLeaderboard();
     }
 
     displayLeaderboard(limit) {
@@ -54,8 +54,8 @@ class Leaderboard extends React.Component {
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                 </div>
-                {this.state.members.map((member, index) => {
-                    return <LeaderboardMember key={index} member={member} />
+                {this.state.members.map((members) => {
+                    return <LeaderboardMember members={members} />
                 })}
             </div>
         );

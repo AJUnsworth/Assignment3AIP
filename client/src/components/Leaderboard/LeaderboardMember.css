@@ -20,10 +20,10 @@
 
 
 .LeaderboardRank{
-    margin-block-start: 0;
-    margin-block-end: 0;
-    float: right;
     font-family: Roboto;
     font-style: normal;
     font-size: 12px;
+    float: right;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }

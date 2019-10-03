@@ -6,8 +6,8 @@ class LeaderboardMember extends React.Component {
     render() {
         return (
             <div className="LeaderboardMember">
-                <label className="LeaderboardMemberName">{this.props.member.name}</label>
-                <label className="LeaderboardRank">{this.props.member.rank}</label>
+                <label className="LeaderboardMemberName">{this.props.members.users.username}</label>
+                <label className="LeaderboardRank">Reactions: {this.props.members.totalUserReactions}</label>
             </div>
         );
     }
