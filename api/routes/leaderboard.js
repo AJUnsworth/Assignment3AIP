@@ -1,7 +1,60 @@
 const express = require("express");
 const router = express.Router();
+const Post = require("../models/post");
 
-const members = [
+router.get("/", function (req, res) {
+    let limit = req.query.limit || 5;
+    Post.aggregate([
+      {
+        '$addFields': {
+          'totalReaactions': {
+            '$sum': [
+              '$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'
+            ]
+          }
+        }
+      }, {
+        '$group': {
+          '_id': '$userId', 
+          'totalUserReactions': {
+            '$sum': '$totalReaactions'
+          }
+        }
+      }, {
+        '$sort': {
+          'totalUserReactions': -1
+        }
+      }, {
+        '$limit': 5
+      }, {
+        '$lookup': {
+          'from': 'users', 
+          'localField': '_id', 
+          'foreignField': '_id', 
+          'as': 'users'
+        }
+      }, {
+        '$unwind': {
+          'path': '$users'
+        }
+      }, {
+        '$project': {
+          'totalUserReactions': 1, 
+          'users': {
+            'username': 1
+          }
+        }
+      }
+    ])
+    
+        .exec(function (err, members) {
+            if (err) return res.status(404);
+            return res.json(members);
+        });
+});
+
+
+/* const members = [
     { name: "Andrew", rank: "#1" },
     { name: "Bela", rank: "#2" },
     { name: "Chloe", rank: "#3" },
@@ -24,12 +77,12 @@ const members = [
     { name: "Chloe", rank: "#20" }
 ];
 
-/* GET home page. */
+
 router.get("/", function (req, res) {
     let start = req.query.start || 0;
     let limit = req.query.limit || 10;
     let topMembers = members.slice(start, limit); //for top limit
     res.json(topMembers);
 });
-
+*/
 module.exports = router;

@@ -18,9 +18,9 @@ class Leaderboard extends React.Component {
         this.displayLeaderboard(0, 5);
     }
 
-    displayLeaderboard(start, limit) {
+    displayLeaderboard(limit) {
         const self = this;
-        fetch(`/leaderboard?start=${start}&limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+        fetch(`/leaderboard?limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
             .then(
                 //Below is handling error
                 function (response) {
@@ -48,9 +48,9 @@ class Leaderboard extends React.Component {
                 <div>
                     <ButtonToolbar>
                         <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
-                            <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(0, 5) }}>Top 5</ToggleButton>
-                            <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(0, 10) }}>Top 10</ToggleButton>
-                            <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(0, 20) }}>Top 20</ToggleButton>
+                            <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
+                            <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
+                            <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                 </div>
