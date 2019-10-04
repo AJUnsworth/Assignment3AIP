@@ -17,17 +17,22 @@ function ContentFrame(props) {
         <Container className="contentFrame">
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
-                <h1 className="welcomeMessage">Welcome <Link to={props.currentUser ? "/user/" + props.currentUser.id : "/login" }>{props.currentUser ? props.currentUser.username : ""}</Link></h1>
+                    <h1 className="welcomeMessage">
+                        Welcome
+                        <Link to={props.currentUser ? "/user/" + props.currentUser.id : "/login"}>
+                            {props.currentUser ? props.currentUser.username : ""}
+                        </Link>
+                    </h1>
                     <h4>Start a new conversation today</h4>
                 </Col>
-                    
+
             </Row>
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8} xl={8} className="contentFrameGrid">
-                    <ImageGrid {...props}/>
+                    <ImageGrid {...props} />
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4} xl={4}>
-                    <Leaderboard/>
+                    <Leaderboard />
                 </Col>
             </Row>
         </Container>
