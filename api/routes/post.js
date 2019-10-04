@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const aws = require("aws-sdk");
 
-const upload = require("../services/image-upload");
+const { uploadImage, deleteImage } = require("../services/image-upload");
 const checkImageAppropriateness = require("../services/cloud-vision");
 const Post = require("../models/post");
 const User = require("../models/user");
 
-const singleUpload = upload.single("image");
+const singleUpload = uploadImage.single("image");
 
 //The create route is based off a tutorial from Medium.com that can no longer be located
 //A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
@@ -43,10 +42,7 @@ router.post("/create", function (req, res, next) {
             newPost
                 .save()
                 .then(post => res.json(post))
-                .catch(err => {
-                    console.log(err);
-                    res.json(err);
-                })
+                .catch(() => res.sendStatus(500));
         });
     });
 });
@@ -55,42 +51,33 @@ router.post("/delete", function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
-    Post.findOne({ _id: postId }).populate("replies").then(post => {
+    Post.findOne({ _id: postId }).populate("replies").then(async post => {
         if (!post) {
             return res.sendStatus(404);
         } else {
-            //User should only be able to delete their posts
             if (post.userId != userId) {
                 return res.sendStatus(403);
             }
-            const s3 = new aws.S3();
-            const key = post.imageUrl.split(".com/")[1];
 
-            const params = {
-                Bucket: process.env.S3_BUCKET,
-                Key: key
-            };
+            if (post.imageUrl) {
+                //deleteImage only returns error messages if any issues occur
+                const err = await deleteImage(post.imageUrl)
+                if (err) return res.sendStatus(500);
+            }
 
-            //Delete image to save space in S3 Bucket, then remove the actual image
-            s3.deleteObject(params, function (err, data) {
-                if (err) {
-                    return res.sendStatus(500);
-                }
-
-                if (Array.isArray(post.replies) && post.replies.length) {
-                    //Remove only the image if the post has replies to replace with a placeholder
-                    post.imageUrl = null;
-                    post.save();
-                } else {
-                    post.remove(err => {
-                        if (err) {
-                            return res.sendStatus(500);
-                        }
-                    });
-                }
-
-                return res.sendStatus(200);
-            });
+            if (Array.isArray(post.replies) && post.replies.length) {
+                //Remove only the image if the post has replies to replace with a placeholder
+                post.imageUrl = null;
+                post
+                    .save()
+                    .then(updatedPost => res.json(updatedPost))
+                    .catch(() => res.sendStatus(500));
+            } else {
+                post
+                    .remove()
+                    .then(() => res.sendStatus(200))
+                    .catch(() => res.sendStatus(500));
+            }
         }
     });
 });
@@ -101,40 +88,35 @@ router.post("/edit", function (req, res, next) {
         const postId = req.body.postId;
         const userId = req.body.userId;
 
-        Post.findOne({ _id: postId }).populate("replies").then(post => {
+        Post.findOne({ _id: postId }).populate("replies").then(async post => {
             if (!post) {
                 return res.sendStatus(404);
             } else if (!post.replies.length && !post.totalReactions) {
                 //singleUpload(req, res, function (err) {
                 if (err) next(err);
+
                 //User should only be able to delete their posts
                 if (post.userId != userId) {
                     return res.sendStatus(403);
                 }
-                const s3 = new aws.S3();
-                const key = post.imageUrl.split(".com/")[1];
 
-                const params = {
-                    Bucket: process.env.S3_BUCKET,
-                    Key: key
-                };
+                if (post.imageUrl) {
+                    //deleteImage only returns error messages if any issues occur
+                    const err = await deleteImage(post.imageUrl)
+                    if (err) return res.sendStatus(500);
+                }
 
-                //Delete image to save space in S3 Bucket, then remove the actual image
-                s3.deleteObject(params, function (err, data) {
-                    if (err) {
-                        return res.sendStatus(500);
-                    } else {
-                        //Remove only the image if the post has replies to replace with a placeholder
-                        post.imageUrl = req.file.location;
-                        checkImageAppropriateness(post.imageUrl).then(result => {
-                            if (result) {
-                                newPost.flagged = true;
-                            }
-                            post
-                                .save()
-                                .then(updatedPost => res.json(updatedPost));
-                        });
+                //Remove only the image if the post has replies to replace with a placeholder
+                post.imageUrl = req.file.location;
+                checkImageAppropriateness(req.file.location).then(result => {
+                    if (result) {
+                        post.flagged = true;
                     }
+
+                    post
+                        .save()
+                        .then(updatedPost => res.json(updatedPost))
+                        .catch(() => res.sendStatus(500));
                 });
             } else {
                 return res.sendStatus(405);
@@ -202,10 +184,10 @@ router.get("/getPopular", function (req, res) {
 router.get("/getOwnPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
     const userId = req.body.userId;
-    
+
     Post.aggregate([
         {
-            '$match': {'userId': userId}
+            '$match': { 'userId': userId }
         },
 
         {

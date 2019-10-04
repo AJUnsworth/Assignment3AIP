@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
-import ReactionCounter from "../Thread/ReactionCounter";
 
 class UploadImage extends React.Component {
     constructor() {
@@ -72,9 +71,12 @@ class UploadImage extends React.Component {
                 body: formData
             }).then(function (response) {
                 if (response.status === 200) {
-                    self.setState(self.initialState);
-                    NotificationManager.success("Your image has been posted!", "Post successful");
-                } else if (ReactionCounter.status === 405) {
+                    response.json().then(data => {
+                        self.setState(self.initialState);
+                        self.props.handleUpdatePost(data);
+                        NotificationManager.success("Your image has been posted!", "Post successful");
+                    });
+                } else if (response.status === 405) {
                     NotificationManager.error(
                         "Looks like someone has already reacted or replied to this post",
                         "Cannot edit post",

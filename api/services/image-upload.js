@@ -14,7 +14,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const upload = multer({
+const uploadImage = multer({
     storage: multerS3({
         s3: s3,
         bucket: process.env.S3_BUCKET,
@@ -25,4 +25,22 @@ const upload = multer({
     })
 });
 
-module.exports = upload;
+const deleteImage = async (imageUrl) => {
+    const key = imageUrl.split(".com/")[1];
+
+    const params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: key
+    };
+
+    //Delete image to save space in S3 Bucket, then remove the actual image
+    s3.deleteObject(params, function (err, data) {
+        if (err) {
+            return err;
+        } else {
+            return;
+        }
+    });
+}
+
+module.exports = { uploadImage, deleteImage };

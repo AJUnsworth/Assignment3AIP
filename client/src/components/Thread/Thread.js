@@ -60,6 +60,10 @@ class Thread extends React.Component {
         this.setState({ showEdit: false });
     }
 
+    handleUpdatePost = (updatedPost) => {
+        this.setState({ post: updatedPost });
+    }
+
     handleDeletePost = () => {
         this.setState({ showDelete: false });
 
@@ -68,6 +72,7 @@ class Thread extends React.Component {
             postId: this.state.post._id
         });
 
+        const self = this;
         fetch("/post/delete", {
             method: "POST",
             body: requestBody,
@@ -77,7 +82,18 @@ class Thread extends React.Component {
         })
             .then(function (response) {
                 if (response.status === 200) {
-                    NotificationManager.success("Post removed successfully", "Post Deleted");
+                    //Code to check if response is JSON
+                    //See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Headers
+                    const contentType = response.headers.get("content-type");
+                    if (contentType.includes('application/json')) {
+                        response.json().then(data => {
+                            self.setState({ post: data });
+                            NotificationManager.success("Post image removed successfully", "Post image deleted"); 
+                        });
+                    } else {
+                        NotificationManager.success("Post removed successfully", "Post deleted");
+                        self.props.history.push("/");
+                    }
                 } else if (response.status === 403) {
                     NotificationManager.error(
                         "Looks like this is someone else's post",
@@ -188,7 +204,11 @@ class Thread extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <h5>Select an image to replace your post</h5>
-                            <UploadImage currentUser={this.props.currentUser} post={this.state.post} />
+                            <UploadImage 
+                                currentUser={this.props.currentUser} 
+                                post={this.state.post} 
+                                handleUpdatePost={this.handleUpdatePost} 
+                            />
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="primary" onClick={this.handleCloseEdit}>
