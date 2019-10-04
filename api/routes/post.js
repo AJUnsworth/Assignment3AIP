@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const aws = require("aws-sdk");
+const mongoose = require('mongoose');
 
 const { uploadImage, deleteImage } = require("../services/image-upload");
 const checkImageAppropriateness = require("../services/cloud-vision");
@@ -181,27 +183,19 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
-router.get("/getOwnPosts", function (req, res) {
+router.get("/getUserPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId = req.body.userId;
-
-    Post.aggregate([
-        {
-            '$match': { 'userId': userId }
-        },
-
-        {
-            '$sort': { 'createdAt': -1 }
-        },
-
+    const userId =  mongoose.Types.ObjectId(req.query.userId);
+    
+    Post.aggregate([  
+        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false }}},
+        {'$sort': { 'createdAt': -1 }},
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
-                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+                results: [{ $skip: skippedPosts }, { $limit: 5 }]
             }
-        }
-    ])
-
+        }])
         .exec(function (err, posts) {
             if (err) return res.status(404);
             return res.json(posts[0]);
