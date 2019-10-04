@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
-<<<<<<< HEAD
 const aws = require("aws-sdk");
 const mongoose = require('mongoose');
-=======
->>>>>>> c5167c103261ff3920a4970872eeb65c8898bc8b
 
 const { uploadImage, deleteImage } = require("../services/image-upload");
 const checkImageAppropriateness = require("../services/cloud-vision");
