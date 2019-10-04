@@ -15,24 +15,28 @@ class ImageGrid extends React.Component {
 
     constructor() {
         super()
-        this.initialState = {
+        this.state = {
             sortBy: "latest"
         };
-        this.tradeInput = React.createRef();
-        this.state = this.initialState;
-        this.handleSortBy = this.handleSortBy.bind(this)
-        this.handleShowMore = this.handleShowMore.bind(this)
     }
 
     componentDidMount() {
-        this.props.displayPosts(true);
+        this.handleNewPosts();
     }
 
-    handleSortBy(value) {
+    handleNewPosts = () => {
+        if (this.state.sortBy === 'latest') {
+            this.props.displayPosts(true);
+        } else if (this.state.sortBy === 'popular') {
+            this.props.displayPopular(true);
+        }
+    }
+
+    handleSortBy = (value) => {
         this.setState({ sortBy: value })
     }
 
-    handleShowMore() {
+    handleShowMore = () => {
         if (this.state.sortBy === 'latest') {
             this.props.displayPosts(false);
         } else if (this.state.sortBy === 'popular') {
@@ -43,7 +47,7 @@ class ImageGrid extends React.Component {
     renderFileUpload() {
         if (this.props.currentUser) {
             return (
-                <UploadImage {...this.props} />
+                <UploadImage {...this.props} handleNewPosts={this.handleNewPosts} />
             );
         }
     }
@@ -74,7 +78,7 @@ class ImageGrid extends React.Component {
 
                     {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
                     <Masonry
-                        breakpointCols={3}
+                        breakpointCols={{ default: 3 }}
                         className="my-masonry-grid"
                         columnClassName="my-masonry-grid_column"
                     >
