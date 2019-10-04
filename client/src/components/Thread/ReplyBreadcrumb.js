@@ -2,6 +2,7 @@ import React from "react";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { NotificationManager } from "react-notifications";
 
+import PlaceholderImage from "../../images/imageremovedplaceholder.png";
 import "./ReplyBreadcrumb.css";
 
 class ReplyBreadcrumb extends React.Component {
@@ -46,7 +47,7 @@ class ReplyBreadcrumb extends React.Component {
         const replyParents = this.state.replyParents.map((post, index) => {
             return (
                 <Breadcrumb.Item key={index} href={"/thread/" + post._id}>
-                    <img src={post.imageUrl} className="breadcrumbImage" alt={post.userId.username + "'s post"} />
+                    <img src={post.imageUrl ? post.imageUrl : PlaceholderImage} className="breadcrumbImage" alt={post.userId.username + "'s post"} />
                 </Breadcrumb.Item>
             );
         });

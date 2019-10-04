@@ -1,5 +1,6 @@
 import React from "react";
 
+import PlaceholderImage from "../../images/imageremovedplaceholder.png";
 import ReactionCounter from "../Thread/ReactionCounter";
 import "./ImageFrame.css";
 
@@ -12,7 +13,7 @@ class ImageFrame extends React.Component {
                 <div className="imageFrame">
                     <ReactionCounter postId={this.props.post._id} />
                     {/* eslint-disable-next-line */}
-                    <img src={this.props.post.imageUrl} className="image" />
+                    <img src={this.props.post.imageUrl ? this.props.post.imageUrl : PlaceholderImage} className="image" />
                 </div>
             </a>
         );

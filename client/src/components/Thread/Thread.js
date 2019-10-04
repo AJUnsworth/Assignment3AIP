@@ -88,7 +88,7 @@ class Thread extends React.Component {
                     if (contentType.includes('application/json')) {
                         response.json().then(data => {
                             self.setState({ post: data });
-                            NotificationManager.success("Post image removed successfully", "Post image deleted"); 
+                            NotificationManager.success("Post image removed successfully", "Post image deleted");
                         });
                     } else {
                         NotificationManager.success("Post removed successfully", "Post deleted");
@@ -142,8 +142,47 @@ class Thread extends React.Component {
         }
     }
 
+    renderQuickActions() {
+        const post = this.state.post;
+        if (post.userId._id === this.props.currentUser.id) {
+            if (this.state.replies.length ||
+                post.reactions.like > 0 ||
+                post.reactions.love > 0 ||
+                post.reactions.tears > 0 ||
+                post.reactions.angry > 0 ||
+                post.reactions.laugh > 0 ||
+                post.reactions.wow > 0) {
+                
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+            } else {
+                return (
+                    <div className="quickActions">
+                        <h6>Quick Actions</h6>
+                        <ButtonGroup>
+                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                            <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                        </ButtonGroup>
+                    </div>
+                );
+            }
+        }
+    }
+
     render() {
         const user = this.state.post.userId;
+        let deleteMessage;
+        if (this.state.replies.length) {
+            deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
+        } else {
+            deleteMessage = "Are you sure you want to delete this post? This action cannot be reversed.";
+        }
 
         if (this.state.loading) {
             return (
@@ -168,13 +207,7 @@ class Thread extends React.Component {
                                 <h1 className="profileName">Post by</h1>
                                 <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
                                 <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
-                                <div className="quickActions">
-                                    <h6>Quick Actions</h6>
-                                    <ButtonGroup>
-                                        <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                                        <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                                    </ButtonGroup>
-                                </div>
+                                {this.renderQuickActions()}
                             </Col>
                         </Row>
                         <Row>
@@ -195,7 +228,7 @@ class Thread extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Delete Post</Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>Are you sure you want to delete this post? This action cannot be reversed.</Modal.Body>
+                        <Modal.Body>{deleteMessage}</Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={this.handleCloseDelete}>
                                 Cancel
@@ -212,10 +245,10 @@ class Thread extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <h5>Select an image to replace your post</h5>
-                            <UploadImage 
-                                currentUser={this.props.currentUser} 
-                                post={this.state.post} 
-                                handleUpdatePost={this.handleUpdatePost} 
+                            <UploadImage
+                                currentUser={this.props.currentUser}
+                                post={this.state.post}
+                                handleUpdatePost={this.handleUpdatePost}
                             />
                         </Modal.Body>
                         <Modal.Footer>
