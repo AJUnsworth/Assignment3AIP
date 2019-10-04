@@ -144,7 +144,7 @@ class Thread extends React.Component {
 
     renderQuickActions() {
         const post = this.state.post;
-        if (post.userId._id === this.props.currentUser.id) {
+        if (this.props.currentUser && post.userId._id === this.props.currentUser.id) {
             if (this.state.replies.length ||
                 post.reactions.like > 0 ||
                 post.reactions.love > 0 ||

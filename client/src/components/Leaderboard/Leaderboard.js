@@ -51,8 +51,8 @@ class Leaderboard extends React.Component {
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                 </div>
-                {this.state.members.map((members) => {
-                    return <LeaderboardMember members={members} />
+                {this.state.members.map((members, index) => {
+                    return <LeaderboardMember key={index} members={members} />
                 })}
             </div>
         );
