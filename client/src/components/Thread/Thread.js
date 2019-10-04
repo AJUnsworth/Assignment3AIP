@@ -1,10 +1,13 @@
 import React from "react";
 import { NotificationManager } from "react-notifications";
+import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./ThreadImage";
@@ -23,7 +26,8 @@ class Thread extends React.Component {
             post: {},
             replies: [],
             showDelete: false,
-            showEdit: false
+            showEdit: false,
+            loading: true
         }
     }
 
@@ -33,9 +37,9 @@ class Thread extends React.Component {
         fetch("/post/" + postId, {
             method: "GET"
         })
-            .then(function(response) {
+            .then(function (response) {
                 response.json().then(function (data) {
-                    self.setState({ post: data });
+                    self.setState({ post: data, loading: false });
                 })
             })
     }
@@ -86,7 +90,7 @@ class Thread extends React.Component {
         })
             .then(function (response) {
                 if (response.status === 404) {
-                    self.setState({replies: []});
+                    self.setState({ replies: [] });
                 }
                 else if (response.status === 200) {
                     response.json().then(function (data) {
@@ -100,79 +104,86 @@ class Thread extends React.Component {
     }
 
     render() {
-        //Check if user has been loaded
-        const username = this.state.post.userId && this.state.post.userId.username;
+        const user = this.state.post.userId;
 
-        return (
-            <div>
-                <Navbar {...this.props} />
-                <div className="content">
-                    <Row>
-                        <ReplyBreadcrumb post={this.state.post}/>
-                    </Row>
-                    <Row className="threadTop">
-                        <Col lg="8" className="threadImg">
-                            <ThreadImage imageUrl={this.state.post.imageUrl}/>
-                        </Col>
-                        <Col lg="4" className="threadDesc">
-                            <ProfilePicture className="profilePicture" />
-                            <h1 className="profileName">Post by</h1>
-                            <h1 className="profileName">{username}</h1>
-                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
-                            <div className="quickActions">
-                                <h6>Quick Actions</h6>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                                    <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                                </ButtonGroup>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div className="comments">
-                                <h2 className="commentsText">Comments</h2>
-                                <ImageGrid displayPosts={this.displayReplies} 
-                                    replyTo={this.state.post} 
-                                    posts={this.state.replies} 
-                                    currentUser={this.props.currentUser} 
-                                />
-                            </div>
-                        </Col>
-                    </Row>
+        if (this.state.loading) {
+            return (
+                <div>
+                    <Navbar {...this.props} />
+                    <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin /></div>)
+        }
+        else {
+            return (
+                <div>
+                    <Navbar {...this.props} />
+                    <div className="content">
+                        <Row>
+                            <ReplyBreadcrumb post={this.state.post} />
+                        </Row>
+                        <Row className="threadTop">
+                            <Col lg="8" className="threadImg">
+                                <ThreadImage imageUrl={this.state.post.imageUrl} />
+                            </Col>
+                            <Col lg="4" className="threadDesc">
+                                <ProfilePicture className="profilePicture" />
+                                <h1 className="profileName">Post by</h1>
+                                <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
+                                <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
+                                <div className="quickActions">
+                                    <h6>Quick Actions</h6>
+                                    <ButtonGroup>
+                                        <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                        <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                                    </ButtonGroup>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <div className="comments">
+                                    <h2 className="commentsText">Comments</h2>
+                                    <ImageGrid displayPosts={this.displayReplies}
+                                        replyTo={this.state.post}
+                                        posts={this.state.replies}
+                                        currentUser={this.props.currentUser}
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+
+                    <Modal show={this.state.showDelete} onHide={this.handleCloseDelete}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Delete Post</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>Are you sure you want to delete this post? This action cannot be reversed.</Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.handleCloseDelete}>
+                                Cancel
+                        </Button>
+                            <Button variant="primary" onClick={this.handleDeletePost}>
+                                Delete
+                        </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={this.state.showEdit} onHide={this.handleCloseEdit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Post</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h5>Select an image to replace your post</h5>
+                            <UploadImage currentUser={this.props.currentUser} post={this.state.post} />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={this.handleCloseEdit}>
+                                Close
+                        </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
-
-                <Modal show={this.state.showDelete} onHide={this.handleCloseDelete}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Delete Post</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this post? This action cannot be reversed.</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleCloseDelete}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={this.handleDeletePost}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={this.state.showEdit} onHide={this.handleCloseEdit}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Edit Post</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <h5>Select an image to replace your post</h5>
-                        <UploadImage currentUser={this.props.currentUser} post={this.state.post}/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="primary" onClick={this.handleCloseEdit}>
-                            Close
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </div>
-        );
+            );
+        }
     }
 }
 

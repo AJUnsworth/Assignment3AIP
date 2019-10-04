@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const likedPostSchema = new Schema({ 
-    postId: { 
+const likedPostSchema = new Schema({
+    postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post"
-    }, 
+    },
     reactionType: {
         type: String
     }
@@ -38,8 +38,14 @@ const userSchema = new Schema({
     },
     likedPosts: [likedPostSchema],
 }, {
-        timestamps: true,
-    });
+    timestamps: true
+});
+
+userSchema.virtual("posts", {
+    ref: "Post",
+    localField: "_id",
+    foreignField: "userId"
+});
 
 const User = mongoose.model("User", userSchema);
 

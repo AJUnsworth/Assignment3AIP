@@ -6,9 +6,9 @@ router.get("/", function (req, res) {
     let limit = parseInt(req.query.limit) || 5;
     Post.aggregate([
       {
-        '$addFields': {'totalReaactions': {'$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry']}}
+        '$addFields': {'totalReactions': {'$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry']}}
       }, {
-        '$group': {'_id': '$userId', 'totalUserReactions': {'$sum': '$totalReaactions'}}
+        '$group': {'_id': '$userId', 'totalUserReactions': {'$sum': '$totalReactions'}}
       }, {'$sort': {'totalUserReactions': -1}
       },  {'$lookup': {'from': 'users', 'localField': '_id', 'foreignField': '_id', 'as': 'users'}
       }, {'$unwind': {'path': '$users'}

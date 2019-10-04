@@ -199,6 +199,33 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
+router.get("/getOwnPosts", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId = req.body.userId;
+    
+    Post.aggregate([
+        {
+            '$match': {'userId': userId}
+        },
+
+        {
+            '$sort': { 'createdAt': -1 }
+        },
+
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }
+    ])
+
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+});
+
 router.post("/addReaction", function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;

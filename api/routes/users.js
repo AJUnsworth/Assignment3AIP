@@ -171,4 +171,23 @@ router.get("/getPostReaction", function (req, res) {
     });
 });
 
+router.get("/:userId", function (req, res) {
+    const userId = req.params.userId;
+
+    User.findOne({_id: userId}).populate("posts").then(user => {
+        if (!user){
+            return res.sendStatus(404);
+        } else {
+            var reactionCount = 0;
+            const postCount = user.posts.length;
+
+            for (var post of user.posts) {
+                reactionCount += post.totalReactions;
+            }
+
+            return res.json({reactionCount, postCount, ...user.toJSON()});
+        }
+    })
+});
+
 module.exports = router;

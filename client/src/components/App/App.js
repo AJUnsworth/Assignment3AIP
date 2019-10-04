@@ -73,7 +73,7 @@ class App extends React.Component {
                     <Route path="/" exact render={(props) => <Home {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/thread/:postId" render={(props) => <Thread {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/login" render={(props) => <LoginContainer {...props} setUser={this.setUser} logout={this.logout} />} />
-                    <Route path="/user" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
+                    <Route path="/user/:userId" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                 </Switch>
                 <NotificationContainer />
             </Router>
