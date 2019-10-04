@@ -78,6 +78,18 @@ class Thread extends React.Component {
             .then(function (response) {
                 if (response.status === 200) {
                     NotificationManager.success("Post removed successfully", "Post Deleted");
+                } else if (response.status === 403) {
+                    NotificationManager.error(
+                        "Looks like this is someone else's post",
+                        "Cannot delete post",
+                        5000
+                    );
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while deleting the post, please try again later",
+                        "Error deleting post",
+                        5000
+                    );
                 }
             })
     }
@@ -89,16 +101,19 @@ class Thread extends React.Component {
             method: "GET"
         })
             .then(function (response) {
-                if (response.status === 404) {
-                    self.setState({ replies: [] });
-                }
-                else if (response.status === 200) {
+                if (response.status === 200) {
                     response.json().then(function (data) {
                         self.setState(prevState => ({
                             replies: [...prevState.replies, ...data],
                             //isShowMoreDisabled: prevState.replies.length + data.length === data.metadata[0].totalCount
                         }));
                     });
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while loading the post, please try refreshing the page",
+                        "Error loading post",
+                        5000
+                    );
                 }
             })
     }

@@ -137,7 +137,7 @@ router.post("/edit", function (req, res, next) {
                     }
                 });
             } else {
-                return res.sendStatus(500);
+                return res.sendStatus(405);
             }
         });
     });
@@ -163,7 +163,7 @@ router.get("/getThumbnails", function (req, res) {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500);
             return res.json(posts[0]);
         });
 
@@ -259,14 +259,14 @@ router.post("/addReaction", function (req, res) {
 
                     user
                         .save()
-                        .catch(err => console.log(err));;
+                        .catch(() => res.sendStatus(500));;
 
                     post
                         .save()
                         .then(updatedPost => {
                             return res.json(updatedPost.reactions);
                         })
-                        .catch(err => console.log(err));;
+                        .catch(() => res.sendStatus(500));;
                 }
             });
         }
@@ -307,14 +307,14 @@ router.post("/removeReaction", function (req, res) {
                     }
                     user
                         .save()
-                        .catch(err => console.log(err));;
+                        .catch(() => res.sendStatus(500));
 
                     post
                         .save()
                         .then(updatedPost => {
                             return res.json(updatedPost.reactions);
                         })
-                        .catch(err => console.log(err));;
+                        .catch(() => res.sendStatus(500));
                 }
             });
         }

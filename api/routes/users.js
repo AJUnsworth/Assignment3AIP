@@ -131,7 +131,7 @@ router.post("/logout", function (req, res) {
 //CheckToken route is based on tutorial by Faizan Virani from Medium.com
 //See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 router.get("/checkToken", authenticate, function (req, res) {
-    res.sendStatus(200);
+    return res.sendStatus(200);
 });
 
 router.get("/getCurrentUser", authenticate, function (req, res) {
@@ -145,7 +145,7 @@ router.get("/getCurrentUser", authenticate, function (req, res) {
     //Decode because authenticate middleware has confirmed the token is valid
     const userData = jwt.decode(token);
 
-    res.send(userData);
+    return res.json(userData);
 });
 
 router.get("/getPostReaction", function (req, res) {
@@ -154,18 +154,18 @@ router.get("/getPostReaction", function (req, res) {
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
-            return res.status(404).send();
+            return res.sendStatus(404);
         } else {
             const likedPosts = user.likedPosts;
             const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
 
             //Only return reactionType when a likedPost exists for a user
             if (indexOfPost != -1) {
-                return res.json({ activeReaction: likedPosts[indexOfPost].reactionType });
+                return res.json(likedPosts[indexOfPost].reactionType);
             }
             //Otherwise the user has not reacted to the post
             else {
-                return res.sendStatus(200);
+                return res.json("None selected");
             }
         }
     });

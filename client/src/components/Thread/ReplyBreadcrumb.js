@@ -1,5 +1,6 @@
 import React from "react";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import { NotificationManager } from "react-notifications";
 
 import "./ReplyBreadcrumb.css";
 
@@ -27,11 +28,18 @@ class ReplyBreadcrumb extends React.Component {
                     method: "GET"
                 });
 
-                const data = await response.json();
-
-                this.setState(prevState => ({
-                    replyParents: [data, ...prevState.replyParents]
-                }));
+                if (response.status === 200) {
+                    const data = await response.json();
+                    this.setState(prevState => ({
+                        replyParents: [data, ...prevState.replyParents]
+                    }));
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while loading the post, please try refreshing the page",
+                        "Error loading post",
+                        5000
+                    );
+                }
             }
         }
     }

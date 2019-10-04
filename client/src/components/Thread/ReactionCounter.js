@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments, faHeart } from "@fortawesome/free-solid-svg-icons";
 import Badge from "react-bootstrap/Badge";
+import { NotificationManager } from "react-notifications";
 
 import "./ReactionCounter.css";
 
@@ -33,9 +34,17 @@ class ReactionCounter extends React.Component {
             method: "GET"
         })
             .then(response => {
-                response.json().then(data => {
-                    self.setState({ repliesCount: data })
-                });
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        self.setState({ repliesCount: data })
+                    });
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while loading posts, please try refreshing the page",
+                        "Error loading posts",
+                        5000
+                    );
+                }
             });
     }
 
@@ -45,10 +54,18 @@ class ReactionCounter extends React.Component {
             method: "GET"
         })
             .then(response => {
-                response.json().then(data => {
-                    self.setState({ reactionsCount: data });
-                })
-            })
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        self.setState({ reactionsCount: data });
+                    });
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while loading posts, please try refreshing the page",
+                        "Error loading posts",
+                        5000
+                    );
+                }
+            });
     }
 
     render() {

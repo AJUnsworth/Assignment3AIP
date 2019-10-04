@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { NotificationManager } from "react-notifications";
 
 import "./ReactionGrid.css";
 
@@ -14,7 +15,7 @@ class ReactionGrid extends React.Component {
             wowReactions: 0,
             tearsReactions: 0,
             angryReactions: 0,
-            activeReaction: ""
+            activeReaction: "None selected"
         };
     }
 
@@ -37,9 +38,17 @@ class ReactionGrid extends React.Component {
                 method: "GET"
             })
                 .then(response => {
-                    response.json().then(data => {
-                        self.setState(data);
-                    })
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            self.setState({ activeReaction: data });
+                        })
+                    } else {
+                        NotificationManager.error(
+                            "Looks like something went wrong while loading the post, please try refreshing the page",
+                            "Error loading posts",
+                            5000
+                        );
+                    }
                 });
         }
     }
@@ -66,12 +75,20 @@ class ReactionGrid extends React.Component {
                 }
             })
                 .then(response => {
-                    response.json().then(data => {
-                        self.setState({
-                            activeReaction: "",
-                            [reactionState]: data[reactionType]
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            self.setState({
+                                activeReaction: "None selected",
+                                [reactionState]: data[reactionType]
+                            });
                         });
-                    });
+                    } else {
+                        NotificationManager.error(
+                            "Looks like something went wrong while reacting to the post, please try refreshing the page",
+                            "Error reacting to post",
+                            5000
+                        );
+                    }
                 });
         } else {
             fetch("/post/addReaction", {
@@ -82,20 +99,28 @@ class ReactionGrid extends React.Component {
                 }
             })
                 .then(response => {
-                    response.json().then(data => {
-                        if (originalReactionType) {
-                            self.setState({
-                                activeReaction: reactionType,
-                                [reactionState]: data[reactionType],
-                                [originalReactionState]: data[originalReactionType]
-                            });
-                        } else {
-                            self.setState({
-                                activeReaction: reactionType,
-                                [reactionState]: data[reactionType]
-                            });
-                        }
-                    });
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            if (originalReactionType) {
+                                self.setState({
+                                    activeReaction: reactionType,
+                                    [reactionState]: data[reactionType],
+                                    [originalReactionState]: data[originalReactionType]
+                                });
+                            } else {
+                                self.setState({
+                                    activeReaction: reactionType,
+                                    [reactionState]: data[reactionType]
+                                });
+                            }
+                        });
+                    } else {
+                        NotificationManager.error(
+                            "Looks like something went wrong while reacting to the post, please try refreshing the page",
+                            "Error reacting to post",
+                            5000
+                        );
+                    }
                 });
         }
     }

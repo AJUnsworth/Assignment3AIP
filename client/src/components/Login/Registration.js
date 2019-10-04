@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Animated} from "react-animated-css";
+import { Animated } from "react-animated-css";
 
 import "./Registration.css";
 
@@ -49,9 +49,14 @@ class Registration extends React.Component {
                 else if (response.status === 200) {
                     self.setState(self.initialState);
                     NotificationManager.success("Account created successfully", "Account Registered");
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while creating an account, please try again later",
+                        "Error registering account",
+                        5000
+                    );
                 }
-            })
-            .catch(error => console.error("Error:", error));
+            });
     }
 
     render() {

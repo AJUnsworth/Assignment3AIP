@@ -12,13 +12,10 @@ import UploadImage from "./UploadImage";
 import "./ImageGrid.css";
 
 class ImageGrid extends React.Component {
-    
+
     constructor() {
         super()
         this.initialState = {
-            imgFile: null,
-            filename: "Choose file",
-            activeState: true,
             sortBy: "latest"
         };
         this.tradeInput = React.createRef();
@@ -32,13 +29,13 @@ class ImageGrid extends React.Component {
     }
 
     handleSortBy(value) {
-        this.setState({sortBy : value})
-    } 
+        this.setState({ sortBy: value })
+    }
 
     handleShowMore() {
-        if (this.state.sortBy === 'latest'){
+        if (this.state.sortBy === 'latest') {
             this.props.displayPosts(false);
-        } else if (this.state.sortBy === 'popular'){
+        } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(false);
         }
     }
@@ -46,7 +43,7 @@ class ImageGrid extends React.Component {
     renderFileUpload() {
         if (this.props.currentUser) {
             return (
-                <UploadImage {...this.props}/>
+                <UploadImage {...this.props} />
             );
         }
     }
@@ -67,8 +64,8 @@ class ImageGrid extends React.Component {
                             <Col xs={12} sm={12} md={12} lg={5} xl={5}>
                                 <h6>Sort by</h6>
                                 <ToggleButtonGroup type="radio" name="sortBy" value={this.state.sortBy} onChange={this.handleSortBy}>
-                                    <ToggleButton value="latest" variant="secondary" onClick={()=> this.props.displayPosts(true)}>Latest</ToggleButton>
-                                    <ToggleButton value="popular" variant="secondary" onClick={()=> this.props.displayPopular(true)}>Most Popular</ToggleButton>
+                                    <ToggleButton value="latest" variant="secondary" onClick={() => this.props.displayPosts(true)}>Latest</ToggleButton>
+                                    <ToggleButton value="popular" variant="secondary" onClick={() => this.props.displayPopular(true)}>Most Popular</ToggleButton>
                                 </ToggleButtonGroup>
                             </Col>
                         </Row>

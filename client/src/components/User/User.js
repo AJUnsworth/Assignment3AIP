@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { NotificationManager } from "react-notifications";
 
 import Navbar from "../Navbar/Navbar";
 import ImageGrid from "../Image/ImageGrid";
@@ -23,14 +24,22 @@ class User extends React.Component {
         fetch("/users/" + userId, {
             method: "GET"
         })
-            .then(function(response) {
-                response.json().then(function (data) {
-                    self.setState({ user: data, loading: false });
-                })
+            .then(function (response) {
+                if (response.status === 200) {
+                    response.json().then(function (data) {
+                        self.setState({ user: data, loading: false });
+                    });
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while loading the user page, please try refreshing the page",
+                        "Error loading user page",
+                        5000
+                    );
+                }
             })
     }
 
-    
+
     displayOwnPosts = (refresh) => {
         const self = this;
         let skippedPosts;
@@ -51,14 +60,14 @@ class User extends React.Component {
                 else if (response.status === 200) {
                     response.json().then(function (data) {
                         if (!refresh) {
-                        self.setState(prevState => ({
-                            posts: [...prevState.posts, ...data.results],
-                            isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
-                        }))
-                    } else{
-                        self.setState({ posts: data.results, isShowMoreDisabled: false})
-                    }
-                });
+                            self.setState(prevState => ({
+                                posts: [...prevState.posts, ...data.results],
+                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
+                            }))
+                        } else {
+                            self.setState({ posts: data.results, isShowMoreDisabled: false })
+                        }
+                    });
                 }
             })
     }
@@ -77,10 +86,10 @@ class User extends React.Component {
                                         <tr>
                                             <td>
                                                 <h2>{this.state.user.postCount}</h2>
-                                                </td>
+                                            </td>
                                             <td>
                                                 <h2>{this.state.user.reactionCount}</h2>
-                                                </td>
+                                            </td>
                                         </tr >
                                         <tr>
                                             <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts</td>
@@ -95,7 +104,7 @@ class User extends React.Component {
 
                     <div className="myPosts">
                         <h2 className="myPostsText">My Posts</h2>
-                        
+
                     </div>
                 </div>
             </div>

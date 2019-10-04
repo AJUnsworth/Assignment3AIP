@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
+import ReactionCounter from "../Thread/ReactionCounter";
 
 class UploadImage extends React.Component {
     constructor() {
@@ -49,18 +50,17 @@ class UploadImage extends React.Component {
                 method: 'POST',
                 body: formData
             }).then(function (response) {
-
-                if (response.status === 400) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
+                if (response.status === 200) {
                     self.setState(self.initialState);
                     NotificationManager.success("Your image has been posted!", "Post successful");
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while creating a post, please try again later",
+                        "Error creating post",
+                        5000
+                    );
                 }
-            })
-            .catch(error => console.error("Error:", error));
+            });
     }
 
     editPost(formData) {
@@ -70,18 +70,23 @@ class UploadImage extends React.Component {
                 method: 'POST',
                 body: formData
             }).then(function (response) {
-
-                if (response.status === 400) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
+                if (response.status === 200) {
                     self.setState(self.initialState);
                     NotificationManager.success("Your image has been posted!", "Post successful");
+                } else if (ReactionCounter.status === 405) {
+                    NotificationManager.error(
+                        "Looks like someone has already reacted or replied to this post",
+                        "Cannot edit post",
+                        5000
+                    );
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong when trying to edit this post, please try again later",
+                        "Error editing post",
+                        5000
+                    );
                 }
             })
-            .catch(error => console.error("Error:", error));
     }
 
     render() {

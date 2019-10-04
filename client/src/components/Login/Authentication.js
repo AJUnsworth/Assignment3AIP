@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { NotificationManager } from "react-notifications";
 
 import Logo from "../../images/Seenit Logo_white.png";
 import "./Authentication.css";
@@ -38,7 +39,7 @@ class Authentication extends React.Component {
             }
         })
             .then(function (response) {
-                if (response.status !== 200) {
+                if (response.status === 400) {
                     response.json().then(function (data) {
                         self.setState({ errors: data });
                     });
@@ -46,7 +47,13 @@ class Authentication extends React.Component {
                     response.json().then(function (data) {
                         self.props.setUser(data);
                         self.props.history.push("/");
-                    })
+                    });
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while logging in, please try again later",
+                        "Error logging in",
+                        5000
+                    );
                 }
             });
     }

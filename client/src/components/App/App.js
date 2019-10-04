@@ -31,6 +31,8 @@ class App extends React.Component {
                             response.json().then(data => {
                                 self.setUser(data);
                             });
+                        } else if (response.status === 401 && response === "Invalid token") {
+                            this.props.history.push("/login");
                         }
                     });
             }

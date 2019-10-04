@@ -12,13 +12,13 @@ const authenticate = function(req, res, next) {
 
     //Check if token is still valid
     if (!token) {
-        return res.status(401).send("Unauthorized: No token provided");
+        return res.status(401).send("No token provided");
     } else {
         jwt.verify(token, process.env.SECRET_OR_KEY, function(err, decoded) {
             if (err) {
                 return res
                     .clearCookie("token")
-                    .status(401).send("Unauthorized: Invalid token");
+                    .status(401).send("Invalid token");
             } else {
                 next();
             }
