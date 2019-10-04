@@ -14,7 +14,8 @@ class User extends React.Component {
         this.state = {
             user: {},
             posts: [],
-            loading: true
+            loading: true,
+            isShowMoreDisabled: false
         }
     }
 
@@ -40,9 +41,10 @@ class User extends React.Component {
     }
 
 
-    displayOwnPosts = (refresh) => {
+    displayUserPosts = (refresh) => {
         const self = this;
         let skippedPosts;
+        const { userId } = this.props.match.params;
 
         if (!refresh) {
             skippedPosts = this.state.posts.length;
@@ -50,7 +52,7 @@ class User extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getOwnPosts?skippedPosts=${skippedPosts}`)
+        fetch(`/post/getUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
             .then(function (response) {
                 if (response.status === 404) {
                     response.json().then(function (data) {
@@ -62,7 +64,8 @@ class User extends React.Component {
                         if (!refresh) {
                             self.setState(prevState => ({
                                 posts: [...prevState.posts, ...data.results],
-                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
+                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                                loading: false
                             }))
                         } else {
                             self.setState({ posts: data.results, isShowMoreDisabled: false })
@@ -92,7 +95,7 @@ class User extends React.Component {
                                             </td>
                                         </tr >
                                         <tr>
-                                            <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts</td>
+                                            <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts &#38; Replies</td>
                                             <td><FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />Reacts</td>
                                         </tr>
 
@@ -103,8 +106,8 @@ class User extends React.Component {
                     </div>
 
                     <div className="myPosts">
-                        <h2 className="myPostsText">My Posts</h2>
-
+                        <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
+                        <ImageGrid displayUserPosts={this.displayUserPosts} sortBy='users' {...this.state} {...this.props}/>
                     </div>
                 </div>
             </div>
