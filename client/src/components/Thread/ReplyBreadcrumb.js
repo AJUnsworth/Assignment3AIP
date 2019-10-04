@@ -12,12 +12,10 @@ class ReplyBreadcrumb extends React.Component {
         };
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.post !== this.props.post) {
-            this.setState({ replyParents: [this.props.post] }, () => {
-                this.getReplyThread();
-            });
-        }
+    componentDidMount() {
+        this.setState({ replyParents: [this.props.post] }, () => {
+            this.getReplyThread();
+        });
     }
 
     async getReplyThread() {

@@ -32,6 +32,7 @@ class UploadImage extends React.Component {
 
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
+            formData.append("depth", this.props.replyTo.depth + 1);
         }
 
         if (this.props.post) {

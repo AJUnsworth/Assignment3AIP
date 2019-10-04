@@ -39,7 +39,8 @@ const postSchema = new Schema({
         ref: "Post"
     },
     depth: {
-        type: Number
+        type: Number,
+        default: 0
     },
     imageUrl: {
         type: String

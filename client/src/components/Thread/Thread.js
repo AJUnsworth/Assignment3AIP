@@ -134,6 +134,14 @@ class Thread extends React.Component {
             })
     }
 
+    renderBreadcrumb() {
+        if (this.state.post.replyTo) {
+            return (
+                <ReplyBreadcrumb post={this.state.post} />
+            );
+        }
+    }
+
     render() {
         const user = this.state.post.userId;
 
@@ -149,7 +157,7 @@ class Thread extends React.Component {
                     <Navbar {...this.props} />
                     <div className="content">
                         <Row>
-                            <ReplyBreadcrumb post={this.state.post} />
+                            {this.renderBreadcrumb()}
                         </Row>
                         <Row className="threadTop">
                             <Col lg="8" className="threadImg">
