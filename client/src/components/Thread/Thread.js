@@ -11,7 +11,6 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./ThreadImage";
-import ProfilePicture from "../User/ProfilePicture";
 import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
@@ -203,7 +202,6 @@ class Thread extends React.Component {
                                 <ThreadImage imageUrl={this.state.post.imageUrl} />
                             </Col>
                             <Col lg="4" className="threadDesc">
-                                <ProfilePicture className="profilePicture" />
                                 <h1 className="profileName">Post by</h1>
                                 <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
                                 <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
