@@ -12,15 +12,6 @@
     padding: 0px;
 }
 
-.profilePicture{
-    text-align:center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 150px;
-    margin-bottom: 20px;
-}
-
 .profileName{
     text-align: center;
     font-family: Roboto;

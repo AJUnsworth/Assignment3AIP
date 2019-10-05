@@ -109,6 +109,7 @@ class UploadImage extends React.Component {
                                 type="file"
                                 className="custom-file-input"
                                 id="inputGroupFile01"
+                                accept=".png, .jpg, .gif"
                                 aria-describedby="inpStGroupFileAddon01"
                                 onChange={this.handleFileBrowse}
                             />
