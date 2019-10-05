@@ -1,7 +1,9 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faComments } from "@fortawesome/free-solid-svg-icons";
 import { NotificationManager } from "react-notifications";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import Navbar from "../Navbar/Navbar";
 import ImageGrid from "../Image/ImageGrid";
@@ -82,32 +84,47 @@ class User extends React.Component {
                 <Navbar {...this.props} />
                 <div className="content">
                     <div className="UserContainer">
-                        <table>
-                            <tr>
-                                <td className="rightColumn"><h1>{this.state.user.username}</h1>
-                                    <table className="rightInfo">
-                                        <tr>
-                                            <td>
-                                                <h2>{this.state.user.postCount}</h2>
-                                            </td>
-                                            <td>
-                                                <h2>{this.state.user.reactionCount}</h2>
-                                            </td>
-                                        </tr >
-                                        <tr>
-                                            <td><FontAwesomeIcon icon={faUpload} className="iconSpacing text-primary" />Posts &#38; Replies</td>
-                                            <td><FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />Reacts</td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
+                        <Row className="align-items-center">
+                            <Col
+                                xs={12}
+                                sm={12}
+                                md={6}
+                                lg={4}
+                                xl={4}
+                                className="verticalColPadding">
+                                <h1 className="userTitle">
+                                    {this.state.user.username}
+                                </h1>
+                            </Col>
+                            <Col
+                                xs={{ span:11, offset:1}}
+                                sm={{ span:11, offset:1}}
+                                md={{ span:4, offset:2}}
+                                lg={{ span:5, offset:3}}
+                                xl={{ span:4, offset:4}}>
+                                <Row>
+                                    <Col className="verticalColPadding textCentred">
+                                        <h2>
+                                            {this.state.user.postCount}
+                                            <FontAwesomeIcon icon={faComments} className="iconSpacing rhsIcon text-primary" />
+                                        </h2>
+                                        <h5>Posts &#38; Replies</h5>
+                                    </Col>
+                                    <Col className="verticalColPadding textCentred">
+                                        <h2>
+                                            {this.state.user.reactionCount}
+                                            <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
+                                        </h2>
+                                        <h5>Reactions</h5>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
                     </div>
 
                     <div className="myPosts">
                         <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
-                        <ImageGrid displayUserPosts={this.displayUserPosts} sortBy='users' {...this.state} {...this.props}/>
+                        <ImageGrid displayUserPosts={this.displayUserPosts} sortBy='users' {...this.state} {...this.props} />
                     </div>
                 </div>
             </div>
