@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faComments } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faComments, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { NotificationManager } from "react-notifications";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,12 +10,12 @@ import ImageGrid from "../Image/ImageGrid";
 import "./User.css";
 
 class User extends React.Component {
-
     constructor() {
         super();
         this.state = {
             user: {},
             posts: [],
+            loadingContent: true,
             loading: true,
             isShowMoreDisabled: false
         }
@@ -30,9 +30,10 @@ class User extends React.Component {
             .then(function (response) {
                 if (response.status === 200) {
                     response.json().then(function (data) {
-                        self.setState({ user: data, loading: false });
+                        self.setState({ user: data, loadingContent: false });
                     });
                 } else {
+                    self.setState({ loadingContent: false });
                     NotificationManager.error(
                         "Looks like something went wrong while loading the user page, please try refreshing the page",
                         "Error loading user page",
@@ -47,6 +48,7 @@ class User extends React.Component {
         const self = this;
         let skippedPosts;
         const { userId } = this.props.match.params;
+        this.setState({ loading: true });
 
         if (!refresh) {
             skippedPosts = this.state.posts.length;
@@ -68,20 +70,24 @@ class User extends React.Component {
                                 posts: [...prevState.posts, ...data.results],
                                 isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
                                 loading: false
-                            }))
+                            }));
                         } else {
-                            self.setState({ posts: data.results, isShowMoreDisabled: false })
+                            self.setState({ 
+                                posts: data.results, 
+                                isShowMoreDisabled: false, 
+                                loading: false
+                            });
                         }
                     });
                 }
             })
     }
 
-
-    render() {
-        return (
-            <div>
-                <Navbar {...this.props} />
+    renderUserContent() {
+        if (this.state.loadingContent) {
+            return <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin />;
+        } else {
+            return (
                 <div className="content">
                     <div className="UserContainer">
                         <Row className="align-items-center">
@@ -127,6 +133,15 @@ class User extends React.Component {
                         <ImageGrid displayUserPosts={this.displayUserPosts} sortBy='users' {...this.state} {...this.props} />
                     </div>
                 </div>
+            );
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <Navbar {...this.props} />
+                {this.renderUserContent()}
             </div>
         );
     }
