@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faComments, faHeart, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Badge from "react-bootstrap/Badge";
 import { NotificationManager } from "react-notifications";
 
@@ -11,54 +11,32 @@ class ReactionCounter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            repliesCount: 0,
-            reactionsCount: 0
+            totalReplies: 0,
+            totalReactions: 0,
+            loading: true
         }
     }
 
     componentDidMount() {
-        this.loadRepliesCount();
-        this.loadReactionCount();
+        this.loadMetrics();
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.postId !== this.props.postId) {
-            this.loadRepliesCount();
-            this.loadReactionCount();
-        }
-    }
-
-    loadRepliesCount() {
+    loadMetrics() {
         const self = this;
-        fetch("/post/getRepliesCount?post_id=" + this.props.postId, {
+        fetch("/post/metrics?post_id=" + this.props.postId, {
             method: "GET"
         })
             .then(response => {
                 if (response.status === 200) {
-                    response.json().then(data => {
-                        self.setState({ repliesCount: data })
+                    response.json().then(metrics => {
+                        self.setState({
+                            totalReactions: metrics.totalReactions,
+                            totalReplies: metrics.totalReplies,
+                            loading: false
+                        });
                     });
                 } else {
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading posts, please try refreshing the page",
-                        "Error loading posts",
-                        5000
-                    );
-                }
-            });
-    }
-
-    loadReactionCount() {
-        const self = this;
-        fetch("/post/getReactionCount?post_id=" + this.props.postId, {
-            method: "GET"
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    response.json().then(data => {
-                        self.setState({ reactionsCount: data });
-                    });
-                } else {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Looks like something went wrong while loading posts, please try refreshing the page",
                         "Error loading posts",
@@ -72,9 +50,15 @@ class ReactionCounter extends React.Component {
         return (
             <Badge pill variant="light">
                 <FontAwesomeIcon icon={faComments} className="iconSpacing text-primary" />
-                {this.state.repliesCount}
+                {this.state.loading 
+                    ? <FontAwesomeIcon id="loading" className="fa-1x" icon={faSpinner} spin /> 
+                    : this.state.totalReplies
+                }
                 <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
-                {this.state.reactionsCount}
+                {this.state.loading 
+                    ? <FontAwesomeIcon id="loading" className="fa-1x" icon={faSpinner} spin /> 
+                    : this.state.totalReactions
+                }
             </Badge>
         );
     }

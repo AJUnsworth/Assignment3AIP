@@ -297,14 +297,17 @@ router.post("/removeReaction", function (req, res) {
     });
 });
 
-router.get("/getReactionCount", function (req, res) {
+router.get("/metrics", function (req, res) {
     const postId = req.query.post_id;
 
-    Post.findOne({ _id: postId }).then(post => {
+    Post.findOne({ _id: postId }).populate("totalReplies").then(post => {
         if (!post) {
             return res.sendStatus(404);
         } else {
-            return res.json(post.totalReactions);
+            return res.json({ 
+                totalReactions: post.totalReactions, 
+                totalReplies: post.totalReplies
+            });
         }
     });
 });

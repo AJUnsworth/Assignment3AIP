@@ -27,7 +27,8 @@ class Thread extends React.Component {
             replies: [],
             showDelete: false,
             showEdit: false,
-            loading: true
+            loading: true,
+            loadingReplies: true
         }
     }
 
@@ -113,6 +114,7 @@ class Thread extends React.Component {
     displayReplies = () => {
         const self = this;
         const { postId } = this.props.match.params;
+        this.setState({ loadingReplies: true });
         fetch("/post/replies?post_id=" + postId, {
             method: "GET"
         })
@@ -121,10 +123,12 @@ class Thread extends React.Component {
                     response.json().then(function (data) {
                         self.setState(prevState => ({
                             replies: [...prevState.replies, ...data],
+                            loadingReplies: false
                             //isShowMoreDisabled: prevState.replies.length + data.length === data.metadata[0].totalCount
                         }));
                     });
                 } else {
+                    self.setState({ loadingReplies: false });
                     NotificationManager.error(
                         "Looks like something went wrong while loading the post, please try refreshing the page",
                         "Error loading post",
@@ -152,15 +156,15 @@ class Thread extends React.Component {
                 post.reactions.angry > 0 ||
                 post.reactions.laugh > 0 ||
                 post.reactions.wow > 0) {
-                
-                    return (
-                        <div className="quickActions">
-                            <h6>Quick Actions</h6>
-                            <ButtonGroup>
-                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                            </ButtonGroup>
-                        </div>
-                    );
+
+                return (
+                    <div className="quickActions">
+                        <h6>Quick Actions</h6>
+                        <ButtonGroup>
+                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                        </ButtonGroup>
+                    </div>
+                );
             } else {
                 return (
                     <div className="quickActions">
@@ -175,8 +179,47 @@ class Thread extends React.Component {
         }
     }
 
+    renderThread() {
+        if (this.state.loading) {
+            return <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin />;
+        } else {
+            const user = this.state.post.userId;
+            return (
+                <div className="content">
+                    <Row>
+                        {this.renderBreadcrumb()}
+                    </Row>
+                    <Row className="threadTop">
+                        <Col lg="8" className="threadImg">
+                            <ThreadImage imageUrl={this.state.post.imageUrl} />
+                        </Col>
+                        <Col lg="4" className="threadDesc">
+                            <ProfilePicture className="profilePicture" />
+                            <h1 className="profileName">Post by</h1>
+                            <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
+                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
+                            {this.renderQuickActions()}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="comments">
+                                <h2 className="commentsText">Comments</h2>
+                                <ImageGrid displayPosts={this.displayReplies}
+                                    replyTo={this.state.post}
+                                    posts={this.state.replies}
+                                    currentUser={this.props.currentUser}
+                                    loading={this.state.loadingReplies}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            );
+        }
+    }
+
     render() {
-        const user = this.state.post.userId;
         let deleteMessage;
         if (this.state.replies.length) {
             deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
@@ -194,35 +237,8 @@ class Thread extends React.Component {
             return (
                 <div>
                     <Navbar {...this.props} />
-                    <div className="content">
-                        <Row>
-                            {this.renderBreadcrumb()}
-                        </Row>
-                        <Row className="threadTop">
-                            <Col lg="8" className="threadImg">
-                                <ThreadImage imageUrl={this.state.post.imageUrl} />
-                            </Col>
-                            <Col lg="4" className="threadDesc">
-                                <ProfilePicture className="profilePicture" />
-                                <h1 className="profileName">Post by</h1>
-                                <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
-                                <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
-                                {this.renderQuickActions()}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <div className="comments">
-                                    <h2 className="commentsText">Comments</h2>
-                                    <ImageGrid displayPosts={this.displayReplies}
-                                        replyTo={this.state.post}
-                                        posts={this.state.replies}
-                                        currentUser={this.props.currentUser}
-                                    />
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+
+                    {this.renderThread()};
 
                     <Modal show={this.state.showDelete} onHide={this.handleCloseDelete}>
                         <Modal.Header closeButton>

@@ -63,7 +63,7 @@ postSchema.virtual("replies", {
     foreignField: "replyTo"
 });
 
-postSchema.virtual("repliesCount", {
+postSchema.virtual("totalReplies", {
     ref: "Post",
     localField: "_id",
     foreignField: "replyTo",

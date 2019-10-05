@@ -1,6 +1,8 @@
 import React from "react";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { NotificationManager } from "react-notifications";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import PlaceholderImage from "../../images/imageremovedplaceholder.png";
 import "./ReplyBreadcrumb.css";
@@ -9,7 +11,8 @@ class ReplyBreadcrumb extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            replyParents: []
+            replyParents: [],
+            loading: true
         };
     }
 
@@ -40,23 +43,30 @@ class ReplyBreadcrumb extends React.Component {
                     );
                 }
             }
+            this.setState({ loading: false });
+        }
+    }
+
+    renderReplyParents() {
+        if (this.state.loading) {
+            return <FontAwesomeIcon id="loading" className="fa-5x" icon={faSpinner} spin />;
+        } else {
+            return (this.state.replyParents.map((post, index) => {
+                return (
+                    <Breadcrumb.Item key={index} href={"/thread/" + post._id}>
+                        <img src={post.imageUrl ? post.imageUrl : PlaceholderImage} className="breadcrumbImage" alt={post.userId.username + "'s post"} />
+                    </Breadcrumb.Item>
+                );
+            }));
         }
     }
 
     render() {
-        const replyParents = this.state.replyParents.map((post, index) => {
-            return (
-                <Breadcrumb.Item key={index} href={"/thread/" + post._id}>
-                    <img src={post.imageUrl ? post.imageUrl : PlaceholderImage} className="breadcrumbImage" alt={post.userId.username + "'s post"} />
-                </Breadcrumb.Item>
-            );
-        });
-
         return (
             <div>
                 <h6 className="breadcrumbTitle">This image is part of the following thread</h6>
                 <Breadcrumb>
-                    {replyParents}
+                    {this.renderReplyParents()}
                 </Breadcrumb>
             </div>
         );

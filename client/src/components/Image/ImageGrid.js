@@ -6,6 +6,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Masonry from 'react-masonry-css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import ImageFrame from "./ImageFrame";
 import UploadImage from "./UploadImage";
@@ -14,7 +16,7 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
-        if (!props.sortBy){
+        if (!props.sortBy) {
             this.state = {
                 sortBy: "latest",
                 showResults: true
@@ -27,7 +29,7 @@ class ImageGrid extends React.Component {
         }
         this.handleHiddenFilters = this.handleHiddenFilters.bind(this)
     };
-    
+
 
     componentDidMount() {
         this.handleNewPosts();
@@ -48,8 +50,8 @@ class ImageGrid extends React.Component {
     handleHiddenFilters() {
         if (this.state.sortBy === 'users') {
             this.setState(prevState => ({
-                showResults : false
-              }));
+                showResults: false
+            }));
         }
     }
 
@@ -76,13 +78,28 @@ class ImageGrid extends React.Component {
         }
     }
 
-    render() {
-        //Display thumbnails for each post
-        
-        const posts = this.props.posts && this.props.posts.map((post, index) => {
-            return <ImageFrame key={index} post={post} />
-        });
+    renderPosts() {
+        console.log(this.props);
+        if (this.props.loading) {
+            return <FontAwesomeIcon id="loading" className="fa-5x" icon={faSpinner} spin />;
+        } else {
+            /*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/
+            const posts = this.props.posts && this.props.posts.map((post, index) => {
+                return <ImageFrame key={index} post={post} />
+            });
+            return (
+                <Masonry
+                    breakpointCols={{ default: 3 }}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                >
+                    {posts}
+                </Masonry>
+            );
+        }
+    }
 
+    render() {
         return (
             <div>
                 <div className="imageGrid">
@@ -91,24 +108,17 @@ class ImageGrid extends React.Component {
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-                                { this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" value={this.state.sortBy} onChange={this.handleSortBy}>
+                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" value={this.state.sortBy} onChange={this.handleSortBy}>
                                     <ToggleButton value="latest" variant="secondary" onClick={() => this.props.displayPosts(true)}>Latest</ToggleButton>
                                     <ToggleButton value="popular" variant="secondary" onClick={() => this.props.displayPopular(true)}>Most Popular</ToggleButton>
-                                </ToggleButtonGroup></div> : null }
-                                
+                                </ToggleButtonGroup></div> : null}
+
                             </Col>
                         </Row>
                     </Container>
 
+                    {this.renderPosts()}
 
-                    {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
-                    <Masonry
-                        breakpointCols={{ default: 3 }}
-                        className="my-masonry-grid"
-                        columnClassName="my-masonry-grid_column"
-                    >
-                        {posts}
-                    </Masonry>
                     <div className="showMoreBtnContainer">
                         <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
                     </div>
