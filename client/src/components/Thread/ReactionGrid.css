@@ -11,6 +11,7 @@
 .reactionTable td{
     padding: 20px 20px 0px 20px;
     text-align: center;
+    cursor: pointer;
 }
 
 .reactionCount{
@@ -23,4 +24,11 @@
 
 .active{
     color: #007bff;
+}
+
+.reaction:hover{
+    cursor: pointer;
+    color: #007bff;
+    transition: ease 0.5s;
+    transform: scale(1.1);
 }
