@@ -5,33 +5,6 @@
     margin-bottom: 60px;
 }
 
-.ProfilePic{
-    float: left;
-    margin: auto 0px;
-}
-
-.ProfilePic img{
-    float: left;
-    width: 100%;
-    margin: 50px;
-}
-
-.rightColumn{
-    width: 60%;
-    padding: 30px;
-    text-align: right;
-}
-
-
-.rightInfo{
-    text-align: center;
-    margin: 0 auto;
-}
-
-.rightInfo td{
-    padding: 0px 30px 0px 30px;
-}
-
 .userTitle{
     font-style: normal;
     font-weight: bold;
