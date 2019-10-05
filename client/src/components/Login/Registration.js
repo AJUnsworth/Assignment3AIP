@@ -5,7 +5,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Animated } from "react-animated-css";
 
 import "./Registration.css";
 
@@ -44,7 +43,7 @@ class Registration extends React.Component {
                 if (response.status === 400) {
                     response.json().then(function (data) {
                         self.setState({ errors: data });
-                    });
+                    })
                 }
                 else if (response.status === 200) {
                     self.setState(self.initialState);
@@ -55,6 +54,7 @@ class Registration extends React.Component {
                         "Error registering account",
                         5000
                     );
+                    
                 }
             });
     }
@@ -63,9 +63,7 @@ class Registration extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Animated animationIn="shake" animationOut="zoomOutDown" animationInDuration={1000} animationOutDuration={1000} isVisible={true}>
-                        <h1 className="titlePadding">Register for an account today!</h1>
-                    </Animated>
+                    <h1 className="titlePadding" id="registerTitle">Register for an account today!</h1>
                 </Row>
                 <Form noValidate onSubmit={this.handleSubmit}>
                     <Row>

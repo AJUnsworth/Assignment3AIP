@@ -99,7 +99,7 @@ class Authentication extends React.Component {
                                 </Button>
                             </Form.Group>
                             <Form.Group>
-                                <Link to="/" className="text-white"> ← Go back to previous page</Link>
+                                <Link to="/" className="text-white textBold"> ← Go back to previous page</Link>
                             </Form.Group>
                         </Form>
                     </Col>
