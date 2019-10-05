@@ -3,3 +3,7 @@
     width: auto;
     margin-bottom: 50px;
 }
+
+.textBold {
+    font-weight: bold;
+}
