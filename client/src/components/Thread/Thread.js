@@ -76,8 +76,30 @@ class Thread extends React.Component {
     }
 
     handleReportImage = () => {
-        //add report image flag
+        const self = this;
+        const requestBody = JSON.stringify({ postId: this.state.post._id, userId: this.props.currentUser.id })
+
+        fetch("/post/report", {
+            method: "POST",
+            body: requestBody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (response) {
+                if (response.status === 200) {
+                    NotificationManager.success("The post has been reported successfully", "Post Reported");
+                }
+                else if (response.status === 405) {
+                    NotificationManager.error("You have already reported this post", "Report Unsuccessful");
+                }
+                else {
+                    NotificationManager.error("An error has occured.", "Error");
+                }
+                self.setState({ showReport: false });
+            })
     }
+
 
     handleDeletePost = () => {
         this.setState({ showDelete: false });
@@ -236,44 +258,46 @@ class Thread extends React.Component {
 
     renderQuickActions() {
         const post = this.state.post;
-        if (this.props.currentUser && post.userId._id === this.props.currentUser.id) {
-            if (this.state.replies.length ||
-                post.reactions.like > 0 ||
-                post.reactions.love > 0 ||
-                post.reactions.tears > 0 ||
-                post.reactions.angry > 0 ||
-                post.reactions.laugh > 0 ||
-                post.reactions.wow > 0) {
+        if (this.props.currentUser) {
+            if (post.userId._id === this.props.currentUser.id) {
+                if (this.state.replies.length ||
+                    post.reactions.like > 0 ||
+                    post.reactions.love > 0 ||
+                    post.reactions.tears > 0 ||
+                    post.reactions.angry > 0 ||
+                    post.reactions.laugh > 0 ||
+                    post.reactions.wow > 0) {
 
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
+            }
+            else {
                 return (
                     <div className="quickActions">
                         <h6>Quick Actions</h6>
                         <ButtonGroup>
-                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                        </ButtonGroup>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="quickActions">
-                        <h6>Quick Actions</h6>
-                        <ButtonGroup>
-                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                            <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                            <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                         </ButtonGroup>
                     </div>
                 );
             }
-        }
-        else {
-            return (
-                <div className="quickActions">
-                    <h6>Quick Actions</h6>
-                    <ButtonGroup>
-                        <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
-                    </ButtonGroup>
-                </div>
-            );
         }
     }
 

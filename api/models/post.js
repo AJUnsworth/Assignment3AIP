@@ -45,6 +45,10 @@ const postSchema = new Schema({
     imageUrl: {
         type: String
     },
+    reports: {
+        type: Number,
+        default: 0
+    },
     flagged: {
         type: Boolean,
         default: false

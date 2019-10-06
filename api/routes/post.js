@@ -20,6 +20,7 @@ router.post("/create", function (req, res, next) {
         const newPost = new Post({
             userId: req.body.userId,
             imageUrl: req.file.location,
+            reports: 0,
             reactions: {
                 like: 0,
                 laugh: 0,
@@ -111,6 +112,42 @@ router.post("/approve", async function (req, res) {
             .catch(() => res.sendStatus(500));
     }
 });
+
+router.post("/report", async function (req, res, next) {
+    const postId = req.body.postId;
+    const userId = req.body.userId;
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+        return res.sendStatus(404);
+    } else {
+        const indexOfPost = user.reportedPosts.findIndex(reportedPost => reportedPost.reportedPost == postId);
+        if (indexOfPost == -1) {
+            Post.findOneAndUpdate({ _id: postId }, { $inc: { reports: 1 } }, { new: true }, function (err, post) {
+                if (err) {
+                    return res.sendStatus(400)
+                }
+
+                user.reportedPosts.push({ reportedPost: postId});
+                user.save().catch(() => res.sendStatus(500));
+
+                if (post.reports >= 20) {
+                    post.flagged = true
+                    post.save().then(updatedPost => res.json(updatedPost))
+                }
+                else {
+                    return res.sendStatus(200);
+                }
+            });
+        } else {
+            return res.sendStatus(405)
+        }
+    }
+
+
+
+
+})
 
 router.post("/edit", function (req, res, next) {
     //Fix later by implementing with Multer
@@ -213,11 +250,11 @@ router.get("/getPopular", function (req, res) {
 
 router.get("/getRecentUserPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId =  mongoose.Types.ObjectId(req.query.userId);
-    
-    Post.aggregate([  
-        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }}},
-        {'$sort': { 'createdAt': -1 }},
+    const userId = mongoose.Types.ObjectId(req.query.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'imageUrl': { '$ne': null } } },
+        { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
@@ -232,14 +269,14 @@ router.get("/getRecentUserPosts", function (req, res) {
 
 router.get("/getPopularUserPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId =  mongoose.Types.ObjectId(req.query.userId);
-    
-    Post.aggregate([  
-        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }}},
+    const userId = mongoose.Types.ObjectId(req.query.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'imageUrl': { '$ne': null } } },
         {
             '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },
-        {'$sort': { 'totalReactions': -1 }},
+        { '$sort': { 'totalReactions': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
@@ -301,11 +338,11 @@ router.post("/addReaction", function (req, res) {
 
 router.get("/repliesRecent", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const postId =  mongoose.Types.ObjectId(req.query.postId);
-    
-    Post.aggregate([  
-        {'$match': { 'replyTo': postId}},
-        {'$sort': { 'createdAt': -1 }},
+    const postId = mongoose.Types.ObjectId(req.query.postId);
+
+    Post.aggregate([
+        { '$match': { 'replyTo': postId } },
+        { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
@@ -320,13 +357,14 @@ router.get("/repliesRecent", function (req, res) {
 
 router.get("/repliesPopular", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const postId =  mongoose.Types.ObjectId(req.query.postId);
-    
-    Post.aggregate([  
-        {'$match': { 'replyTo': postId}},
-        {'$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+    const postId = mongoose.Types.ObjectId(req.query.postId);
+
+    Post.aggregate([
+        { '$match': { 'replyTo': postId } },
+        {
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },
-        {'$sort': { 'totalReactions': -1 }},
+        { '$sort': { 'totalReactions': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
@@ -338,7 +376,7 @@ router.get("/repliesPopular", function (req, res) {
             return res.json(posts[0]);
         });
 });
-    
+
 
 router.post("/removeReaction", function (req, res) {
     const userId = req.body.userId;
