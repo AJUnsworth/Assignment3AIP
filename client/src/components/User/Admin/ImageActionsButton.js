@@ -19,12 +19,12 @@ class ImageActionsButton extends React.Component {
         this.setState({ showModal: false });
     }
 
-    keepImage = () => {
+    handleApprove = () => {
         //Remove image flag
         //Return to admin dashboard
     }
 
-    deleteImage = () => {
+    handleDelete = () => {
         //Delete image as admin
     }
 
@@ -32,7 +32,7 @@ class ImageActionsButton extends React.Component {
         return (
             <div className="imageActionsButton">
                 <ButtonGroup>
-                    <Button variant="secondary" size="sm">Keep</Button>
+                    <Button variant="secondary" size="sm" onClick={this.handleApprove}>Approve</Button>
                     <Button variant="danger" size="sm" onClick={this.handleShowModal}>Remove</Button>
                 </ButtonGroup>
 
@@ -45,7 +45,7 @@ class ImageActionsButton extends React.Component {
                         <Button variant="secondary" onClick={this.handleCloseModal}>
                             Cancel
                         </Button>
-                        <Button variant="danger">
+                        <Button variant="danger" onClick={this.handleDelete}>
                             Delete
                         </Button>
                     </Modal.Footer>

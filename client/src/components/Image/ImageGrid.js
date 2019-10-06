@@ -79,22 +79,26 @@ class ImageGrid extends React.Component {
     }
 
     renderPosts() {
-        console.log(this.props);
         if (this.props.loading) {
-            return <FontAwesomeIcon id="loading" className="fa-5x" icon={faSpinner} spin />;
+            return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
         } else {
             /*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/
             const posts = this.props.posts && this.props.posts.map((post, index) => {
                 return <ImageFrame key={index} post={post} />
             });
             return (
-                <Masonry
-                    breakpointCols={{ default: 3 }}
-                    className="my-masonry-grid"
-                    columnClassName="my-masonry-grid_column"
-                >
-                    {posts}
-                </Masonry>
+                <>
+                    <Masonry
+                        breakpointCols={{ default: 3 }}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column"
+                    >
+                        {posts}
+                    </Masonry>
+                    <div className="showMoreBtnContainer">
+                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
+                    </div>
+                </>
             );
         }
     }
@@ -119,9 +123,6 @@ class ImageGrid extends React.Component {
 
                     {this.renderPosts()}
 
-                    <div className="showMoreBtnContainer">
-                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
-                    </div>
                 </div>
             </div>
         );

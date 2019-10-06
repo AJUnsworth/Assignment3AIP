@@ -9,6 +9,23 @@ import ViewProfileButton from "./Buttons/ViewProfileButton";
 import "./Navbar.css";
 
 class Navbar extends React.Component {
+
+    renderNavButtons() {
+        if (this.props.currentUser) {
+            return (
+                <>
+                    <LogoutButton logout={this.props.logout} />
+                    <ViewProfileButton {...this.props} />
+                </>
+            );
+        }
+        else {
+            return(
+                <LoginButton />
+            );   
+        }
+    }
+
     render() {
         return (
             <div className="navbar">
@@ -16,8 +33,7 @@ class Navbar extends React.Component {
                     <Link to="/">
                         <img src={Logo} alt="logo" className="navbarSizing" />
                     </Link>
-                    {this.props.currentUser ? <LogoutButton logout={this.props.logout} /> : <LoginButton/>}
-                    <ViewProfileButton {...this.props}/>
+                    {this.renderNavButtons()}
                 </div>
             </div>
         );

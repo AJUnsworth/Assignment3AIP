@@ -26,6 +26,7 @@ class Thread extends React.Component {
             replies: [],
             showDelete: false,
             showEdit: false,
+            showReport: false,
             loading: true,
             loadingReplies: true
         }
@@ -42,6 +43,14 @@ class Thread extends React.Component {
                     self.setState({ post: data, loading: false });
                 })
             })
+    }
+
+    handleShowReport = () => {
+        this.setState({ showReport: true });
+    }
+
+    handleCloseReport = () => {
+        this.setState({ showReport: false });
     }
 
     handleShowDelete = () => {
@@ -62,6 +71,10 @@ class Thread extends React.Component {
 
     handleUpdatePost = (updatedPost) => {
         this.setState({ post: updatedPost });
+    }
+
+    handleReportImage = () => {
+        //add report image flag
     }
 
     handleDeletePost = () => {
@@ -176,6 +189,16 @@ class Thread extends React.Component {
                 );
             }
         }
+        else {
+            return (
+                <div className="quickActions">
+                    <h6>Quick Actions</h6>
+                    <ButtonGroup>
+                        <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
+                    </ButtonGroup>
+                </div>
+            );
+        }
     }
 
     renderThread() {
@@ -229,7 +252,8 @@ class Thread extends React.Component {
             return (
                 <div>
                     <Navbar {...this.props} />
-                    <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin /></div>)
+                    <FontAwesomeIcon id="loading" className="fa-10x loadingIcon" icon={faSpinner} spin />
+                </div>)
         }
         else {
             return (
@@ -268,6 +292,27 @@ class Thread extends React.Component {
                             <Button variant="primary" onClick={this.handleCloseEdit}>
                                 Close
                         </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={this.state.showReport} onHide={this.handleCloseReport}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Report Post</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h5>Are you sure you want to proceed?</h5>
+                            <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <ButtonGroup>
+                                <Button variant="secondary" onClick={this.handleCloseEdit}>
+                                    Cancel
+                                </Button>
+                                <Button variant="danger" onClick={this.handleReportImage}>
+                                    Report
+                                </Button>
+                            </ButtonGroup>
+
                         </Modal.Footer>
                     </Modal>
                 </div>
