@@ -48,3 +48,8 @@
 .quickActions {
     margin-top: 45px;
 }
+
+.loadingIcon {
+    margin: 30vh auto 0px auto;
+    display: block;
+}

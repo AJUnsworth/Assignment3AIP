@@ -85,7 +85,7 @@ class User extends React.Component {
 
     renderUserContent() {
         if (this.state.loadingContent) {
-            return <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin />;
+            return <FontAwesomeIcon id="loading" className="fa-10x loadingIcon" icon={faSpinner} spin />;
         } else {
             return (
                 <div className="content">

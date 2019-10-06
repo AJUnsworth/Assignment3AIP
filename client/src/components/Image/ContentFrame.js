@@ -18,7 +18,7 @@ function ContentFrame(props) {
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                     <h1 className="welcomeMessage">
-                        Welcome
+                        Welcome&nbsp;
                         <Link to={props.currentUser ? "/user/" + props.currentUser.id : "/login"}>
                             {props.currentUser ? props.currentUser.username : ""}
                         </Link>

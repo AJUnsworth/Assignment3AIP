@@ -229,7 +229,8 @@ class Thread extends React.Component {
             return (
                 <div>
                     <Navbar {...this.props} />
-                    <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin /></div>)
+                    <FontAwesomeIcon id="loading" className="fa-10x loadingIcon" icon={faSpinner} spin />
+                </div>)
         }
         else {
             return (

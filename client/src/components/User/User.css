@@ -41,3 +41,8 @@
 .textCentred{
     text-align: center !important;
 }
+
+.loadingIcon {
+    margin: 30vh auto 0px auto;
+    display: block;
+}
