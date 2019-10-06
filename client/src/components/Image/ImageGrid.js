@@ -48,6 +48,9 @@ class ImageGrid extends React.Component {
         else if (this.state.sortBy === 'repliesRecent') {
             this.props.displayRecentReplies(true);
         }
+        else if (this.state.sortBy === 'repliesPopular') {
+            this.props.displayPopularReplies(true);
+        }
     }
 
     handleHiddenFilters() {
@@ -73,6 +76,31 @@ class ImageGrid extends React.Component {
         }
         else if (this.state.sortBy === 'repliesRecent') {
             this.props.displayRecentReplies(false);
+        }
+        else if (this.state.sortBy === 'repliesPopular') {
+            this.props.displayPopularReplies(false);
+        }
+    }
+
+    handleLatestFilter = () => {
+        if (this.state.sortBy === 'popular' || this.state.sortBy === 'latest') {
+            this.props.displayPosts(true)
+            this.handleSortBy('latest');
+        }
+        if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
+            this.props.displayRecentReplies(true)
+            this.handleSortBy('repliesRecent');
+        }
+    }
+
+    handlePopularFilter = () => {
+        if (this.state.sortBy === 'popular' || this.state.sortBy === 'latest') {
+            this.props.displayPopular(true)
+            this.handleSortBy('popular');
+        }
+        if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
+            this.props.displayPopularReplies(true)
+            this.handleSortBy('repliesPopular');
         }
     }
 
@@ -114,9 +142,9 @@ class ImageGrid extends React.Component {
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" value={this.state.sortBy} onChange={this.handleSortBy}>
-                                    <ToggleButton value="latest" variant="secondary" onClick={() => this.props.displayPosts(true)}>Latest</ToggleButton>
-                                    <ToggleButton value="popular" variant="secondary" onClick={() => this.props.displayPopular(true)}>Most Popular</ToggleButton>
+                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" >
+                                    <ToggleButton  variant="secondary" onClick={this.handleLatestFilter}>Latest</ToggleButton>
+                                    <ToggleButton  variant="secondary" onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
                                 </ToggleButtonGroup></div> : null}
 
                             </Col>

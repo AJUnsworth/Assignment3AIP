@@ -255,6 +255,7 @@ displayPopularReplies = (refresh) => {
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
                                 <ImageGrid displayRecentReplies={this.displayRecentReplies}
+                                displayPopularReplies={this.displayPopularReplies}
                                     sortBy='repliesRecent'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}

@@ -254,7 +254,7 @@ router.get("/repliesRecent", function (req, res) {
     const postId =  mongoose.Types.ObjectId(req.query.postId);
     
     Post.aggregate([  
-        {'$match': { 'replyTo': postId,  'imageUrl': { '$ne': null }}},
+        {'$match': { 'replyTo': postId}},
         {'$sort': { 'createdAt': -1 }},
         {
             $facet: {
@@ -273,7 +273,7 @@ router.get("/repliesPopular", function (req, res) {
     const postId =  mongoose.Types.ObjectId(req.query.postId);
     
     Post.aggregate([  
-        {'$match': { 'replyTo': postId,  'imageUrl': { '$ne': null }}},
+        {'$match': { 'replyTo': postId}},
         {'$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },
         {'$sort': { 'totalReactions': -1 }},
