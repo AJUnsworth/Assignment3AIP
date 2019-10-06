@@ -11,42 +11,30 @@ const User = require("../models/user");
 
 //Register and login routes are based on a tutorial by Rishi Prasad
 //See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
-router.post("/register", (req, res) => {
-    const { errors, isValid } = validateRegisterInput(req.body);
+router.post("/register", async (req, res) => {
+    const { errors, isValid } = await validateRegisterInput(req.body);
 
     // Check validation
     if (!isValid) {
         return res.status(400).json(errors);
     }
 
-    User.findOne({ username: req.body.username }).then(user => {
-        if (user) {
-            return res.status(400).json({ username: "Username is already registered" });
-        } else {
-            User.findOne({ email: req.body.email }).then(user => {
-                if (user) {
-                    return res.status(400).json({ email: "Email is already registered" });
-                } else {
-                    const newUser = new User({
-                        username: req.body.username,
-                        email: req.body.email,
-                        password: req.body.password,
-                    });
+    const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+    });
 
-                    // Hash password before saving in database
-                    bcrypt.genSalt(10, (err, salt) => {
-                        bcrypt.hash(newUser.password, salt, (err, hash) => {
-                            if (err) throw err;
-                            newUser.password = hash;
-                            newUser
-                                .save()
-                                .then(user => res.json(user))
-                                .catch(err => console.log(err));
-                        });
-                    });
-                }
-            });
-        }
+    // Hash password before saving in database
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+                .save()
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
+        });
     });
 });
 
@@ -63,7 +51,7 @@ router.post("/login", (req, res) => {
 
     User.findOne({ username }).then(user => {
         if (!user) {
-            return res.status(404).json({ username: "Username not found" });
+            return res.status(404).json({ password: "Username or password is incorrect" });
         } else {
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (isMatch) {
@@ -117,7 +105,7 @@ router.post("/login", (req, res) => {
                         });
                     });
                 } else {
-                    return res.status(400).json({ password: "Password incorrect" });
+                    return res.status(404).json({ password: "Username or password incorrect" });
                 }
             });
         }
@@ -193,7 +181,7 @@ router.get("/checkAdmin", authenticate, async function (req, res) {
     //Decode because authenticate middleware has confirmed the token is valid
     const userData = jwt.decode(token);
     const user = await User.findOne({ _id: userData.id });
-    
+
     if (!user) {
         return res.sendStatus(404);
     } else if (user.isAdmin) {
@@ -242,15 +230,15 @@ router.get("/getPostReaction", function (req, res) {
 
 router.get("/flagged", async function (req, res) {
     let skipped = parseInt(req.query.skipped) || 0;
-    
+
     const userCount = await User.countDocuments({ flagged: true });
-    
+
     User.find({ flagged: true })
         .limit(10)
         .skip(skipped)
         .exec(function (err, users) {
             if (err) return res.status(404);
-            return res.json({users, userCount});
+            return res.json({ users, userCount });
         });
 });
 
