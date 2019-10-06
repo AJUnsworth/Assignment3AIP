@@ -184,7 +184,7 @@ class Thread extends React.Component {
                         } else {
                             self.setState({
                                 replies: data.results,
-                                isShowMoreDisabled: data.results.length <= 10,
+                                isShowMoreDisabled: data.results.length < 10,
                                 loadingReplies: false
                             });
                         }
@@ -224,7 +224,7 @@ class Thread extends React.Component {
                     } else {
                         self.setState({
                             replies: data.results,
-                            isShowMoreDisabled: data.results.length <= 10,
+                            isShowMoreDisabled: data.results.length < 10,
                             loadingReplies: false
                         });
                     }

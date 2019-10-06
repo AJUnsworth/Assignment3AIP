@@ -74,7 +74,7 @@ class User extends React.Component {
                         } else {
                             self.setState({ 
                                 posts: data.results, 
-                                isShowMoreDisabled: data.results.length <= 10,
+                                isShowMoreDisabled: data.results.length < 10,
                                 loading: false
                             });
                         }
@@ -113,7 +113,7 @@ class User extends React.Component {
                         } else {
                             self.setState({ 
                                 posts: data.results, 
-                                isShowMoreDisabled: data.results.length <= 10,
+                                isShowMoreDisabled: data.results.length < 10,
                                 loading: false
                             });
                         }
