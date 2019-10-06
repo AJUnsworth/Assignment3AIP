@@ -193,7 +193,7 @@ router.get("/getUserPosts", function (req, res) {
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
-                results: [{ $skip: skippedPosts }, { $limit: 5 }]
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
             }
         }])
         .exec(function (err, posts) {
@@ -249,17 +249,46 @@ router.post("/addReaction", function (req, res) {
     });
 });
 
-router.get("/replies", function (req, res) {
-    const postId = req.query.post_id;
-
-    Post.findOne({ _id: postId }).populate("replies").then(post => {
-        if (!post) {
-            return res.sendStatus(404);
-        } else {
-            return res.json(post.replies);
-        }
-    })
+router.get("/repliesRecent", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const postId =  mongoose.Types.ObjectId(req.query.postId);
+    
+    Post.aggregate([  
+        {'$match': { 'replyTo': postId,  'imageUrl': { '$ne': null }}},
+        {'$sort': { 'createdAt': -1 }},
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
 });
+
+router.get("/repliesPopular", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const postId =  mongoose.Types.ObjectId(req.query.postId);
+    
+    Post.aggregate([  
+        {'$match': { 'replyTo': postId,  'imageUrl': { '$ne': null }}},
+        {'$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+        {'$sort': { 'totalReactions': -1 }},
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+});
+    
 
 router.post("/removeReaction", function (req, res) {
     const userId = req.body.userId;

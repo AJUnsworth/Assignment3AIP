@@ -45,6 +45,9 @@ class ImageGrid extends React.Component {
         else if (this.state.sortBy === 'users') {
             this.props.displayUserPosts(true);
         }
+        else if (this.state.sortBy === 'repliesRecent') {
+            this.props.displayRecentReplies(true);
+        }
     }
 
     handleHiddenFilters() {
@@ -67,6 +70,9 @@ class ImageGrid extends React.Component {
         }
         else if (this.state.sortBy === 'users') {
             this.props.displayUserPosts(false);
+        }
+        else if (this.state.sortBy === 'repliesRecent') {
+            this.props.displayRecentReplies(false);
         }
     }
 
