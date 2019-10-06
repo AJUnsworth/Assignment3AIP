@@ -29,7 +29,6 @@ class Thread extends React.Component {
             loading: true,
             loadingReplies: true,
             isShowMoreDisabled: false,
-            isNoPostsEnabled: false
         }
     }
 
@@ -161,7 +160,7 @@ class Thread extends React.Component {
         this.setState({ loadingReplies: true });
 
         if (!refresh) {
-            skippedPosts = this.state.posts && this.state.posts.length;
+            skippedPosts = this.state.replies.length;
         } else {
             skippedPosts = 0;
         }
@@ -179,25 +178,13 @@ class Thread extends React.Component {
                             self.setState(prevState => ({
                                 replies: [...prevState.replies, ...data.results],
                                 isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                                isNoPostsEnabled: false,
                                 loadingReplies: false
                             }));
-                        }
-                        else if (self.state.replies.length === 0) {
+
+                        } else {
                             self.setState({
                                 replies: data.results,
-                                isShowMoreDisabled: true,
-                                isNoPostsEnabled: true,
-                                loadingReplies: false
-                            })
-
-                        }
-
-                        else {
-                            self.setState({
-                                replies: data.results,
-                                isShowMoreDisabled: false,
-                                isNoPostsEnabled: false,
+                                isShowMoreDisabled: data.results.length <= 10,
                                 loadingReplies: false
                             });
                         }
@@ -213,47 +200,38 @@ class Thread extends React.Component {
         this.setState({ loadingReplies: true });
 
         if (!refresh) {
-            skippedPosts = this.state.posts && this.state.posts.length;
+            skippedPosts = this.state.replies.length;
         } else {
             skippedPosts = 0;
         }
 
         fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                replies: [...prevState.replies, ...data.results],
-                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                                isNoPostsEnabled: false,
-                                loadingReplies: false
-                            }));
-                        } else if (self.state.replies.length === 0) {
-                            self.setState({
-                                replies: data.results,
-                                isShowMoreDisabled: true,
-                                isNoPostsEnabled: true,
-                                loadingReplies: false
-                            })
+        .then(function (response) {
+            if (response.status === 404) {
+                response.json().then(function (data) {
+                    //self.setState({ errors: data });
+                });
+            }
+            else if (response.status === 200) {
+                response.json().then(function (data) {
+                    if (!refresh) {
+                        self.setState(prevState => ({
+                            replies: [...prevState.replies, ...data.results],
+                            isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                            loadingReplies: false
+                        }));
 
-                        } else {
-                            self.setState({
-                                replies: data.results,
-                                isShowMoreDisabled: false,
-                                isNoPostsEnabled: false,
-                                loadingReplies: false
-                            });
-                        }
-                    });
-                }
-            })
-    }
+                    } else {
+                        self.setState({
+                            replies: data.results,
+                            isShowMoreDisabled: data.results.length <= 10,
+                            loadingReplies: false
+                        });
+                    }
+                });
+            }
+        })
+}
 
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
@@ -341,7 +319,6 @@ class Thread extends React.Component {
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
                                     isShowMoreDisabled={this.state.isShowMoreDisabled}
-                                    isNoPostsEnabled={this.state.isNoPostsEnabled}
                                 />
                             </div>
                         </Col>
