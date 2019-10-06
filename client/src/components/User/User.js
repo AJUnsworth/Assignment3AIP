@@ -44,7 +44,7 @@ class User extends React.Component {
     }
 
 
-    displayUserPosts = (refresh) => {
+    displayRecentUserPosts = (refresh) => {
         const self = this;
         let skippedPosts;
         const { userId } = this.props.match.params;
@@ -56,7 +56,46 @@ class User extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
+        fetch(`/post/getRecentUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                posts: [...prevState.posts, ...data.results],
+                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                                loading: false
+                            }));
+                        } else {
+                            self.setState({ 
+                                posts: data.results, 
+                                isShowMoreDisabled: false, 
+                                loading: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
+
+    displayPopularUserPosts = (refresh) => {
+        const self = this;
+        let skippedPosts;
+        const { userId } = this.props.match.params;
+        this.setState({ loading: true });
+
+        if (!refresh) {
+            skippedPosts = this.state.posts.length;
+        } else {
+            skippedPosts = 0;
+        }
+
+        fetch(`/post/getPopularUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
             .then(function (response) {
                 if (response.status === 404) {
                     response.json().then(function (data) {
@@ -130,7 +169,7 @@ class User extends React.Component {
 
                     <div className="myPosts">
                         <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
-                        <ImageGrid displayUserPosts={this.displayUserPosts} sortBy='users' {...this.state} {...this.props} />
+                        <ImageGrid displayPopularUserPosts={this.displayPopularUserPosts} displayRecentUserPosts={this.displayRecentUserPosts} sortBy='usersRecent' {...this.state} {...this.props} />
                     </div>
                 </div>
             );

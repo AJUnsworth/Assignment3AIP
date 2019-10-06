@@ -27,13 +27,11 @@ class ImageGrid extends React.Component {
                 showResults: true
             }
         }
-        this.handleHiddenFilters = this.handleHiddenFilters.bind(this)
     };
 
 
     componentDidMount() {
         this.handleNewPosts();
-        this.handleHiddenFilters();
     }
 
     handleNewPosts = () => {
@@ -42,8 +40,11 @@ class ImageGrid extends React.Component {
         } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(true);
         }
-        else if (this.state.sortBy === 'users') {
-            this.props.displayUserPosts(true);
+        else if (this.state.sortBy === 'usersRecent') {
+            this.props.displayRecentUserPosts(true);
+        }
+        else if (this.state.sortBy === 'usersPopular') {
+            this.props.displayPopularUserPosts(true);
         }
         else if (this.state.sortBy === 'repliesRecent') {
             this.props.displayRecentReplies(true);
@@ -53,13 +54,6 @@ class ImageGrid extends React.Component {
         }
     }
 
-    handleHiddenFilters() {
-        if (this.state.sortBy === 'users') {
-            this.setState(prevState => ({
-                showResults: false
-            }));
-        }
-    }
 
     handleSortBy = (value) => {
         this.setState({ sortBy: value })
@@ -71,8 +65,11 @@ class ImageGrid extends React.Component {
         } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(false);
         }
-        else if (this.state.sortBy === 'users') {
-            this.props.displayUserPosts(false);
+        else if (this.state.sortBy === 'usersRecent') {
+            this.props.displayRecentUserPosts(false);
+        }
+        else if (this.state.sortBy === 'usersPopular') {
+            this.props.displayPopularUserPosts(false);
         }
         else if (this.state.sortBy === 'repliesRecent') {
             this.props.displayRecentReplies(false);
@@ -87,6 +84,10 @@ class ImageGrid extends React.Component {
             this.props.displayPosts(true)
             this.handleSortBy('latest');
         }
+        if (this.state.sortBy === 'usersPopular' || this.state.sortBy === 'usersRecent') {
+            this.props.displayRecentUserPosts(true)
+            this.handleSortBy('usersRecent');
+        }
         if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
             this.props.displayRecentReplies(true)
             this.handleSortBy('repliesRecent');
@@ -97,6 +98,10 @@ class ImageGrid extends React.Component {
         if (this.state.sortBy === 'popular' || this.state.sortBy === 'latest') {
             this.props.displayPopular(true)
             this.handleSortBy('popular');
+        }
+        if (this.state.sortBy === 'usersPopular' || this.state.sortBy === 'usersRecent') {
+            this.props.displayPopularUserPosts(true)
+            this.handleSortBy('usersPopular');
         }
         if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
             this.props.displayPopularReplies(true)

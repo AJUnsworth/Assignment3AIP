@@ -183,13 +183,35 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
-router.get("/getUserPosts", function (req, res) {
+router.get("/getRecentUserPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
     const userId =  mongoose.Types.ObjectId(req.query.userId);
     
     Post.aggregate([  
-        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false }}},
+        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }}},
         {'$sort': { 'createdAt': -1 }},
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+});
+
+router.get("/getPopularUserPosts", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId =  mongoose.Types.ObjectId(req.query.userId);
+    
+    Post.aggregate([  
+        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }}},
+        {
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+        {'$sort': { 'totalReactions': -1 }},
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
