@@ -49,39 +49,67 @@ router.post("/create", function (req, res, next) {
     });
 });
 
-router.post("/delete", function (req, res) {
+router.post("/delete", async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
-    Post.findOne({ _id: postId }).populate("replies").then(async post => {
-        if (!post) {
+    const post = await Post.findOne({ _id: postId }).populate("replies");
+    if (!post) {
+        return res.sendStatus(404);
+    } else {
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
             return res.sendStatus(404);
-        } else {
-            if (post.userId != userId) {
-                return res.sendStatus(403);
-            }
-
-            if (post.imageUrl) {
-                //deleteImage only returns error messages if any issues occur
-                const err = await deleteImage(post.imageUrl)
-                if (err) return res.sendStatus(500);
-            }
-
-            if (Array.isArray(post.replies) && post.replies.length) {
-                //Remove only the image if the post has replies to replace with a placeholder
-                post.imageUrl = null;
-                post
-                    .save()
-                    .then(updatedPost => res.json(updatedPost))
-                    .catch(() => res.sendStatus(500));
-            } else {
-                post
-                    .remove()
-                    .then(() => res.sendStatus(200))
-                    .catch(() => res.sendStatus(500));
-            }
         }
-    });
+
+        if (post.userId != userId || !user.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        if (post.imageUrl) {
+            //deleteImage only returns error messages if any issues occur
+            const err = await deleteImage(post.imageUrl)
+            if (err) return res.sendStatus(500);
+        }
+
+        if (Array.isArray(post.replies) && post.replies.length) {
+            //Remove only the image if the post has replies to replace with a placeholder
+            post.imageUrl = null;
+            post
+                .save()
+                .then(updatedPost => res.json(updatedPost))
+                .catch(() => res.sendStatus(500));
+        } else {
+            post
+                .remove()
+                .then(() => res.sendStatus(200))
+                .catch(() => res.sendStatus(500));
+        }
+    }
+});
+
+router.post("/approve", async function (req, res) {
+    const postId = req.body.postId;
+    const userId = req.body.userId;
+
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+        return res.sendStatus(404);
+    } else {
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.sendStatus(404);
+        }
+
+        if (!user.isAdmin) {
+            return res.sendStatus(403);
+        }
+        post.flagged = false;
+        post
+            .save()
+            .then(() => res.sendStatus(200))
+            .catch(() => res.sendStatus(500));
+    }
 });
 
 router.post("/edit", function (req, res, next) {
@@ -355,8 +383,8 @@ router.get("/metrics", function (req, res) {
         if (!post) {
             return res.sendStatus(404);
         } else {
-            return res.json({ 
-                totalReactions: post.totalReactions, 
+            return res.json({
+                totalReactions: post.totalReactions,
                 totalReplies: post.totalReplies
             });
         }

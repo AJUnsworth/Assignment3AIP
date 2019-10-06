@@ -36,6 +36,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     likedPosts: [likedPostSchema],
 }, {
     timestamps: true

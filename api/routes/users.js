@@ -124,6 +124,55 @@ router.post("/login", (req, res) => {
     });
 });
 
+router.delete("/delete", async function (req, res) {
+    const currentUserId = req.body.currentUserId;
+    const flaggedUserId = req.body.flaggedUserId;
+
+    const currentUser = await User.findOne({ _id: currentUserId });
+    if (!currentUser) {
+        return res.sendStatus(404);
+    } else {
+        if (!currentUser.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        await User.findByIdAndRemove(flaggedUserId, (error, data) => {
+            if (error) {
+                return res.sendStatus(500);
+            } else {
+                if (data === null) {
+                    return res.sendStatus(404);
+                } else {
+                    return res.sendStatus(200);
+                }
+            }
+        });
+    }
+});
+
+router.post("/approve", async function (req, res) {
+    const currentUserId = req.body.currentUserId;
+    const flaggedUserId = req.body.flaggedUserId;
+
+    const currentUser = await User.findOne({ _id: currentUserId });
+    if (!currentUser) {
+        return res.sendStatus(404);
+    } else {
+        if (!currentUser.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        const flaggedUser = await User.findOne({ _id: flaggedUserId });
+        if (!flaggedUser) return res.sendStatus(500);
+        flaggedUser.flagged = false;
+
+        flaggedUser
+            .save()
+            .then(() => res.sendStatus(200))
+            .catch(err => res.sendStatus(500));
+    }
+});
+
 router.post("/logout", function (req, res) {
     res.clearCookie("token").sendStatus(200);
 });
@@ -174,8 +223,8 @@ router.get("/getPostReaction", function (req, res) {
 router.get("/:userId", function (req, res) {
     const userId = req.params.userId;
 
-    User.findOne({_id: userId}).populate("posts").then(user => {
-        if (!user){
+    User.findOne({ _id: userId }).populate("posts").then(user => {
+        if (!user) {
             return res.sendStatus(404);
         } else {
             var reactionCount = 0;
@@ -185,7 +234,7 @@ router.get("/:userId", function (req, res) {
                 reactionCount += post.totalReactions;
             }
 
-            return res.json({reactionCount, postCount, ...user.toJSON()});
+            return res.json({ reactionCount, postCount, ...user.toJSON() });
         }
     })
 });
