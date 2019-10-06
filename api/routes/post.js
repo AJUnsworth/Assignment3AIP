@@ -113,7 +113,7 @@ router.post("/approve", async function (req, res) {
     }
 });
 
-router.post("/report", async function (req, res, next) {
+router.post("/report", async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
     const user = await User.findOne({ _id: userId });
@@ -128,7 +128,7 @@ router.post("/report", async function (req, res, next) {
                     return res.sendStatus(400)
                 }
 
-                user.reportedPosts.push({ reportedPost: postId});
+                user.reportedPosts.push({ reportedPost: postId });
                 user.save().catch(() => res.sendStatus(500));
 
                 if (post.reports >= 20) {
@@ -198,8 +198,8 @@ router.get("/getThumbnails", function (req, res) {
     Post.aggregate([
         {
             '$match': {
-                'imageUrl': { '$ne': null },
-                'replyTo': { '$exists': false }
+                'replyTo': { '$exists': false },
+                'flagged': false
             }
         }, {
             '$sort': { 'createdAt': -1 }
@@ -223,7 +223,7 @@ router.get("/getPopular", function (req, res) {
 
     Post.aggregate([
         {
-            '$match': { 'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false } }
+            '$match': { 'replyTo': { '$exists': false }, 'flagged': false }
         },
 
         {
@@ -256,10 +256,10 @@ router.get("/flagged", async function (req, res) {
     Post.find({ flagged: true })
         .limit(10)
         .skip(skippedPosts)
-        .sort({ createdAt: -1})
+        .sort({ createdAt: -1 })
         .exec(function (err, posts) {
             if (err) return res.status(404);
-            return res.json({posts: posts, postCount: postCount});
+            return res.json({ posts: posts, postCount: postCount });
         });
 });
 
@@ -268,7 +268,7 @@ router.get("/getRecentUserPosts", function (req, res) {
     const userId = mongoose.Types.ObjectId(req.query.userId);
 
     Post.aggregate([
-        { '$match': { 'userId': userId, 'imageUrl': { '$ne': null } } },
+        { '$match': { 'userId': userId, 'flagged': false } },
         { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
@@ -287,7 +287,7 @@ router.get("/getPopularUserPosts", function (req, res) {
     const userId = mongoose.Types.ObjectId(req.query.userId);
 
     Post.aggregate([
-        { '$match': { 'userId': userId, 'imageUrl': { '$ne': null } } },
+        { '$match': { 'userId': userId, 'flagged': false } },
         {
             '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },
@@ -356,7 +356,7 @@ router.get("/repliesRecent", function (req, res) {
     const postId = mongoose.Types.ObjectId(req.query.postId);
 
     Post.aggregate([
-        { '$match': { 'replyTo': postId } },
+        { '$match': { 'replyTo': postId, 'flagged': false } },
         { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
@@ -375,7 +375,7 @@ router.get("/repliesPopular", function (req, res) {
     const postId = mongoose.Types.ObjectId(req.query.postId);
 
     Post.aggregate([
-        { '$match': { 'replyTo': postId } },
+        { '$match': { 'replyTo': postId, 'flagged': false } },
         {
             '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },
@@ -432,16 +432,18 @@ router.post("/removeReaction", function (req, res) {
 router.get("/metrics", function (req, res) {
     const postId = req.query.post_id;
 
-    Post.findOne({ _id: postId }).populate("totalReplies").then(post => {
-        if (!post) {
-            return res.sendStatus(404);
-        } else {
-            return res.json({
-                totalReactions: post.totalReactions,
-                totalReplies: post.totalReplies
-            });
-        }
-    });
+    Post.findOne({ _id: postId })
+        .populate({ path: "totalReplies", match: { flagged: false } })
+        .then(post => {
+            if (!post) {
+                return res.sendStatus(404);
+            } else {
+                return res.json({
+                    totalReactions: post.totalReactions,
+                    totalReplies: post.totalReplies
+                });
+            }
+        });
 });
 
 router.get("/getRepliesCount", function (req, res) {

@@ -51,9 +51,15 @@ class UploadImage extends React.Component {
                 body: formData
             }).then(function (response) {
                 if (response.status === 200) {
-                    self.setState(self.initialState);
-                    self.props.handleNewPosts();
-                    NotificationManager.success("Your image has been posted!", "Post successful");
+                    response.json().then(post => {
+                        if (post.flagged) {
+                            NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
+                        } else {
+                            NotificationManager.success("Your image has been posted!", "Post successful");
+                        }
+                        self.setState(self.initialState);
+                        self.props.handleNewPosts();
+                    });
                 } else {
                     NotificationManager.error(
                         "Looks like something went wrong while creating a post, please try again later",
