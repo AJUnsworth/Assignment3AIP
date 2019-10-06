@@ -10,7 +10,8 @@ class Home extends React.Component {
         this.state = {
             posts: [],
             isShowMoreDisabled: false,
-            loading: true
+            loading: true,
+            isNoPostsEnabled: false
         }
     }
 
@@ -33,11 +34,18 @@ class Home extends React.Component {
                             self.setState(prevState => ({
                                 posts: [...prevState.posts, ...data.results],
                                 isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
                                 loading: false
                             }));
-                        } else {
+                        } else if (!self.state.posts) {
+                            self.setState({
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loading: false
+                            })} else {
                             self.setState({ 
                                 posts: data.results, 
+                                isNoPostsEnabled: false,
                                 isShowMoreDisabled: false,
                                 loading: false
                             });
@@ -73,11 +81,21 @@ class Home extends React.Component {
                             self.setState(prevState => ({
                                 posts: [...prevState.posts, ...data.results],
                                 isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
                                 loading: false
                             }))
+                            
+                        } else if (!self.state.posts.length) {
+                            self.setState({
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loading: false
+                            })
+
                         } else {
                             self.setState({
                                 posts: data.results,
+                                isNoPostsEnabled: false,
                                 isShowMoreDisabled: false,
                                 loading: false
                             });

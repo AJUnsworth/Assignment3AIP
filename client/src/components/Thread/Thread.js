@@ -28,7 +28,9 @@ class Thread extends React.Component {
             showEdit: false,
             showReport: false,
             loading: true,
-            loadingReplies: true
+            loadingReplies: true,
+            isShowMoreDisabled: false,
+            isNoPostsEnabled: false
         }
     }
 
@@ -123,29 +125,103 @@ class Thread extends React.Component {
             })
     }
 
-    displayReplies = () => {
+    displayRecentReplies = (refresh) => {
         const self = this;
+        let skippedPosts;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
-        fetch("/post/replies?post_id=" + postId, {
-            method: "GET"
-        })
+
+        if (!refresh) {
+            skippedPosts = this.state.posts && this.state.posts.length;
+        } else {
+            skippedPosts = 0;
+        }
+
+        fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`)
             .then(function (response) {
-                if (response.status === 200) {
+                if (response.status === 404) {
                     response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            replies: [...prevState.replies, ...data],
-                            loadingReplies: false
-                            //isShowMoreDisabled: prevState.replies.length + data.length === data.metadata[0].totalCount
-                        }));
+                        //self.setState({ errors: data });
                     });
-                } else {
-                    self.setState({ loadingReplies: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading the post, please try refreshing the page",
-                        "Error loading post",
-                        5000
-                    );
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            }));
+                        }
+                        else if (self.state.replies.length === 0) {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loadingReplies: false
+                            })
+
+                        }
+
+                        else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: false,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
+
+    displayPopularReplies = (refresh) => {
+        const self = this;
+        let skippedPosts;
+        const { postId } = this.props.match.params;
+        this.setState({ loadingReplies: true });
+
+        if (!refresh) {
+            skippedPosts = this.state.posts && this.state.posts.length;
+        } else {
+            skippedPosts = 0;
+        }
+
+        fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            }));
+                        } else if (self.state.replies.length === 0) {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loadingReplies: false
+                            })
+
+                        } else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: false,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            });
+                        }
+                    });
                 }
             })
     }
@@ -226,11 +302,15 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
-                                <ImageGrid displayPosts={this.displayReplies}
+                                <ImageGrid displayRecentReplies={this.displayRecentReplies}
+                                    displayPopularReplies={this.displayPopularReplies}
+                                    sortBy='repliesRecent'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
+                                    isShowMoreDisabled={this.state.isShowMoreDisabled}
+                                    isNoPostsEnabled={this.state.isNoPostsEnabled}
                                 />
                             </div>
                         </Col>
