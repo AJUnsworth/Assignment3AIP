@@ -5,6 +5,7 @@ import "./App.css";
 import "react-notifications/lib/notifications.css";
 
 import Home from "../Home/Home";
+import Admin from "../Admin/Admin";
 import Thread from "../Thread/Thread";
 import LoginContainer from "../Login/LoginContainer";
 import User from "../User/User";
@@ -73,6 +74,8 @@ class App extends React.Component {
                     {/*Code for passing props to routes is based on an example by Tyler McGinnis. 
                         See https://tylermcginnis.com/react-router-pass-props-to-components/*/}
                     <Route path="/" exact render={(props) => <Home {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
+                    
+                    <Route path="/admin" render={(props) => <Admin {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/thread/:postId" render={(props) => <Thread {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/login" render={(props) => <LoginContainer {...props} setUser={this.setUser} logout={this.logout} />} />
                     <Route path="/user/:userId" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
