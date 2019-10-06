@@ -248,6 +248,21 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
+router.get("/flagged", async function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+
+    const postCount = await Post.countDocuments({ flagged: true });
+
+    Post.find({ flagged: true })
+        .limit(10)
+        .skip(skippedPosts)
+        .sort({ createdAt: -1})
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json({posts: posts, postCount: postCount});
+        });
+});
+
 router.get("/getRecentUserPosts", function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
     const userId = mongoose.Types.ObjectId(req.query.userId);

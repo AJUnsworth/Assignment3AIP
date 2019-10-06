@@ -8,23 +8,21 @@ function authenticate(ComponentToProtect) {
             super();
             this.state = {
                 loading: true,
-                redirect: false,
+                redirectLogin: false,
+                redirectHome: false
             };
         }
 
         componentDidMount() {
-            fetch("/users/checkToken")
+            fetch("/users/checkAdmin")
                 .then(res => {
                     if (res.status === 200) {
                         this.setState({ loading: false });
+                    } else if (res.status === 403) {
+                        this.setState({ loading: false, redirectHome: true });
                     } else {
-                        const error = new Error(res.error);
-                        throw error;
+                        this.setState({ loading: false, redirectLogin: true });
                     }
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.setState({ loading: false, redirect: true });
                 });
         }
 
@@ -32,9 +30,15 @@ function authenticate(ComponentToProtect) {
             if (this.state.loading) {
                 return null;
             }
-            if (this.state.redirect) {
+
+            if (this.state.redirectLogin) {
                 return <Redirect to="/login" />
             }
+
+            if (this.state.redirectHome) {
+                return <Redirect to="/" />
+            }
+
             return (
                 <React.Fragment>
                     <ComponentToProtect {...this.props} />

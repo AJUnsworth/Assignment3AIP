@@ -183,6 +183,26 @@ router.get("/checkToken", authenticate, function (req, res) {
     return res.sendStatus(200);
 });
 
+router.get("/checkAdmin", authenticate, async function (req, res) {
+    const token =
+        req.body.token ||
+        req.query.token ||
+        req.headers["x-access-token"] ||
+        req.cookies.token;
+
+    //Decode because authenticate middleware has confirmed the token is valid
+    const userData = jwt.decode(token);
+    const user = await User.findOne({ _id: userData.id });
+    
+    if (!user) {
+        return res.sendStatus(404);
+    } else if (user.isAdmin) {
+        return res.sendStatus(200);
+    } else {
+        return res.sendStatus(403);
+    }
+});
+
 router.get("/getCurrentUser", authenticate, function (req, res) {
     //Look for token in request body, query string, headers, or cookie
     const token =
@@ -218,6 +238,20 @@ router.get("/getPostReaction", function (req, res) {
             }
         }
     });
+});
+
+router.get("/flagged", async function (req, res) {
+    let skipped = parseInt(req.query.skipped) || 0;
+    
+    const userCount = await User.countDocuments({ flagged: true });
+    
+    User.find({ flagged: true })
+        .limit(10)
+        .skip(skipped)
+        .exec(function (err, users) {
+            if (err) return res.status(404);
+            return res.json({users, userCount});
+        });
 });
 
 router.get("/:userId", function (req, res) {
