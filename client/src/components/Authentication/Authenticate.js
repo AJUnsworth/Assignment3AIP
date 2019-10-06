@@ -14,6 +14,7 @@ function authenticate(ComponentToProtect) {
         }
 
         componentDidMount() {
+            //Create helper function later
             fetch("/users/checkAdmin")
                 .then(res => {
                     if (res.status === 200) {

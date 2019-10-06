@@ -18,7 +18,6 @@ import ReplyBreadcrumb from "./ReplyBreadcrumb";
 import UploadImage from "../Image/UploadImage";
 
 class Thread extends React.Component {
-
     constructor() {
         super();
         this.state = {
@@ -42,6 +41,14 @@ class Thread extends React.Component {
         })
             .then(function (response) {
                 response.json().then(function (data) {
+                    if (data.flagged) {
+                        fetch("/users/checkAdmin")
+                            .then(res => {
+                                if (res.status !== 200) {
+                                    self.props.history.push("/");
+                                }
+                            });
+                    }
                     self.setState({ post: data, loading: false });
                 })
             })
@@ -416,7 +423,6 @@ class Thread extends React.Component {
                                     Report
                                 </Button>
                             </ButtonGroup>
-
                         </Modal.Footer>
                     </Modal>
                 </div>
