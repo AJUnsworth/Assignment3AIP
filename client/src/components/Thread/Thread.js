@@ -27,7 +27,9 @@ class Thread extends React.Component {
             showDelete: false,
             showEdit: false,
             loading: true,
-            loadingReplies: true
+            loadingReplies: true,
+            isShowMoreDisabled: false,
+            isNoPostsEnabled: false
         }
     }
 
@@ -117,76 +119,99 @@ class Thread extends React.Component {
         this.setState({ loadingReplies: true });
 
         if (!refresh) {
-            skippedPosts = this.state.posts.length;
+            skippedPosts = this.state.posts && this.state.posts.length;
         } else {
             skippedPosts = 0;
         }
 
         fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`)
-        .then(function (response) {
-            if (response.status === 404) {
-                response.json().then(function (data) {
-                    //self.setState({ errors: data });
-                });
-            }
-            else if (response.status === 200) {
-                response.json().then(function (data) {
-                    if (!refresh) {
-                        self.setState(prevState => ({
-                            replies: [...prevState.replies, ...data.results],
-                            isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                            loadingReplies: false
-                        }));
-                    } else {
-                        self.setState({ 
-                            replies: data.results, 
-                            isShowMoreDisabled: false, 
-                            loadingReplies: false
-                        });
-                    }
-                });
-            }
-        })
-}
-
-displayPopularReplies = (refresh) => {
-    const self = this;
-    let skippedPosts;
-    const { postId } = this.props.match.params;
-    this.setState({ loadingReplies: true });
-
-    if (!refresh) {
-        skippedPosts = this.state.posts.length;
-    } else {
-        skippedPosts = 0;
-    }
-
-    fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
-    .then(function (response) {
-        if (response.status === 404) {
-            response.json().then(function (data) {
-                //self.setState({ errors: data });
-            });
-        }
-        else if (response.status === 200) {
-            response.json().then(function (data) {
-                if (!refresh) {
-                    self.setState(prevState => ({
-                        replies: [...prevState.replies, ...data.results],
-                        isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                        loadingReplies: false
-                    }));
-                } else {
-                    self.setState({ 
-                        replies: data.results, 
-                        isShowMoreDisabled: false, 
-                        loadingReplies: false
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
                     });
                 }
-            });
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            }));
+                        }
+                        else if (self.state.replies.length === 0) {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loadingReplies: false
+                            })
+
+                        }
+
+                        else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: false,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
+
+    displayPopularReplies = (refresh) => {
+        const self = this;
+        let skippedPosts;
+        const { postId } = this.props.match.params;
+        this.setState({ loadingReplies: true });
+
+        if (!refresh) {
+            skippedPosts = this.state.posts && this.state.posts.length;
+        } else {
+            skippedPosts = 0;
         }
-    })
-}
+
+        fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            }));
+                        } else if (self.state.replies.length === 0) {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: true,
+                                isNoPostsEnabled: true,
+                                loadingReplies: false
+                            })
+
+                        } else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: false,
+                                isNoPostsEnabled: false,
+                                loadingReplies: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
 
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
@@ -255,12 +280,14 @@ displayPopularReplies = (refresh) => {
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
                                 <ImageGrid displayRecentReplies={this.displayRecentReplies}
-                                displayPopularReplies={this.displayPopularReplies}
+                                    displayPopularReplies={this.displayPopularReplies}
                                     sortBy='repliesRecent'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
+                                    isShowMoreDisabled={this.state.isShowMoreDisabled}
+                                    isNoPostsEnabled={this.state.isNoPostsEnabled}
                                 />
                             </div>
                         </Col>

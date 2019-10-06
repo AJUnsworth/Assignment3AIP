@@ -154,6 +154,7 @@ class ImageGrid extends React.Component {
                     {this.renderPosts()}
 
                     <div className="showMoreBtnContainer">
+                        {this.props.isNoPostsEnabled && <h6 >There are no more posts to display.</h6>}
                         <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
                     </div>
                 </div>
