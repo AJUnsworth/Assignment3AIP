@@ -4,6 +4,8 @@ import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 class UploadImage extends React.Component {
     constructor() {
@@ -11,7 +13,8 @@ class UploadImage extends React.Component {
         this.initialState = {
             imgFile: null,
             filename: "Choose file",
-            activeState: true
+            activeState: true,
+            loading: false
         };
         this.state = this.initialState;
     }
@@ -45,6 +48,7 @@ class UploadImage extends React.Component {
     }
 
     createPost(formData) {
+        this.setState({ loading: true });
         const self = this;
         fetch('/post/create',
             {
@@ -72,6 +76,7 @@ class UploadImage extends React.Component {
     }
 
     editPost(formData) {
+        this.setState({ loading: true });
         const self = this;
         fetch('/post/edit',
             {
@@ -111,6 +116,16 @@ class UploadImage extends React.Component {
             })
     }
 
+    renderUploadButton() {
+        if (this.state.loading) {
+            return <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />;
+        } else {
+            return (
+                "Upload"
+            );
+        }
+    }
+
     render() {
         return (
             <div xs={12} sm={12} md={12} lg={6} xl={6}>
@@ -119,7 +134,7 @@ class UploadImage extends React.Component {
                     <div className="input-group">
                         <Form.Group>
                             <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
-                                Upload
+                                {this.renderUploadButton()}
                             </Button>
                         </Form.Group>
                         <div className="custom-file">
