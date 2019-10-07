@@ -338,14 +338,16 @@ class Thread extends React.Component {
                         </div>
                     )
                 }
-                return (
-                    <div className="quickActions">
-                        <h6>Quick Actions</h6>
-                        <ButtonGroup>
-                            <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
-                        </ButtonGroup>
-                    </div>
-                );
+                if (post.imageUrl) {
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
         }
     }
@@ -384,6 +386,7 @@ class Thread extends React.Component {
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
                                     isShowMoreDisabled={this.state.isShowMoreDisabled}
+                                    post={this.state.post}
                                 />
                             </div>
                         </Col>

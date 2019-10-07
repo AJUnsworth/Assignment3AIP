@@ -49,7 +49,13 @@ class ReactionGrid extends React.Component {
     }
 
     addReaction = e => {
-        if (this.props.currentUser) {
+        if (!this.props.post.imageUrl) {
+            NotificationManager.warning(
+                "Since this post is deleted, it can't be reacted to",
+                "Cannot react to post",
+                5000
+            );
+        } else if (this.props.currentUser) {
             const self = this;
             const originalReactionType = this.state.activeReaction;
             const reactionType = e.currentTarget.id;

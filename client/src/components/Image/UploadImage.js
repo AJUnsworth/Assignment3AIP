@@ -22,12 +22,14 @@ class UploadImage extends React.Component {
 
     handleFileBrowse = e => {
         e.preventDefault();
-        // eslint-disable-next-line
-        this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
-        if (!e.target.value) {
-            this.setState({ activeState: true });
-        } else {
-            this.setState({ activeState: false });
+        if (this.props.post.imageUrl) {
+            // eslint-disable-next-line
+            this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
+            if (!e.target.value) {
+                this.setState({ activeState: true });
+            } else {
+                this.setState({ activeState: false });
+            }
         }
     }
 

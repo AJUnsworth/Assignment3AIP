@@ -111,7 +111,9 @@ class ImageGrid extends React.Component {
     }
 
     renderFileUpload() {
-        if (this.props.currentUser) {
+        if (!this.props.currentUser || (this.props.post && !this.props.post.imageUrl)) {
+            return null;
+        } else {
             return (
                 <UploadImage {...this.props} handleNewPosts={this.handleNewPosts} />
             );
@@ -171,7 +173,6 @@ class ImageGrid extends React.Component {
                 </div>
             </div>
         );
-
     }
 }
 
