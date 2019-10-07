@@ -118,7 +118,7 @@ class UploadImage extends React.Component {
 
     renderUploadButton() {
         if (this.state.loading) {
-            return <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />;
+            return <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;
         } else {
             return (
                 "Upload"
