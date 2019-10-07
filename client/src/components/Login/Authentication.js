@@ -6,8 +6,6 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { NotificationManager } from "react-notifications";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Logo from "../../images/Seenit Logo_white.png";
 import "./Authentication.css";
@@ -53,7 +51,7 @@ class Authentication extends React.Component {
                         self.props.setUser(data);
                         self.props.history.push("/");
                     });
-                } else if (response.status === 405) { 
+                } else if (response.status === 405) {
                     NotificationManager.error(
                         "Too many accounts have logged in from the same location in the past 24 hours, please use one of the previously used accounts",
                         "Too many logins",
@@ -106,9 +104,9 @@ class Authentication extends React.Component {
                             </Form.Group>
                             <Form.Group>
                                 <Button name="loginBtn" variant="outline-light" type="submit" block>
-                                    {this.state.loading? 
-                                    <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />
-                                    : "Login"}
+                                    {this.state.loading ?
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                                        : "Login"}
                                 </Button>
                             </Form.Group>
                             <Form.Group>

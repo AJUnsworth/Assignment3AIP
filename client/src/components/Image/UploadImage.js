@@ -24,7 +24,11 @@ class UploadImage extends React.Component {
         e.preventDefault();
         // eslint-disable-next-line
         this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
-        this.setState({ activeState: false });
+        if (!e.target.value) {
+            this.setState({ activeState: true });
+        } else {
+            this.setState({ activeState: false });
+        }
     }
 
     handleFileUpload = () => {
@@ -67,6 +71,7 @@ class UploadImage extends React.Component {
                         self.props.handleNewPosts();
                     });
                 } else {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Looks like something went wrong while creating a post, please try again later",
                         "Error creating post",
@@ -96,18 +101,21 @@ class UploadImage extends React.Component {
                         }
                     });
                 } else if (response.status === 405) {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Looks like someone has already reacted or replied to this post",
                         "Cannot edit post",
                         5000
                     );
                 } else if (response.status === 400) {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Please only upload .jpg, .png or .gif files",
                         "Cannot upload post",
                         5000
                     );
                 } else {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Looks like something went wrong when trying to edit this post, please try again later",
                         "Error editing post",

@@ -82,7 +82,7 @@ router.post("/login", (req, res) => {
                     //See https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
                     const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-                    if (user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) {
+                    if ((user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) || user.isAdmin) {
                         user.lastIpAddress = lastIpAddress;
                         user.lastLoggedIn = Date.now();
 

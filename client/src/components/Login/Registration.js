@@ -5,8 +5,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import "./Registration.css";
 
@@ -47,9 +45,9 @@ class Registration extends React.Component {
             .then(function (response) {
                 if (response.status === 400) {
                     response.json().then(function (data) {
-                        self.setState({ 
+                        self.setState({
                             errors: data,
-                            loading: false 
+                            loading: false
                         });
                     })
                 }
@@ -136,7 +134,7 @@ class Registration extends React.Component {
                             <Form.Group>
                                 <Button variant="primary" type="submit" name="registerBtn">
                                     {this.state.loading ?
-                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
                                         : "Register"}
                                 </Button>
                             </Form.Group>

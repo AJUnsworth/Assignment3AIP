@@ -16,7 +16,7 @@ function authenticate(ComponentToProtect) {
         }
 
         componentDidMount() {
-            fetch("/users/checkToken")
+            fetch("/users/checkAdmin")
                 .then(res => {
                     if (res.status === 200) {
                         this.setState({ loading: false });

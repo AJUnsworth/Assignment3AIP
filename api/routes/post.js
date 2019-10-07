@@ -12,9 +12,9 @@ const singleUpload = uploadImage.single("image");
 
 //The create route is based off a tutorial from Medium.com that can no longer be located
 //A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
-router.post("/create", authenticate, function (req, res, next) {
+router.post("/create", authenticate, async function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
-    singleUpload(req, res, function (err) {
+    singleUpload(req, res, async function (err) {
         if (!req.file || req.file === undefined) {
             return res.sendStatus(400);
         }
@@ -37,6 +37,11 @@ router.post("/create", authenticate, function (req, res, next) {
 
         //Checks if the post is a reply, otherwise it is a main post
         if (req.body.replyTo) {
+            const parentPost = await Post.findOne({ _id: req.body.replyTo });
+            if(!parentPost) {
+                return res.sendStatus(404);
+            }
+
             newPost.replyTo = req.body.replyTo;
             newPost.depth = req.body.depth;
         }
