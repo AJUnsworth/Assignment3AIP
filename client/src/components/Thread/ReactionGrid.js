@@ -185,7 +185,7 @@ class ReactionGrid extends React.Component {
 
                 <Modal show={this.state.showSuggestLogin} onHide={this.handleCloseSuggestLogin}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Delete Post</Modal.Title>
+                        <Modal.Title>Log in</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>You must be logged in to react to posts. Would you like to log in?</Modal.Body>
                     <Modal.Footer>

@@ -301,9 +301,11 @@ class Thread extends React.Component {
                         return (
                             <div className="quickActions">
                                 <h6>Quick Actions</h6>
-                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
-                                <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                                <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                                <ButtonGroup>
+                                    <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
+                                    <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                                    <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                                </ButtonGroup>
                             </div>
                         );
                     }
@@ -344,7 +346,7 @@ class Thread extends React.Component {
 
     renderThread() {
         if (this.state.loading) {
-            return <FontAwesomeIcon id="loading" className="fa-10x" icon={faSpinner} spin />;
+            return <FontAwesomeIcon id="loading" className="fa-10x loadIconColor" icon={faSpinner} spin />;
         } else {
             const user = this.state.post.userId;
             return (
@@ -397,7 +399,7 @@ class Thread extends React.Component {
             return (
                 <div>
                     <Navbar {...this.props} />
-                    <FontAwesomeIcon id="loading" className="fa-10x loadingIcon" icon={faSpinner} spin />
+                    <FontAwesomeIcon id="loading" className="fa-10x loadIconColor loadingIcon" icon={faSpinner} spin />
                 </div>)
         }
         else {
