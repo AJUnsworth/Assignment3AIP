@@ -136,8 +136,8 @@ class Registration extends React.Component {
                             <Form.Group>
                                 <Button variant="primary" type="submit" name="registerBtn">
                                     {this.state.loading ?
-                                        <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />
-                                        : "Login"}
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        : "Register"}
                                 </Button>
                             </Form.Group>
                         </Col>

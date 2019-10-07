@@ -4,8 +4,9 @@ import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
+// Upload image component is built on top of a component found online
+// Source: https://mdbootstrap.com/docs/react/forms/file-input/
 
 class UploadImage extends React.Component {
     constructor() {
@@ -118,7 +119,7 @@ class UploadImage extends React.Component {
 
     renderUploadButton() {
         if (this.state.loading) {
-            return <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />;
+            return <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;
         } else {
             return (
                 "Upload"
@@ -132,11 +133,6 @@ class UploadImage extends React.Component {
                 <Col>
                     <h6>Add a thread...</h6>
                     <div className="input-group">
-                        <Form.Group>
-                            <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
-                                {this.renderUploadButton()}
-                            </Button>
-                        </Form.Group>
                         <div className="custom-file">
                             <input
                                 type="file"
@@ -150,6 +146,11 @@ class UploadImage extends React.Component {
                                 {this.state.filename}
                             </label>
                         </div>
+                        <Form.Group>
+                            <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
+                                {this.renderUploadButton()}
+                            </Button>
+                        </Form.Group>
                     </div>
                 </Col>
             </div>
