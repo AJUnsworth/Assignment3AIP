@@ -22,6 +22,14 @@ class ReplyBreadcrumb extends React.Component {
         });
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.post !== this.props.post) {
+            this.setState({ replyParents: [this.props.post] }, () => {
+                this.getReplyThread();
+            });
+        }
+    }
+
     async getReplyThread() {
         if (this.props.post.replyTo) {
             for (let depth = 0; depth < this.props.post.depth; depth++) {

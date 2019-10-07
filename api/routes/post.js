@@ -77,7 +77,12 @@ router.post("/delete", async function (req, res) {
             post.imageUrl = null;
             post
                 .save()
-                .then(updatedPost => res.json(updatedPost))
+                .then(updatedPost => {
+                    updatedPost.populate("userId").execPopulate()
+                        .then(populatedPost => {
+                            return res.json(populatedPost);
+                        });
+                })
                 .catch(() => res.sendStatus(500));
         } else {
             post

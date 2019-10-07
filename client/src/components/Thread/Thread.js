@@ -98,7 +98,18 @@ class Thread extends React.Component {
         })
             .then(function (response) {
                 if (response.status === 200) {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType.includes('application/json')) {
+                        response.json().then(data => {
+                            console.log(data);
+                            if (data.flagged) {
+                                self.props.history.push("/");
+                                NotificationManager.success("Post has been been flagged for containing text or innapropriate content", "Post reported");
+                            }
+                        });
+                    } else {
                     NotificationManager.success("The post has been reported successfully", "Post Reported");
+                    }
                 }
                 else if (response.status === 405) {
                     NotificationManager.error("You have already reported this post", "Report Unsuccessful");
@@ -272,21 +283,13 @@ class Thread extends React.Component {
                     post.reactions.laugh > 0 ||
                     post.reactions.wow > 0) {
                     if (!this.state.post.imageUrl) {
-                        return (
-                            <div className="quickActions">
-                                <h6>Quick Actions</h6>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
-                                </ButtonGroup>
-                            </div>
-                        );
+                        return null;
                     }
                     return (
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
                             <ButtonGroup>
                                 <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                                <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                             </ButtonGroup>
                         </div>
                     );
@@ -297,7 +300,6 @@ class Thread extends React.Component {
                             <ButtonGroup>
                                 <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
                                 <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                                <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                             </ButtonGroup>
                         </div>
                     );
