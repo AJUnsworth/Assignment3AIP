@@ -1,5 +1,4 @@
 import React from "react";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import { NotificationManager } from "react-notifications";
@@ -51,7 +50,7 @@ class Leaderboard extends React.Component {
             return <FontAwesomeIcon id="loading" className="fa-3x" icon={faSpinner} spin />;
         } else {
             return (this.state.members.map((members, index) => {
-                return <LeaderboardMember key={index} members={members} />
+                return <LeaderboardMember {...this.props} key={index} position={index} members={members} />
             }));
         }
     }
@@ -60,13 +59,12 @@ class Leaderboard extends React.Component {
         return (
             <div className="Leaderboard">
                 <h1>Leaderboard</h1>
-                <ButtonToolbar>
-                    <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
-                        <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
-                        <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
-                        <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
-                    </ToggleButtonGroup>
-                </ButtonToolbar>
+                <h6>Total number of reactions across all posts</h6>
+                <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
+                    <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
+                    <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
+                    <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
+                </ToggleButtonGroup>
                 {this.renderLeaderboard()}
             </div>
         );
