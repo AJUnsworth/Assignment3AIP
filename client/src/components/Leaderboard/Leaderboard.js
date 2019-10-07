@@ -66,7 +66,7 @@ class Leaderboard extends React.Component {
 
     renderLeaderboard() {
         if (this.state.loading) {
-            return <FontAwesomeIcon id="loading" className="fa-3x" icon={faSpinner} spin />;
+            return <FontAwesomeIcon id="loading" className="fa-3x loadIconColor" icon={faSpinner} spin />;
         } else {
             return (this.state.members.map((member, index) => {
                 return <LeaderboardMember {...this.props} key={index} position={index} member={member} />

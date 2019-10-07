@@ -58,8 +58,8 @@ class ImageActionsButton extends React.Component {
 
     render() {
         return (
-            <div className="imageActionsButton">
-                <Button variant="secondary" size="sm" onClick={this.handleShowApprove}>Approve</Button>
+            <>
+                <Button variant="secondary" onClick={this.handleShowApprove}>Approve</Button>
 
                 <Modal show={this.state.showApprove} onHide={this.handleCloseApprove}>
                     <Modal.Header closeButton>
@@ -75,7 +75,7 @@ class ImageActionsButton extends React.Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-            </div>
+            </>
         );
 
     };
