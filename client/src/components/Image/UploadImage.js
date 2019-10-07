@@ -4,8 +4,9 @@ import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
+// Upload image component is built on top of a component found online
+// Source: https://mdbootstrap.com/docs/react/forms/file-input/
 
 class UploadImage extends React.Component {
     constructor() {
@@ -118,7 +119,7 @@ class UploadImage extends React.Component {
 
     renderUploadButton() {
         if (this.state.loading) {
-            return <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;
+            return <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;
         } else {
             return (
                 "Upload"
