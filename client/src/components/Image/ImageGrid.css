@@ -59,3 +59,7 @@
     margin: 3vh auto 0px auto;
     display: block;
 }
+
+.noPadding {
+    margin: 0px;
+}
