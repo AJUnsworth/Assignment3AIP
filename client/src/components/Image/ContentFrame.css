@@ -2,7 +2,7 @@
     width: 80%;
     max-width: 80%;
     height: auto;
-    margin: 5% 10% 0% 10%;
+    margin: 2% 10% 0% 10%;
 }
 
 .contentFrame h2{
@@ -10,8 +10,8 @@
 }
 
 .contentFrameGrid {
-    padding-left: 2vw;
-    padding-right: 2vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
     width: 100px;
 }
 .welcomeMessage{
@@ -26,4 +26,8 @@
 
 .container{
     clear: both;
+}
+
+.rowPadding {
+    margin-bottom: 30px;
 }

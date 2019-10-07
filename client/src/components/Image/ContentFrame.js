@@ -7,7 +7,6 @@ import Col from "react-bootstrap/Col";
 import Leaderboard from "../Leaderboard/Leaderboard";
 import ImageGrid from "./ImageGrid";
 import "./ContentFrame.css";
-import ImageActionsButton from "../User/Admin/ImageActionsButton";
 
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
@@ -15,7 +14,7 @@ import ImageActionsButton from "../User/Admin/ImageActionsButton";
 function ContentFrame(props) {
     return (
         <Container className="contentFrame">
-            <Row>
+            <Row className="rowPadding">
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                     <h1 className="welcomeMessage">
                         Welcome&nbsp;
@@ -29,7 +28,6 @@ function ContentFrame(props) {
                     }
                     <ImageActionsButton/>
                 </Col>
-
             </Row>
             <Row>
                 <Col xs={12} sm={12} md={8} lg={8} xl={8} className="contentFrameGrid">
