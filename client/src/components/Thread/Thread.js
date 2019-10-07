@@ -39,7 +39,7 @@ class Thread extends React.Component {
             method: "GET"
         })
             .then(function (response) {
-                if (response.status === 404){
+                if (response.status === 404) {
                     self.props.history.push("/");
                 }
                 response.json().then(function (data) {
@@ -196,6 +196,14 @@ class Thread extends React.Component {
             })
     }
 
+    displayFlagged = () => {
+        if (this.state.post.flagged) {
+            return (
+                <h5 className="text-danger">Note: This post has been flagged as it contains text or inappropriate content</h5>
+            );
+        }
+    }
+
     displayPopularReplies = (refresh) => {
         const self = this;
         let skippedPosts;
@@ -209,32 +217,32 @@ class Thread extends React.Component {
         }
 
         fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
-        .then(function (response) {
-            if (response.status === 404) {
-                response.json().then(function (data) {
-                    //self.setState({ errors: data });
-                });
-            }
-            else if (response.status === 200) {
-                response.json().then(function (data) {
-                    if (!refresh) {
-                        self.setState(prevState => ({
-                            replies: [...prevState.replies, ...data.results],
-                            isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                            loadingReplies: false
-                        }));
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                loadingReplies: false
+                            }));
 
-                    } else {
-                        self.setState({
-                            replies: data.results,
-                            isShowMoreDisabled: data.results.length < 10,
-                            loadingReplies: false
-                        });
-                    }
-                });
-            }
-        })
-}
+                        } else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: data.results.length < 10,
+                                loadingReplies: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
 
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
@@ -296,7 +304,7 @@ class Thread extends React.Component {
             const user = this.state.post.userId;
             return (
                 <div className="content">
-                    <Row>
+                    <Row xs={12} sm={12} md={12} lg={12} xl={12}>
                         {this.renderBreadcrumb()}
                     </Row>
                     <Row className="threadTop">
@@ -307,6 +315,7 @@ class Thread extends React.Component {
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
                             <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
+                            {this.displayFlagged()}
                             {this.renderQuickActions()}
                         </Col>
                     </Row>

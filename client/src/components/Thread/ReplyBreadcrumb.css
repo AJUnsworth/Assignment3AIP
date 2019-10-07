@@ -7,8 +7,9 @@
 .breadcrumb {
     border-radius: 10px;
     margin: 0px 20px 20px 20px;
-    width: fit-content;
-    overflow: scroll;
+    width: 79.3vw;
+    overflow: auto;
+    display: -webkit-box;
 }
 
 .breadcrumbTitle {
