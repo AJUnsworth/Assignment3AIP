@@ -263,12 +263,22 @@ class Thread extends React.Component {
                     post.reactions.angry > 0 ||
                     post.reactions.laugh > 0 ||
                     post.reactions.wow > 0) {
-
+                    if (!this.state.post.imageUrl) {
+                        return (
+                            <div className="quickActions">
+                                <h6>Quick Actions</h6>
+                                <ButtonGroup>
+                                    <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
+                                </ButtonGroup>
+                            </div>
+                        );
+                    }
                     return (
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
                             <ButtonGroup>
                                 <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                             </ButtonGroup>
                         </div>
                     );
@@ -279,6 +289,7 @@ class Thread extends React.Component {
                             <ButtonGroup>
                                 <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
                                 <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                                <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                             </ButtonGroup>
                         </div>
                     );
