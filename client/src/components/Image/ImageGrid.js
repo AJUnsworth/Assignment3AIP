@@ -27,6 +27,7 @@ class ImageGrid extends React.Component {
                 showResults: true
             }
         }
+
     };
 
 
@@ -118,6 +119,7 @@ class ImageGrid extends React.Component {
     }
 
     renderPosts() {
+        
         if (this.props.loading) {
             return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
         } else {
@@ -125,17 +127,21 @@ class ImageGrid extends React.Component {
             const posts = this.props.posts && this.props.posts.map((post, index) => {
                 return <ImageFrame key={index} post={post} />
             });
+
             return (
                 <>
                     <Masonry
-                        breakpointCols={{ default: 3 }}
+                        breakpointCols={{
+                            default: 3,
+                            1100: 2,
+                            700: 1}}
                         className="my-masonry-grid"
                         columnClassName="my-masonry-grid_column"
                     >
                         {posts}
                     </Masonry>
                     <div className="showMoreBtnContainer">
-                    {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
+                        {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
                         <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
                     </div>
                 </>
@@ -153,8 +159,8 @@ class ImageGrid extends React.Component {
                             {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={5} xl={5}>
                                 {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" >
-                                    <ToggleButton  variant="secondary" onClick={this.handleLatestFilter}>Latest</ToggleButton>
-                                    <ToggleButton  variant="secondary" onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
+                                    <ToggleButton variant="secondary" onClick={this.handleLatestFilter}>Latest</ToggleButton>
+                                    <ToggleButton variant="secondary" onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
                                 </ToggleButtonGroup></div> : null}
 
                             </Col>
@@ -163,7 +169,7 @@ class ImageGrid extends React.Component {
 
                     {this.renderPosts()}
 
-                
+
                 </div>
             </div>
         );

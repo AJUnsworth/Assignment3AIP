@@ -52,6 +52,7 @@
 .my-masonry-grid_column {
     padding-left: 30px;
     background-clip: padding-box;
+    width: 100%;
   }
 
 .loadingPostIcon {
