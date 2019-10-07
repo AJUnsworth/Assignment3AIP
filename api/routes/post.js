@@ -22,7 +22,7 @@ router.post("/create", authenticate, async function (req, res, next) {
         if (err) next(err);
 
         const newPost = new Post({
-            userId: req.body.userId,
+            userId: req.decoded.id,
             imageUrl: req.file.location,
             reports: 0,
             reactions: {
@@ -61,7 +61,7 @@ router.post("/create", authenticate, async function (req, res, next) {
 
 router.post("/delete", authenticate, async function (req, res) {
     const postId = req.body.postId;
-    const userId = req.body.userId;
+    const userId = req.decoded.id;
 
     const post = await Post.findOne({ _id: postId }).populate("replies");
     if (!post) {
@@ -105,7 +105,7 @@ router.post("/delete", authenticate, async function (req, res) {
 
 router.post("/approve", authenticate, async function (req, res) {
     const postId = req.body.postId;
-    const userId = req.body.userId;
+    const userId = req.decoded.id;
 
     const post = await Post.findOne({ _id: postId });
     if (!post) {
@@ -131,7 +131,7 @@ router.post("/approve", authenticate, async function (req, res) {
 
 router.post("/report", authenticate, async function (req, res) {
     const postId = req.body.postId;
-    const userId = req.body.userId;
+    const userId = req.decoded.id;
     const user = await User.findOne({ _id: userId });
 
     if (!user) {
@@ -165,7 +165,7 @@ router.post("/edit", authenticate, function (req, res, next) {
     //Fix later by implementing with Multer
     singleUpload(req, res, function (err) {
         const postId = req.body.postId;
-        const userId = req.body.userId;
+        const userId = req.decoded.id;
 
         Post.findOne({ _id: postId }).populate("replies").then(async post => {
             if (!post) {
@@ -322,7 +322,7 @@ router.get("/getPopularUserPosts", function (req, res) {
 });
 
 router.post("/addReaction", authenticate, function (req, res) {
-    const userId = req.body.userId;
+    const userId = req.decoded.id;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;
 
@@ -411,7 +411,7 @@ router.get("/repliesPopular", function (req, res) {
 
 
 router.post("/removeReaction", authenticate, function (req, res) {
-    const userId = req.body.userId;
+    const userId = req.decoded.id;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;
 

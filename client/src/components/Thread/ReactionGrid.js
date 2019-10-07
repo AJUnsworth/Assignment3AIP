@@ -55,7 +55,6 @@ class ReactionGrid extends React.Component {
             const reactionType = e.currentTarget.id;
 
             const requestBody = JSON.stringify({
-                userId: this.props.currentUser.id,
                 postId: this.props.post._id,
                 reactionType: reactionType
             });

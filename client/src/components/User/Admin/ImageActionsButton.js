@@ -24,7 +24,6 @@ class ImageActionsButton extends React.Component {
         this.setState({ showApprove: false });
 
         const requestBody = JSON.stringify({
-            userId: this.props.currentUser.id,
             postId: this.props.post._id
         });
 

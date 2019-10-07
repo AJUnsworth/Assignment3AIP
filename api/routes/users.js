@@ -80,7 +80,7 @@ router.post("/login", (req, res) => {
                     //Find users ipAddress and login time for checking if the account is a potential sock puppet
                     //Based on user topkek's answer on how to get a user's IP address in Node
                     //See https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-                    const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+                    const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
                     if ((user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) || user.isAdmin) {
                         user.lastIpAddress = lastIpAddress;
@@ -153,19 +153,7 @@ router.get("/checkToken", authenticate, function (req, res) {
 });
 
 router.get("/checkAdmin", authenticate, async function (req, res) {
-    const token =
-        req.body.token ||
-        req.query.token ||
-        req.headers["x-access-token"] ||
-        req.cookies.token;
-
-    //Decode because authenticate middleware has confirmed the token is valid
-    const userData = jwt.decode(token);
-    const user = await User.findOne({ _id: userData.id });
-
-    if (!user) {
-        return res.sendStatus(404);
-    } else if (user.isAdmin) {
+    if (req.decoded.isAdmin) {
         return res.sendStatus(200);
     } else {
         return res.sendStatus(403);
@@ -173,22 +161,12 @@ router.get("/checkAdmin", authenticate, async function (req, res) {
 });
 
 router.get("/getCurrentUser", authenticate, function (req, res) {
-    //Look for token in request body, query string, headers, or cookie
-    const token =
-        req.body.token ||
-        req.query.token ||
-        req.headers["x-access-token"] ||
-        req.cookies.token;
-
-    //Decode because authenticate middleware has confirmed the token is valid
-    const userData = jwt.decode(token);
-
-    return res.json(userData);
+    return res.json(req.decoded);
 });
 
 router.get("/getPostReaction", authenticate, function (req, res) {
     const postId = req.query.post_id;
-    const userId = req.query.user_id;
+    const userId = req.decoded.id;
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {

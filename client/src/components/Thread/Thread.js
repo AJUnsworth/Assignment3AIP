@@ -87,7 +87,7 @@ class Thread extends React.Component {
 
     handleReportImage = () => {
         const self = this;
-        const requestBody = JSON.stringify({ postId: this.state.post._id, userId: this.props.currentUser.id })
+        const requestBody = JSON.stringify({ postId: this.state.post._id });
 
         fetch("/post/report", {
             method: "POST",
@@ -133,7 +133,6 @@ class Thread extends React.Component {
         this.setState({ showDelete: false });
 
         const requestBody = JSON.stringify({
-            userId: this.props.currentUser.id,
             postId: this.state.post._id
         });
 

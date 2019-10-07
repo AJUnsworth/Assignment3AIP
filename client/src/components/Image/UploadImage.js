@@ -32,11 +32,8 @@ class UploadImage extends React.Component {
     }
 
     handleFileUpload = () => {
-        const userId = this.props.currentUser.id;
-
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
-        formData.append("userId", userId);
         this.setState({ activeState: true });
 
         if (this.props.replyTo) {
