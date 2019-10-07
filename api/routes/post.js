@@ -14,7 +14,7 @@ const singleUpload = uploadImage.single("image");
 router.post("/create", function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
     singleUpload(req, res, function (err) {
-        if(!req.file || req.file === undefined) {
+        if (!req.file || req.file === undefined) {
             return res.sendStatus(400);
         }
 
@@ -113,7 +113,7 @@ router.post("/approve", async function (req, res) {
         if (!user.isAdmin) {
             return res.sendStatus(403);
         }
-        
+
         post.flagged = false;
         post.reports = 0;
         post
@@ -192,7 +192,12 @@ router.post("/edit", function (req, res, next) {
 
                     post
                         .save()
-                        .then(updatedPost => res.json(updatedPost))
+                        .then(updatedPost => {
+                            updatedPost.populate("userId").execPopulate()
+                                .then(populatedPost => {
+                                    return res.json(populatedPost);
+                                });
+                        })
                         .catch(() => res.sendStatus(500));
                 });
             } else {
@@ -466,7 +471,7 @@ router.get("/:postId", function (req, res) {
             return res.json(post);
         }
     })
-    .catch(() => res.sendStatus(404));
+        .catch(() => res.sendStatus(404));
 });
 
 module.exports = router;

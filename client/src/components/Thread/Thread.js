@@ -108,7 +108,7 @@ class Thread extends React.Component {
                             }
                         });
                     } else {
-                    NotificationManager.success("The post has been reported successfully", "Post Reported");
+                        NotificationManager.success("The post has been reported successfully", "Post Reported");
                     }
                 }
                 else if (response.status === 405) {
@@ -267,14 +267,7 @@ class Thread extends React.Component {
     renderQuickActions() {
         const post = this.state.post;
         if (this.props.currentUser) {
-            if (this.props.currentUser.isAdmin) {
-                return (
-                    <div className="quickActions">
-                        <h6>Quick Actions</h6>
-                        <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
-                    </div>
-                );
-            } else if (post.userId._id === this.props.currentUser.id) {
+            if (post.userId._id === this.props.currentUser.id) {
                 if (this.state.replies.length ||
                     post.reactions.like > 0 ||
                     post.reactions.love > 0 ||
@@ -285,6 +278,17 @@ class Thread extends React.Component {
                     if (!this.state.post.imageUrl) {
                         return null;
                     }
+                    if (this.props.currentUser.isAdmin) {
+                        return (
+                            <div className="quickActions">
+                                <h6>Quick Actions</h6>
+                                <ButtonGroup>
+                                    <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
+                                    <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                                </ButtonGroup>
+                            </div>
+                        );
+                    }
                     return (
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
@@ -294,6 +298,16 @@ class Thread extends React.Component {
                         </div>
                     );
                 } else {
+                    if (this.props.currentUser.isAdmin) {
+                        return (
+                            <div className="quickActions">
+                                <h6>Quick Actions</h6>
+                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
+                                <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                                <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                            </div>
+                        );
+                    }
                     return (
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
@@ -306,6 +320,17 @@ class Thread extends React.Component {
                 }
             }
             else {
+                if (this.props.currentUser.isAdmin) {
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
+                                <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                            </ButtonGroup>
+                        </div>
+                    )
+                }
                 return (
                     <div className="quickActions">
                         <h6>Quick Actions</h6>
