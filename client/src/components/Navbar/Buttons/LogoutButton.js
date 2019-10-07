@@ -2,6 +2,8 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import "./Button.css";
 
@@ -15,6 +17,10 @@ function LogoutButton(props) {
     const handleLogout = () => {
         setShowLogout(false);
         props.logout();
+    }
+
+    if(props.loading) {
+            return <FontAwesomeIcon id="loading" className="fa-3x loadingPostIcon" icon={faSpinner} spin />;
     }
 
     return (

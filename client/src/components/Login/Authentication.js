@@ -6,6 +6,8 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { NotificationManager } from "react-notifications";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Logo from "../../images/Seenit Logo_white.png";
 import "./Authentication.css";
@@ -19,7 +21,8 @@ class Authentication extends React.Component {
         this.state = {
             username: "",
             password: "",
-            errors: {}
+            errors: {},
+            loading: false
         };
     }
 
@@ -30,6 +33,7 @@ class Authentication extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         const self = this;
+        this.setState({ loading: true });
 
         fetch("/users/login", {
             method: "POST",
@@ -39,6 +43,7 @@ class Authentication extends React.Component {
             }
         })
             .then(function (response) {
+                self.setState({ loading: false });
                 if (response.status === 404 || response.status === 400) {
                     response.json().then(function (data) {
                         self.setState({ errors: data });
@@ -101,7 +106,9 @@ class Authentication extends React.Component {
                             </Form.Group>
                             <Form.Group>
                                 <Button name="loginBtn" variant="outline-light" type="submit" block>
-                                    Login
+                                    {this.state.loading? 
+                                    <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />
+                                    : "Login"}
                                 </Button>
                             </Form.Group>
                             <Form.Group>

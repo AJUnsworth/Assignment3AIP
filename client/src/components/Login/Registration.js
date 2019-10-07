@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import "./Registration.css";
 
@@ -19,7 +21,8 @@ class Registration extends React.Component {
             email: "",
             password: "",
             confirmPassword: "",
-            errors: {}
+            errors: {},
+            loading: false
         };
 
         this.state = this.initialState;
@@ -32,6 +35,8 @@ class Registration extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         const self = this;
+        this.setState({ loading: true });
+
         fetch("/users/register", {
             method: "POST",
             body: JSON.stringify(this.state),
@@ -42,19 +47,23 @@ class Registration extends React.Component {
             .then(function (response) {
                 if (response.status === 400) {
                     response.json().then(function (data) {
-                        self.setState({ errors: data });
+                        self.setState({ 
+                            errors: data,
+                            loading: false 
+                        });
                     })
                 }
                 else if (response.status === 200) {
                     self.setState(self.initialState);
                     NotificationManager.success("Account created successfully", "Account Registered");
                 } else {
+                    self.setState({ loading: false });
                     NotificationManager.error(
                         "Looks like something went wrong while creating an account, please try again later",
                         "Error registering account",
                         5000
                     );
-                    
+
                 }
             });
     }
@@ -126,7 +135,9 @@ class Registration extends React.Component {
                             </Form.Group>
                             <Form.Group>
                                 <Button variant="primary" type="submit" name="registerBtn">
-                                    Register Account
+                                    {this.state.loading ?
+                                        <FontAwesomeIcon id="loading" className="fa-lg loadingPostIcon" icon={faSpinner} spin />
+                                        : "Login"}
                                 </Button>
                             </Form.Group>
                         </Col>

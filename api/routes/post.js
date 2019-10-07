@@ -153,11 +153,7 @@ router.post("/report", async function (req, res) {
             return res.sendStatus(405)
         }
     }
-
-
-
-
-})
+});
 
 router.post("/edit", function (req, res, next) {
     //Fix later by implementing with Multer

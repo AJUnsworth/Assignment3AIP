@@ -1,5 +1,7 @@
 import React from "react";
 import { Redirect } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 //From https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 function authenticate(ComponentToProtect) {
@@ -28,7 +30,7 @@ function authenticate(ComponentToProtect) {
 
         render() {
             if (this.state.loading) {
-                return null;
+                return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
             }
 
             if (this.state.redirectLogin) {

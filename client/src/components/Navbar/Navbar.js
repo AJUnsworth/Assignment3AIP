@@ -10,12 +10,11 @@ import ViewProfileButton from "./Buttons/ViewProfileButton";
 import "./Navbar.css";
 
 class Navbar extends React.Component {
-
     renderNavButtons() {
         if (this.props.currentUser) {
             return (
                 <>
-                    <LogoutButton logout={this.props.logout} />
+                    <LogoutButton logout={this.props.logout} loading={this.props.loading} />
                     <ViewProfileButton {...this.props} />
                     {this.props.currentUser.isAdmin && 
                         <AdminButton/>
