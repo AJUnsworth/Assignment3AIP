@@ -446,18 +446,6 @@ router.get("/metrics", function (req, res) {
         });
 });
 
-router.get("/getRepliesCount", function (req, res) {
-    const postId = req.query.post_id;
-
-    Post.findOne({ _id: postId }).populate("repliesCount").then(post => {
-        if (!post) {
-            return res.sendStatus(404);
-        } else {
-            return res.json(post.repliesCount);
-        }
-    });
-});
-
 router.get("/:postId", function (req, res) {
     const postId = req.params.postId;
 

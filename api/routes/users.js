@@ -59,14 +59,15 @@ router.post("/login", (req, res) => {
                     const payload = {
                         id: user._id,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        isAdmin: user.isAdmin
                     };
                     // Sign token
                     const token = jwt.sign(
                         payload,
                         process.env.SECRET_OR_KEY,
                         {
-                            expiresIn: 3600 // 1 hour in seconds
+                            expiresIn: 43200 // 12 hours in seconds
                         },
                     );
 
@@ -77,7 +78,9 @@ router.post("/login", (req, res) => {
                     user.lastLoggedIn = Date.now();
 
                     User.find({ lastIpAddress: user.lastIpAddress }).where("_id").ne(user._id).then(users => {
-                        for (var i = 0; i < users.length; i++) {
+                        let matchingUsersCount = 1;
+
+                        for (let i = 0; i < users.length; i++) {
                             //Based on SO post by Hitesh Anshani on comparing dates in the last 24 hours
                             //See https://stackoverflow.com/questions/51405133/check-if-a-date-is-24-hours-old/51405446
 
@@ -86,19 +89,24 @@ router.post("/login", (req, res) => {
                             const dayAgo = user.lastLoggedIn - day;
 
                             //Flag potential sock puppets when account was last logged in less than a day ago
-                            if (users[i].lastLoggedIn >= dayAgo) {
-                                user.flagged = true;
-                                users[i].flagged = true;
-                                users[i].save()
-                                    .catch(err => res.sendStatus(500));
-                            }
+                            //if (users[i].lastLoggedIn >= dayAgo) {
+                            //    matchingUsersCount++;
+                            //    if (matchingUsersCount >= 3) {
+                            //        return res.sendStatus(405);
+                            //    }
+                            //}
                         }
 
                         user.save(err => {
                             if (!err) {
                                 return res
                                     .cookie("token", token, { httpOnly: true })
-                                    .json({ id: user._id, username: user.username, email: user.email })
+                                    .json({ 
+                                        id: user._id, 
+                                        username: user.username, 
+                                        email: user.email, 
+                                        isAdmin: user.isAdmin
+                                    });
                             } else {
                                 return res.sendStatus(500);
                             }
@@ -110,55 +118,6 @@ router.post("/login", (req, res) => {
             });
         }
     });
-});
-
-router.delete("/delete", async function (req, res) {
-    const currentUserId = req.body.currentUserId;
-    const flaggedUserId = req.body.flaggedUserId;
-
-    const currentUser = await User.findOne({ _id: currentUserId });
-    if (!currentUser) {
-        return res.sendStatus(404);
-    } else {
-        if (!currentUser.isAdmin) {
-            return res.sendStatus(403);
-        }
-
-        await User.findByIdAndRemove(flaggedUserId, (error, data) => {
-            if (error) {
-                return res.sendStatus(500);
-            } else {
-                if (data === null) {
-                    return res.sendStatus(404);
-                } else {
-                    return res.sendStatus(200);
-                }
-            }
-        });
-    }
-});
-
-router.post("/approve", async function (req, res) {
-    const currentUserId = req.body.currentUserId;
-    const flaggedUserId = req.body.flaggedUserId;
-
-    const currentUser = await User.findOne({ _id: currentUserId });
-    if (!currentUser) {
-        return res.sendStatus(404);
-    } else {
-        if (!currentUser.isAdmin) {
-            return res.sendStatus(403);
-        }
-
-        const flaggedUser = await User.findOne({ _id: flaggedUserId });
-        if (!flaggedUser) return res.sendStatus(500);
-        flaggedUser.flagged = false;
-
-        flaggedUser
-            .save()
-            .then(() => res.sendStatus(200))
-            .catch(err => res.sendStatus(500));
-    }
 });
 
 router.post("/logout", function (req, res) {
