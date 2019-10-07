@@ -39,6 +39,11 @@
     margin-left: 5px;
 }
 
+.input-group>.custom-file:not(:last-child) .custom-file-label, .input-group>.custom-file:not(:last-child) .custom-file-label::after {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 .custom-file-label {
     overflow: hidden;
     text-overflow: ellipsis;
