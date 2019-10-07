@@ -39,7 +39,7 @@ class Authentication extends React.Component {
             }
         })
             .then(function (response) {
-                if (response.status === 400) {
+                if (response.status === 404 || response.status === 400) {
                     response.json().then(function (data) {
                         self.setState({ errors: data });
                     });

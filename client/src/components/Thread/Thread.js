@@ -18,7 +18,6 @@ import ReplyBreadcrumb from "./ReplyBreadcrumb";
 import UploadImage from "../Image/UploadImage";
 
 class Thread extends React.Component {
-
     constructor() {
         super();
         this.state = {
@@ -28,7 +27,8 @@ class Thread extends React.Component {
             showEdit: false,
             showReport: false,
             loading: true,
-            loadingReplies: true
+            loadingReplies: true,
+            isShowMoreDisabled: false,
         }
     }
 
@@ -40,6 +40,14 @@ class Thread extends React.Component {
         })
             .then(function (response) {
                 response.json().then(function (data) {
+                    if (data.flagged) {
+                        fetch("/users/checkAdmin")
+                            .then(res => {
+                                if (res.status !== 200) {
+                                    self.props.history.push("/");
+                                }
+                            });
+                    }
                     self.setState({ post: data, loading: false });
                 })
             })
@@ -74,8 +82,30 @@ class Thread extends React.Component {
     }
 
     handleReportImage = () => {
-        //add report image flag
+        const self = this;
+        const requestBody = JSON.stringify({ postId: this.state.post._id, userId: this.props.currentUser.id })
+
+        fetch("/post/report", {
+            method: "POST",
+            body: requestBody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (response) {
+                if (response.status === 200) {
+                    NotificationManager.success("The post has been reported successfully", "Post Reported");
+                }
+                else if (response.status === 405) {
+                    NotificationManager.error("You have already reported this post", "Report Unsuccessful");
+                }
+                else {
+                    NotificationManager.error("An error has occured.", "Error");
+                }
+                self.setState({ showReport: false });
+            })
     }
+
 
     handleDeletePost = () => {
         this.setState({ showDelete: false });
@@ -123,32 +153,85 @@ class Thread extends React.Component {
             })
     }
 
-    displayReplies = () => {
+    displayRecentReplies = (refresh) => {
         const self = this;
+        let skippedPosts;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
-        fetch("/post/replies?post_id=" + postId, {
-            method: "GET"
-        })
+
+        if (!refresh) {
+            skippedPosts = this.state.replies.length;
+        } else {
+            skippedPosts = 0;
+        }
+
+        fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`)
             .then(function (response) {
-                if (response.status === 200) {
+                if (response.status === 404) {
                     response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            replies: [...prevState.replies, ...data],
-                            loadingReplies: false
-                            //isShowMoreDisabled: prevState.replies.length + data.length === data.metadata[0].totalCount
-                        }));
+                        //self.setState({ errors: data });
                     });
-                } else {
-                    self.setState({ loadingReplies: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading the post, please try refreshing the page",
-                        "Error loading post",
-                        5000
-                    );
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                loadingReplies: false
+                            }));
+
+                        } else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: data.results.length < 10,
+                                loadingReplies: false
+                            });
+                        }
+                    });
                 }
             })
     }
+
+    displayPopularReplies = (refresh) => {
+        const self = this;
+        let skippedPosts;
+        const { postId } = this.props.match.params;
+        this.setState({ loadingReplies: true });
+
+        if (!refresh) {
+            skippedPosts = this.state.replies.length;
+        } else {
+            skippedPosts = 0;
+        }
+
+        fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
+        .then(function (response) {
+            if (response.status === 404) {
+                response.json().then(function (data) {
+                    //self.setState({ errors: data });
+                });
+            }
+            else if (response.status === 200) {
+                response.json().then(function (data) {
+                    if (!refresh) {
+                        self.setState(prevState => ({
+                            replies: [...prevState.replies, ...data.results],
+                            isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                            loadingReplies: false
+                        }));
+
+                    } else {
+                        self.setState({
+                            replies: data.results,
+                            isShowMoreDisabled: data.results.length < 10,
+                            loadingReplies: false
+                        });
+                    }
+                });
+            }
+        })
+}
 
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
@@ -160,44 +243,46 @@ class Thread extends React.Component {
 
     renderQuickActions() {
         const post = this.state.post;
-        if (this.props.currentUser && post.userId._id === this.props.currentUser.id) {
-            if (this.state.replies.length ||
-                post.reactions.like > 0 ||
-                post.reactions.love > 0 ||
-                post.reactions.tears > 0 ||
-                post.reactions.angry > 0 ||
-                post.reactions.laugh > 0 ||
-                post.reactions.wow > 0) {
+        if (this.props.currentUser) {
+            if (post.userId._id === this.props.currentUser.id) {
+                if (this.state.replies.length ||
+                    post.reactions.like > 0 ||
+                    post.reactions.love > 0 ||
+                    post.reactions.tears > 0 ||
+                    post.reactions.angry > 0 ||
+                    post.reactions.laugh > 0 ||
+                    post.reactions.wow > 0) {
 
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className="quickActions">
+                            <h6>Quick Actions</h6>
+                            <ButtonGroup>
+                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
+            }
+            else {
                 return (
                     <div className="quickActions">
                         <h6>Quick Actions</h6>
                         <ButtonGroup>
-                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                        </ButtonGroup>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="quickActions">
-                        <h6>Quick Actions</h6>
-                        <ButtonGroup>
-                            <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
-                            <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                            <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
                         </ButtonGroup>
                     </div>
                 );
             }
-        }
-        else {
-            return (
-                <div className="quickActions">
-                    <h6>Quick Actions</h6>
-                    <ButtonGroup>
-                        <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
-                    </ButtonGroup>
-                </div>
-            );
         }
     }
 
@@ -226,11 +311,14 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentsText">Comments</h2>
-                                <ImageGrid displayPosts={this.displayReplies}
+                                <ImageGrid displayRecentReplies={this.displayRecentReplies}
+                                    displayPopularReplies={this.displayPopularReplies}
+                                    sortBy='repliesRecent'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
+                                    isShowMoreDisabled={this.state.isShowMoreDisabled}
                                 />
                             </div>
                         </Col>
@@ -312,7 +400,6 @@ class Thread extends React.Component {
                                     Report
                                 </Button>
                             </ButtonGroup>
-
                         </Modal.Footer>
                     </Modal>
                 </div>

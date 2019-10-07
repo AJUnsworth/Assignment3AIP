@@ -35,10 +35,10 @@ class Home extends React.Component {
                                 isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
                                 loading: false
                             }));
-                        } else {
+                        }  else {
                             self.setState({ 
                                 posts: data.results, 
-                                isShowMoreDisabled: false,
+                                isShowMoreDisabled: data.results.length < 10,
                                 loading: false
                             });
                         }
@@ -75,10 +75,11 @@ class Home extends React.Component {
                                 isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
                                 loading: false
                             }))
+                            
                         } else {
                             self.setState({
                                 posts: data.results,
-                                isShowMoreDisabled: false,
+                                isShowMoreDisabled: data.results.length < 10,
                                 loading: false
                             });
                         }

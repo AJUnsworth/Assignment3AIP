@@ -4,12 +4,20 @@ const Schema = mongoose.Schema;
 const likedPostSchema = new Schema({
     postId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Post"
+        ref: "Post",
+        unique: true
     },
     reactionType: {
         type: String
     }
 });
+
+const reportedPostSchema = new Schema({
+    reportedPost: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    },
+})
 
 const userSchema = new Schema({
     username: {
@@ -36,6 +44,11 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    reportedPosts: [reportedPostSchema],
     likedPosts: [likedPostSchema],
 }, {
     timestamps: true

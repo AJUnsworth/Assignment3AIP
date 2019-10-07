@@ -16,13 +16,13 @@ class LeaderboardMember extends React.Component {
                     {this.props.position + 1}
                 </Col>
                 <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <Link to={"/user/" + this.props.members._id} className="LeaderboardMemberName">
-                        {this.props.members.users.username}
+                    <Link to={"/user/" + this.props.member._id} className="LeaderboardMemberName">
+                        {this.props.member.username}
                     </Link>
                 </Col>
                 <Col xs={4} sm={4} md={4} lg={4} xl={4}>
                     <Row className="align-self-end">
-                        <label className="LeaderboardRank">{this.props.members.totalUserReactions}</label>
+                        <label className="LeaderboardRank">{this.props.member.totalUserReactions}</label>
                         <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
                     </Row>
                     <Row>

@@ -13,12 +13,17 @@ class Leaderboard extends React.Component {
         super(props)
         this.state = {
             members: [],
-            loading: true
+            loading: true,
+            isShowMoreDisabled: false
         };
     }
 
     componentDidMount() {
-        this.displayLeaderboard();
+        if (this.props.isAdminPage) {
+            this.displayFlaggedUsers();
+        } else {
+            this.displayLeaderboard();
+        }
     }
 
     displayLeaderboard(limit) {
@@ -45,12 +50,58 @@ class Leaderboard extends React.Component {
             });
     }
 
+    displayFlaggedUsers() {
+        const self = this;
+        this.setState({ loading: true });
+        const skipped = this.state.members.length;
+
+        fetch(`/users/flagged?skipped=${skipped}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+            .then(response => {
+                if (response.status === 200) {
+                    response.json().then(function (data) {
+                        self.setState(prevState => ({
+                            members: [...prevState.members, ...data.users],
+                            isShowMoreDisabled: prevState.members.length + data.users.length === data.userCount,
+                            loading: false
+                        }));
+                    });
+                } else {
+                    self.setState({ loading: false });
+                    NotificationManager.error(
+                        "Looks like something went wrong while trying to load the leaderboard, please try refreshing the page",
+                        "Error loading leaderboard",
+                        5000
+                    );
+                }
+            });
+    }
+
+    handleShowMore = () => {
+        this.displayFlaggedUsers();
+    }
+
+    renderLeaderboardButtons() {
+        if (!this.props.isAdminPage) {
+            return (
+                <>
+                    <h1>Leaderboard</h1>
+                    <h6>Total number of reactions across all posts</h6>
+                    <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
+                        <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
+                        <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
+                        <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
+                    </ToggleButtonGroup>
+                </>
+            );
+        }
+    }
+
     renderLeaderboard() {
         if (this.state.loading) {
             return <FontAwesomeIcon id="loading" className="fa-3x" icon={faSpinner} spin />;
         } else {
-            return (this.state.members.map((members, index) => {
-                return <LeaderboardMember {...this.props} key={index} position={index} members={members} />
+            return (this.state.members.map((member, index) => {
+                return <LeaderboardMember {...this.props} key={index} position={index} member={member} />
             }));
         }
     }
@@ -58,15 +109,9 @@ class Leaderboard extends React.Component {
     render() {
         return (
             <div className="Leaderboard">
-                <h1>Leaderboard</h1>
-                <h6>Total number of reactions across all posts</h6>
-                <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
-                    <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
-                    <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
-                    <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
-                </ToggleButtonGroup>
-                {this.renderLeaderboard()}
-            </div>
+                {this.renderLeaderboardButtons()}
+                { this.renderLeaderboard() }
+            </div >
         );
     }
 }

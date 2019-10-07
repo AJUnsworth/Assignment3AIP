@@ -11,42 +11,30 @@ const User = require("../models/user");
 
 //Register and login routes are based on a tutorial by Rishi Prasad
 //See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
-router.post("/register", (req, res) => {
-    const { errors, isValid } = validateRegisterInput(req.body);
+router.post("/register", async (req, res) => {
+    const { errors, isValid } = await validateRegisterInput(req.body);
 
     // Check validation
     if (!isValid) {
         return res.status(400).json(errors);
     }
 
-    User.findOne({ username: req.body.username }).then(user => {
-        if (user) {
-            return res.status(400).json({ username: "Username is already registered" });
-        } else {
-            User.findOne({ email: req.body.email }).then(user => {
-                if (user) {
-                    return res.status(400).json({ email: "Email is already registered" });
-                } else {
-                    const newUser = new User({
-                        username: req.body.username,
-                        email: req.body.email,
-                        password: req.body.password,
-                    });
+    const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+    });
 
-                    // Hash password before saving in database
-                    bcrypt.genSalt(10, (err, salt) => {
-                        bcrypt.hash(newUser.password, salt, (err, hash) => {
-                            if (err) throw err;
-                            newUser.password = hash;
-                            newUser
-                                .save()
-                                .then(user => res.json(user))
-                                .catch(err => console.log(err));
-                        });
-                    });
-                }
-            });
-        }
+    // Hash password before saving in database
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+                .save()
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
+        });
     });
 });
 
@@ -63,7 +51,7 @@ router.post("/login", (req, res) => {
 
     User.findOne({ username }).then(user => {
         if (!user) {
-            return res.status(404).json({ username: "Username not found" });
+            return res.status(404).json({ password: "Username or password is incorrect" });
         } else {
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (isMatch) {
@@ -117,11 +105,60 @@ router.post("/login", (req, res) => {
                         });
                     });
                 } else {
-                    return res.status(400).json({ password: "Password incorrect" });
+                    return res.status(404).json({ password: "Username or password incorrect" });
                 }
             });
         }
     });
+});
+
+router.delete("/delete", async function (req, res) {
+    const currentUserId = req.body.currentUserId;
+    const flaggedUserId = req.body.flaggedUserId;
+
+    const currentUser = await User.findOne({ _id: currentUserId });
+    if (!currentUser) {
+        return res.sendStatus(404);
+    } else {
+        if (!currentUser.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        await User.findByIdAndRemove(flaggedUserId, (error, data) => {
+            if (error) {
+                return res.sendStatus(500);
+            } else {
+                if (data === null) {
+                    return res.sendStatus(404);
+                } else {
+                    return res.sendStatus(200);
+                }
+            }
+        });
+    }
+});
+
+router.post("/approve", async function (req, res) {
+    const currentUserId = req.body.currentUserId;
+    const flaggedUserId = req.body.flaggedUserId;
+
+    const currentUser = await User.findOne({ _id: currentUserId });
+    if (!currentUser) {
+        return res.sendStatus(404);
+    } else {
+        if (!currentUser.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        const flaggedUser = await User.findOne({ _id: flaggedUserId });
+        if (!flaggedUser) return res.sendStatus(500);
+        flaggedUser.flagged = false;
+
+        flaggedUser
+            .save()
+            .then(() => res.sendStatus(200))
+            .catch(err => res.sendStatus(500));
+    }
 });
 
 router.post("/logout", function (req, res) {
@@ -132,6 +169,26 @@ router.post("/logout", function (req, res) {
 //See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 router.get("/checkToken", authenticate, function (req, res) {
     return res.sendStatus(200);
+});
+
+router.get("/checkAdmin", authenticate, async function (req, res) {
+    const token =
+        req.body.token ||
+        req.query.token ||
+        req.headers["x-access-token"] ||
+        req.cookies.token;
+
+    //Decode because authenticate middleware has confirmed the token is valid
+    const userData = jwt.decode(token);
+    const user = await User.findOne({ _id: userData.id });
+
+    if (!user) {
+        return res.sendStatus(404);
+    } else if (user.isAdmin) {
+        return res.sendStatus(200);
+    } else {
+        return res.sendStatus(403);
+    }
 });
 
 router.get("/getCurrentUser", authenticate, function (req, res) {
@@ -171,11 +228,25 @@ router.get("/getPostReaction", function (req, res) {
     });
 });
 
+router.get("/flagged", async function (req, res) {
+    let skipped = parseInt(req.query.skipped) || 0;
+
+    const userCount = await User.countDocuments({ flagged: true });
+
+    User.find({ flagged: true })
+        .limit(10)
+        .skip(skipped)
+        .exec(function (err, users) {
+            if (err) return res.status(404);
+            return res.json({ users, userCount });
+        });
+});
+
 router.get("/:userId", function (req, res) {
     const userId = req.params.userId;
 
-    User.findOne({_id: userId}).populate("posts").then(user => {
-        if (!user){
+    User.findOne({ _id: userId }).populate("posts").then(user => {
+        if (!user) {
             return res.sendStatus(404);
         } else {
             var reactionCount = 0;
@@ -185,7 +256,7 @@ router.get("/:userId", function (req, res) {
                 reactionCount += post.totalReactions;
             }
 
-            return res.json({reactionCount, postCount, ...user.toJSON()});
+            return res.json({ reactionCount, postCount, ...user.toJSON() });
         }
     })
 });

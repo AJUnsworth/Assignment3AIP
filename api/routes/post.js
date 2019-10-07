@@ -20,6 +20,7 @@ router.post("/create", function (req, res, next) {
         const newPost = new Post({
             userId: req.body.userId,
             imageUrl: req.file.location,
+            reports: 0,
             reactions: {
                 like: 0,
                 laugh: 0,
@@ -49,40 +50,104 @@ router.post("/create", function (req, res, next) {
     });
 });
 
-router.post("/delete", function (req, res) {
+router.post("/delete", async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
-    Post.findOne({ _id: postId }).populate("replies").then(async post => {
-        if (!post) {
+    const post = await Post.findOne({ _id: postId }).populate("replies");
+    if (!post) {
+        return res.sendStatus(404);
+    } else {
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
             return res.sendStatus(404);
-        } else {
-            if (post.userId != userId) {
-                return res.sendStatus(403);
-            }
-
-            if (post.imageUrl) {
-                //deleteImage only returns error messages if any issues occur
-                const err = await deleteImage(post.imageUrl)
-                if (err) return res.sendStatus(500);
-            }
-
-            if (Array.isArray(post.replies) && post.replies.length) {
-                //Remove only the image if the post has replies to replace with a placeholder
-                post.imageUrl = null;
-                post
-                    .save()
-                    .then(updatedPost => res.json(updatedPost))
-                    .catch(() => res.sendStatus(500));
-            } else {
-                post
-                    .remove()
-                    .then(() => res.sendStatus(200))
-                    .catch(() => res.sendStatus(500));
-            }
         }
-    });
+
+        if (post.userId != userId || !user.isAdmin) {
+            return res.sendStatus(403);
+        }
+
+        if (post.imageUrl) {
+            //deleteImage only returns error messages if any issues occur
+            const err = await deleteImage(post.imageUrl)
+            if (err) return res.sendStatus(500);
+        }
+
+        if (Array.isArray(post.replies) && post.replies.length) {
+            //Remove only the image if the post has replies to replace with a placeholder
+            post.imageUrl = null;
+            post
+                .save()
+                .then(updatedPost => res.json(updatedPost))
+                .catch(() => res.sendStatus(500));
+        } else {
+            post
+                .remove()
+                .then(() => res.sendStatus(200))
+                .catch(() => res.sendStatus(500));
+        }
+    }
 });
+
+router.post("/approve", async function (req, res) {
+    const postId = req.body.postId;
+    const userId = req.body.userId;
+
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+        return res.sendStatus(404);
+    } else {
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.sendStatus(404);
+        }
+
+        if (!user.isAdmin) {
+            return res.sendStatus(403);
+        }
+        post.flagged = false;
+        post
+            .save()
+            .then(() => res.sendStatus(200))
+            .catch(() => res.sendStatus(500));
+    }
+});
+
+router.post("/report", async function (req, res) {
+    const postId = req.body.postId;
+    const userId = req.body.userId;
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+        return res.sendStatus(404);
+    } else {
+        const indexOfPost = user.reportedPosts.findIndex(reportedPost => reportedPost.reportedPost == postId);
+        if (indexOfPost == -1) {
+            Post.findOneAndUpdate({ _id: postId }, { $inc: { reports: 1 } }, { new: true }, function (err, post) {
+                if (err) {
+                    return res.sendStatus(400)
+                }
+
+                user.reportedPosts.push({ reportedPost: postId });
+                user.save().catch(() => res.sendStatus(500));
+
+                if (post.reports >= 20) {
+                    post.flagged = true
+                    post.save().then(updatedPost => res.json(updatedPost))
+                }
+                else {
+                    return res.sendStatus(200);
+                }
+            });
+        } else {
+            return res.sendStatus(405)
+        }
+    }
+
+
+
+
+})
 
 router.post("/edit", function (req, res, next) {
     //Fix later by implementing with Multer
@@ -133,8 +198,8 @@ router.get("/getThumbnails", function (req, res) {
     Post.aggregate([
         {
             '$match': {
-                'imageUrl': { '$ne': null },
-                'replyTo': { '$exists': false }
+                'replyTo': { '$exists': false },
+                'flagged': false
             }
         }, {
             '$sort': { 'createdAt': -1 }
@@ -158,7 +223,7 @@ router.get("/getPopular", function (req, res) {
 
     Post.aggregate([
         {
-            '$match': { 'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false } }
+            '$match': { 'replyTo': { '$exists': false }, 'flagged': false }
         },
 
         {
@@ -183,17 +248,54 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
-router.get("/getUserPosts", function (req, res) {
+router.get("/flagged", async function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId =  mongoose.Types.ObjectId(req.query.userId);
-    
-    Post.aggregate([  
-        {'$match': { 'userId': userId,  'imageUrl': { '$ne': null }, 'replyTo': { '$exists': false }}},
-        {'$sort': { 'createdAt': -1 }},
+
+    const postCount = await Post.countDocuments({ flagged: true });
+
+    Post.find({ flagged: true })
+        .limit(10)
+        .skip(skippedPosts)
+        .sort({ createdAt: -1 })
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json({ posts: posts, postCount: postCount });
+        });
+});
+
+router.get("/getRecentUserPosts", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId = mongoose.Types.ObjectId(req.query.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'flagged': false } },
+        { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],
-                results: [{ $skip: skippedPosts }, { $limit: 5 }]
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+});
+
+router.get("/getPopularUserPosts", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId = mongoose.Types.ObjectId(req.query.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'flagged': false } },
+        {
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+        { '$sort': { 'totalReactions': -1 } },
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
             }
         }])
         .exec(function (err, posts) {
@@ -249,17 +351,47 @@ router.post("/addReaction", function (req, res) {
     });
 });
 
-router.get("/replies", function (req, res) {
-    const postId = req.query.post_id;
+router.get("/repliesRecent", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const postId = mongoose.Types.ObjectId(req.query.postId);
 
-    Post.findOne({ _id: postId }).populate("replies").then(post => {
-        if (!post) {
-            return res.sendStatus(404);
-        } else {
-            return res.json(post.replies);
-        }
-    })
+    Post.aggregate([
+        { '$match': { 'replyTo': postId, 'flagged': false } },
+        { '$sort': { 'createdAt': -1 } },
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
 });
+
+router.get("/repliesPopular", function (req, res) {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const postId = mongoose.Types.ObjectId(req.query.postId);
+
+    Post.aggregate([
+        { '$match': { 'replyTo': postId, 'flagged': false } },
+        {
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+        { '$sort': { 'totalReactions': -1 } },
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(404);
+            return res.json(posts[0]);
+        });
+});
+
 
 router.post("/removeReaction", function (req, res) {
     const userId = req.body.userId;
@@ -300,16 +432,18 @@ router.post("/removeReaction", function (req, res) {
 router.get("/metrics", function (req, res) {
     const postId = req.query.post_id;
 
-    Post.findOne({ _id: postId }).populate("totalReplies").then(post => {
-        if (!post) {
-            return res.sendStatus(404);
-        } else {
-            return res.json({ 
-                totalReactions: post.totalReactions, 
-                totalReplies: post.totalReplies
-            });
-        }
-    });
+    Post.findOne({ _id: postId })
+        .populate({ path: "totalReplies", match: { flagged: false } })
+        .then(post => {
+            if (!post) {
+                return res.sendStatus(404);
+            } else {
+                return res.json({
+                    totalReactions: post.totalReactions,
+                    totalReplies: post.totalReplies
+                });
+            }
+        });
 });
 
 router.get("/getRepliesCount", function (req, res) {
