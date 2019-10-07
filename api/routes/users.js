@@ -259,6 +259,7 @@ router.get("/:userId", function (req, res) {
             return res.json({ reactionCount, postCount, ...user.toJSON() });
         }
     })
+    .catch(() => res.sendStatus(404));
 });
 
 module.exports = router;

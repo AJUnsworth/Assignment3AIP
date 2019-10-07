@@ -467,7 +467,8 @@ router.get("/:postId", function (req, res) {
         } else {
             return res.json(post);
         }
-    });
+    })
+    .catch(() => res.sendStatus(404));
 });
 
 module.exports = router;
