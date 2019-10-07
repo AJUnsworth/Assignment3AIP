@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "../../images/Seenit Logo_white.png";
+import AdminButton from "./Buttons/AdminButton";
 import LoginButton from "./Buttons/LoginButton";
 import LogoutButton from "./Buttons/LogoutButton";
 import ViewProfileButton from "./Buttons/ViewProfileButton";
@@ -16,6 +17,9 @@ class Navbar extends React.Component {
                 <>
                     <LogoutButton logout={this.props.logout} />
                     <ViewProfileButton {...this.props} />
+                    {this.props.currentUser.isAdmin && 
+                        <AdminButton/>
+                    }
                 </>
             );
         }

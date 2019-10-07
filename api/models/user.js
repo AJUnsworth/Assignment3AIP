@@ -40,10 +40,6 @@ const userSchema = new Schema({
     lastLoggedIn: {
         type: Date
     },
-    flagged: {
-        type: Boolean,
-        default: false
-    },
     isAdmin: {
         type: Boolean,
         default: false

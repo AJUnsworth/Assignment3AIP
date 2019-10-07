@@ -48,6 +48,12 @@ class Authentication extends React.Component {
                         self.props.setUser(data);
                         self.props.history.push("/");
                     });
+                } else if (response.status === 405) { 
+                    NotificationManager.error(
+                        "Too many accounts have logged in from the same location in the past 24 hours, please use one of the previously used accounts",
+                        "Too many logins",
+                        7000
+                    );
                 } else {
                     NotificationManager.error(
                         "Looks like something went wrong while logging in, please try again later",

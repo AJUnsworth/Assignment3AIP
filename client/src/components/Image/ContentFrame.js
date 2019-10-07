@@ -22,7 +22,11 @@ function ContentFrame(props) {
                             {props.currentUser ? props.currentUser.username : ""}
                         </Link>
                     </h1>
-                    <h4>Start a new conversation today</h4>
+                    {props.currentUser ?
+                        <h4>Start a new conversation today</h4> :
+                        <h4>Please register/log in to be able to post</h4>
+                    }
+                    {/*<ImageActionsButton/>*/}
                 </Col>
             </Row>
             <Row>

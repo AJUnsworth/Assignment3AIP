@@ -32,6 +32,8 @@ class User extends React.Component {
                     response.json().then(function (data) {
                         self.setState({ user: data, loadingContent: false });
                     });
+                } else if (response.status === 404) {
+                    self.props.history.push("/");
                 } else {
                     self.setState({ loadingContent: false });
                     NotificationManager.error(

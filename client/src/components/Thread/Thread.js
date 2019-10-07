@@ -39,6 +39,9 @@ class Thread extends React.Component {
             method: "GET"
         })
             .then(function (response) {
+                if (response.status === 404){
+                    self.props.history.push("/");
+                }
                 response.json().then(function (data) {
                     if (data.flagged) {
                         fetch("/users/checkAdmin")
