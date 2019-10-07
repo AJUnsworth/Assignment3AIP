@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import authenticate from "../Authentication/Authenticate";
-import ImageGrid from "..//Image/ImageGrid";
+import AdminImageGrid from "../Admin/AdminImageGrid";
 import Navbar from "../Navbar/Navbar";
 
 class Admin extends React.Component {
@@ -64,7 +64,7 @@ class Admin extends React.Component {
                     </Row>
                     <Row>
                         <Col xs={12} sm={12} md={12} lg={8} xl={12} className="contentFrameGrid">
-                            <ImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
+                            <AdminImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
                         </Col>
                     </Row>
                 </Container>
