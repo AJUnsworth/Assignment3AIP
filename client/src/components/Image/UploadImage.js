@@ -89,6 +89,12 @@ class UploadImage extends React.Component {
                         "Cannot edit post",
                         5000
                     );
+                } else if (response.status === 400) {
+                    NotificationManager.error(
+                        "Please only upload .jpg, .png or .gif files",
+                        "Cannot upload post",
+                        5000
+                    );
                 } else {
                     NotificationManager.error(
                         "Looks like something went wrong when trying to edit this post, please try again later",

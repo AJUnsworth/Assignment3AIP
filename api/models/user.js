@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const likedPostSchema = new Schema({
     postId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-        unique: true
+        ref: "Post"
     },
     reactionType: {
         type: String

@@ -32,7 +32,7 @@ module.exports = async function validateRegisterInput(data) {
     }
 
     if (!validator.isLength(data.username, { min: 6, max: 16 })) {
-        errors.password = "Username must be between 6 and 16 characters long";
+        errors.username = "Username must be between 6 and 16 characters long";
     }
 
     if (!validator.isEmail(data.email)) {

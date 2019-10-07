@@ -14,6 +14,10 @@ const singleUpload = uploadImage.single("image");
 router.post("/create", function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
     singleUpload(req, res, function (err) {
+        if(!req.file || req.file === undefined) {
+            return res.sendStatus(400);
+        }
+
         if (err) next(err);
 
         const newPost = new Post({
