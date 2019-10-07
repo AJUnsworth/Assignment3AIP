@@ -32,7 +32,7 @@ class ReactionGrid extends React.Component {
     }
 
     async getUserReaction() {
-        const response = await fetch("/users/getPostReaction?user_id=" + this.props.currentUser.id + "&post_id=" + this.props.post._id, {
+        const response = await fetch("/users/getPostReaction?post_id=" + this.props.post._id, {
             method: "GET"
         });
 

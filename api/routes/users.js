@@ -33,7 +33,7 @@ router.post("/register", async (req, res) => {
             newUser
                 .save()
                 .then(user => res.json(user))
-                .catch(err => console.log(err));
+                .catch(err => res.sendStatus(500);
         });
     });
 });
