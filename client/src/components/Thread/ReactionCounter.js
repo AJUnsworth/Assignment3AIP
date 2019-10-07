@@ -21,8 +21,15 @@ class ReactionCounter extends React.Component {
         this.loadMetrics();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.post !== this.props.post) {
+            this.loadMetrics();
+        }
+    }
+
     loadMetrics() {
         const self = this;
+        this.setState({ loading: true });
         fetch("/post/metrics?post_id=" + this.props.post._id, {
             method: "GET"
         })

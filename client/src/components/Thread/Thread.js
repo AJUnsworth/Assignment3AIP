@@ -274,7 +274,6 @@ class Thread extends React.Component {
     renderQuickActions() {
         const post = this.state.post;
         if (this.props.currentUser) {
-            console.log(post);
             if (post.userId._id === this.props.currentUser.id) {
                 if (this.state.replies.length ||
                     post.reactions.like > 0 ||
@@ -283,7 +282,6 @@ class Thread extends React.Component {
                     post.reactions.angry > 0 ||
                     post.reactions.laugh > 0 ||
                     post.reactions.wow > 0) {
-                        console.log("Test");
                     if (!this.state.post.imageUrl) {
                         return null;
                     }
