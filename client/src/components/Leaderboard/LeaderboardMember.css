@@ -21,14 +21,8 @@
 .LeaderboardRank{
     font-family: Roboto;
     font-style: normal;
-    font-size: 12px;
+    font-size: 18px;
     float: right;
     margin-block-start: 0;
     margin-block-end: 0;
-}
-
-.leaderboardLabel {
-    font-size: 9px;
-    text-align: right;
-    margin: 0px;
 }

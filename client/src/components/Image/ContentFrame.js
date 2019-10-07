@@ -30,10 +30,10 @@ function ContentFrame(props) {
                 </Col>
             </Row>
             <Row>
-                <Col xs={12} sm={12} md={12} lg={8} xl={8} className="contentFrameGrid">
+                <Col xs={12} sm={12} md={12} lg={9} xl={9} className="contentFrameGrid">
                     <ImageGrid {...props} />
                 </Col>
-                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                <Col xs={12} sm={12} md={12} lg={3} xl={3}>
                     <Leaderboard {...props} />
                 </Col>
             </Row>
