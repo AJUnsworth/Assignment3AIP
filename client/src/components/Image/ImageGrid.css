@@ -36,8 +36,7 @@
 }
 
 #uploadButton {
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
+    margin-left: 5px;
 }
 
 .custom-file-label {

@@ -111,11 +111,6 @@ class UploadImage extends React.Component {
                 <Col>
                     <h6>Add a thread...</h6>
                     <div className="input-group">
-                        <Form.Group>
-                            <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
-                                Upload
-                            </Button>
-                        </Form.Group>
                         <div className="custom-file">
                             <input
                                 type="file"
@@ -129,6 +124,11 @@ class UploadImage extends React.Component {
                                 {this.state.filename}
                             </label>
                         </div>
+                        <Form.Group>
+                            <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
+                                Upload
+                            </Button>
+                        </Form.Group>
                     </div>
                 </Col>
             </div>
