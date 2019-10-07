@@ -135,7 +135,7 @@ router.post("/login", (req, res) => {
                         });
                     }
                 } else {
-                    return res.status(404).json({ password: "Username or password incorrect" });
+                    return res.status(404).json({ password: "Username or password is incorrect" });
                 }
             });
         }

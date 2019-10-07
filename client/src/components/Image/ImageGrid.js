@@ -148,9 +148,9 @@ class ImageGrid extends React.Component {
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
                             <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" name="sortBy" >
-                                    <ToggleButton variant="secondary" onClick={this.handleLatestFilter}>Latest</ToggleButton>
-                                    <ToggleButton variant="secondary" onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
+                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" defaultValue={1} name="sortBy" >
+                                    <ToggleButton variant="secondary" value={1} onClick={this.handleLatestFilter}>Latest</ToggleButton>
+                                    <ToggleButton variant="secondary" value={2} onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
                                 </ToggleButtonGroup></div> : null}
 
                             </Col>
