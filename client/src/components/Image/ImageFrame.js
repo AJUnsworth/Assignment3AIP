@@ -11,7 +11,7 @@ class ImageFrame extends React.Component {
             //Otherwise, the page does not reload the component
             <a href={"/thread/" + this.props.post._id}>
                 <div className="imageFrame">
-                    <ReactionCounter postId={this.props.post._id} />
+                    <ReactionCounter post={this.props.post} />
                     {/* eslint-disable-next-line */}
                     <img src={this.props.post.imageUrl ? this.props.post.imageUrl : PlaceholderImage} className="image" />
                 </div>

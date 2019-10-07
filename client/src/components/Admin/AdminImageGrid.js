@@ -8,24 +8,15 @@ import ImageFrame from "../Image/ImageFrame";
 import "./AdminImageGrid.css";
 
 class AdminImageGrid extends React.Component {
-    constructor(props) {
-        super(props)
-        if (!props.sortBy) {
-            this.state = {
-                sortBy: "latest",
-                showResults: true
-            }
-        } else {
-            this.state = {
-                sortBy: props.sortBy,
-                showResults: true
-            }
-        }
+    componentDidMount() {
+        this.props.displayPosts();
+    }
 
-    };
+    handleShowMore = () => {
+        this.props.displayPosts();
+    }
 
     renderPosts() {
-        
         if (this.props.loading) {
             return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
         } else {
