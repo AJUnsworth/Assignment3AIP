@@ -289,7 +289,7 @@ class Thread extends React.Component {
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
                             <ButtonGroup>
-                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
                             </ButtonGroup>
                         </div>
                     );
@@ -298,7 +298,7 @@ class Thread extends React.Component {
                         <div className="quickActions">
                             <h6>Quick Actions</h6>
                             <ButtonGroup>
-                                <Button onClick={this.handleShowDelete} variant="secondary">Delete</Button>
+                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
                                 <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
                             </ButtonGroup>
                         </div>
@@ -310,7 +310,7 @@ class Thread extends React.Component {
                     <div className="quickActions">
                         <h6>Quick Actions</h6>
                         <ButtonGroup>
-                            <Button onClick={this.handleShowReport} variant="secondary">Report Image</Button>
+                            <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
                         </ButtonGroup>
                     </div>
                 );
@@ -391,7 +391,7 @@ class Thread extends React.Component {
                             <Button variant="secondary" onClick={this.handleCloseDelete}>
                                 Cancel
                         </Button>
-                            <Button variant="primary" onClick={this.handleDeletePost}>
+                            <Button variant="danger" onClick={this.handleDeletePost}>
                                 Delete
                         </Button>
                         </Modal.Footer>
