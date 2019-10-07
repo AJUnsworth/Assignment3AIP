@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const aws = require("aws-sdk");
 const mongoose = require('mongoose');
 
 const { uploadImage, deleteImage } = require("../services/image-upload");
@@ -63,7 +62,7 @@ router.post("/delete", async function (req, res) {
             return res.sendStatus(404);
         }
 
-        if (post.userId != userId || !user.isAdmin) {
+        if (post.userId != userId) {
             return res.sendStatus(403);
         }
 
@@ -105,7 +104,9 @@ router.post("/approve", async function (req, res) {
         if (!user.isAdmin) {
             return res.sendStatus(403);
         }
+        
         post.flagged = false;
+        post.reports = 0;
         post
             .save()
             .then(() => res.sendStatus(200))

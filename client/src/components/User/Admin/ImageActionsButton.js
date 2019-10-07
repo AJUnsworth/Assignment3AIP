@@ -1,52 +1,77 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Modal from "react-bootstrap/Modal";
+import { NotificationManager } from "react-notifications";
+import { withRouter } from "react-router-dom";
 
 class ImageActionsButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
+            showApprove: false,
         }
     }
 
-    handleShowModal = () => {
-        this.setState({ showModal: true });
+    handleShowApprove = () => {
+        this.setState({ showApprove: true });
     }
 
-    handleCloseModal = () => {
-        this.setState({ showModal: false });
+    handleCloseApprove = () => {
+        this.setState({ showApprove: false });
     }
 
     handleApprove = () => {
-        //Remove image flag
-        //Return to admin dashboard
-    }
+        this.setState({ showApprove: false });
 
-    handleDelete = () => {
-        //Delete image as admin
+        const requestBody = JSON.stringify({
+            userId: this.props.currentUser.id,
+            postId: this.props.post._id
+        });
+
+        const self = this;
+        fetch("/post/approve", {
+            method: "POST",
+            body: requestBody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (response) {
+                if (response.status === 200) {
+                    NotificationManager.success("Post has been successfully approved", "Approved");
+                    self.props.history.push("/admin");
+                } else if (response.status === 403) {
+                    NotificationManager.error(
+                        "Looks like you don't have permission to approve this",
+                        "Cannot approve post",
+                        5000
+                    );
+                } else {
+                    NotificationManager.error(
+                        "Looks like something went wrong while approving the post, please try again later",
+                        "Error approving post",
+                        5000
+                    );
+                }
+            })
     }
 
     render() {
         return (
             <div className="imageActionsButton">
-                <ButtonGroup>
-                    <Button variant="secondary" size="sm" onClick={this.handleApprove}>Approve</Button>
-                    <Button variant="danger" size="sm" onClick={this.handleShowModal}>Remove</Button>
-                </ButtonGroup>
+                <Button variant="secondary" size="sm" onClick={this.handleShowApprove}>Approve</Button>
 
-                <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+                <Modal show={this.state.showApprove} onHide={this.handleCloseApprove}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Confirm deletion</Modal.Title>
+                        <Modal.Title>Confirm Approval</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to proceed?</Modal.Body>
+                    <Modal.Body>Is this post clear of text and inappropriate content?</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleCloseModal}>
+                        <Button variant="secondary" onClick={this.handleCloseShow}>
                             Cancel
                         </Button>
-                        <Button variant="danger" onClick={this.handleDelete}>
-                            Delete
+                        <Button variant="primary" onClick={this.handleApprove}>
+                            Approve
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -56,4 +81,4 @@ class ImageActionsButton extends React.Component {
     };
 }
 
-export default ImageActionsButton;
+export default withRouter(ImageActionsButton);

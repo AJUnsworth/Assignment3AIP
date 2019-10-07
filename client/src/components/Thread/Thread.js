@@ -9,6 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import ImageActionsButton from "../User/Admin/ImageActionsButton";
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./ThreadImage";
 import ImageGrid from "../Image/ImageGrid";
@@ -39,7 +40,7 @@ class Thread extends React.Component {
             method: "GET"
         })
             .then(function (response) {
-                if (response.status === 404){
+                if (response.status === 404) {
                     self.props.history.push("/");
                 }
                 response.json().then(function (data) {
@@ -209,32 +210,32 @@ class Thread extends React.Component {
         }
 
         fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
-        .then(function (response) {
-            if (response.status === 404) {
-                response.json().then(function (data) {
-                    //self.setState({ errors: data });
-                });
-            }
-            else if (response.status === 200) {
-                response.json().then(function (data) {
-                    if (!refresh) {
-                        self.setState(prevState => ({
-                            replies: [...prevState.replies, ...data.results],
-                            isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                            loadingReplies: false
-                        }));
+            .then(function (response) {
+                if (response.status === 404) {
+                    response.json().then(function (data) {
+                        //self.setState({ errors: data });
+                    });
+                }
+                else if (response.status === 200) {
+                    response.json().then(function (data) {
+                        if (!refresh) {
+                            self.setState(prevState => ({
+                                replies: [...prevState.replies, ...data.results],
+                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                                loadingReplies: false
+                            }));
 
-                    } else {
-                        self.setState({
-                            replies: data.results,
-                            isShowMoreDisabled: data.results.length < 10,
-                            loadingReplies: false
-                        });
-                    }
-                });
-            }
-        })
-}
+                        } else {
+                            self.setState({
+                                replies: data.results,
+                                isShowMoreDisabled: data.results.length < 10,
+                                loadingReplies: false
+                            });
+                        }
+                    });
+                }
+            })
+    }
 
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
@@ -247,7 +248,14 @@ class Thread extends React.Component {
     renderQuickActions() {
         const post = this.state.post;
         if (this.props.currentUser) {
-            if (post.userId._id === this.props.currentUser.id) {
+            if (this.props.currentUser.isAdmin) {
+                return (
+                    <div className="quickActions">
+                        <h6>Quick Actions</h6>
+                        <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
+                    </div>
+                );
+            } else if (post.userId._id === this.props.currentUser.id) {
                 if (this.state.replies.length ||
                     post.reactions.like > 0 ||
                     post.reactions.love > 0 ||
