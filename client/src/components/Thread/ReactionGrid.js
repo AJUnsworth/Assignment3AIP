@@ -78,6 +78,7 @@ class ReactionGrid extends React.Component {
                                     reactions: data,
                                     loading: false
                                 });
+                                self.props.handleReactionUpdate(data);
                             });
                         } else {
                             self.setState({ loading: false });
@@ -112,6 +113,7 @@ class ReactionGrid extends React.Component {
                                         loading: false
                                     });
                                 }
+                                self.props.handleReactionUpdate(data);
                             });
                         } else {
                             self.setState({ loading: false });

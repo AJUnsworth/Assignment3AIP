@@ -120,6 +120,14 @@ class Thread extends React.Component {
             })
     }
 
+    handleReactionUpdate = (reactions) => {
+        this.setState(prevState => ({
+            post: {
+                ...prevState.post,
+                reactions: reactions
+            }
+        }));
+    }
 
     handleDeletePost = () => {
         this.setState({ showDelete: false });
@@ -266,6 +274,7 @@ class Thread extends React.Component {
     renderQuickActions() {
         const post = this.state.post;
         if (this.props.currentUser) {
+            console.log(post);
             if (post.userId._id === this.props.currentUser.id) {
                 if (this.state.replies.length ||
                     post.reactions.like > 0 ||
@@ -274,6 +283,7 @@ class Thread extends React.Component {
                     post.reactions.angry > 0 ||
                     post.reactions.laugh > 0 ||
                     post.reactions.wow > 0) {
+                        console.log("Test");
                     if (!this.state.post.imageUrl) {
                         return null;
                     }
@@ -324,9 +334,8 @@ class Thread extends React.Component {
                 if (this.props.currentUser.isAdmin) {
                     return (
                         <div className="quickActions">
-                            <h6>Quick Actions</h6>
+                            {post.flagged && <h6>Quick Actions</h6>}
                             <ButtonGroup>
-                                <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
                                 <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
                             </ButtonGroup>
                         </div>
@@ -361,7 +370,7 @@ class Thread extends React.Component {
                         <Col xs={12} sm={12} md={12} lg={4} xl={4} className="threadDesc">
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
-                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
+                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" handleReactionUpdate={this.handleReactionUpdate} />
                             {this.displayFlagged()}
                             {this.renderQuickActions()}
                         </Col>

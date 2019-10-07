@@ -59,7 +59,8 @@ class ImageActionsButton extends React.Component {
     render() {
         return (
             <>
-                <Button variant="secondary" onClick={this.handleShowApprove}>Approve</Button>
+                {this.props.post.flagged &&
+                    <Button variant="secondary" onClick={this.handleShowApprove}>Approve</Button>}
 
                 <Modal show={this.state.showApprove} onHide={this.handleCloseApprove}>
                     <Modal.Header closeButton>
