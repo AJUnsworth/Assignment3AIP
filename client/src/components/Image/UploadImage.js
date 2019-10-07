@@ -22,14 +22,12 @@ class UploadImage extends React.Component {
 
     handleFileBrowse = e => {
         e.preventDefault();
-        if (this.props.post.imageUrl) {
-            // eslint-disable-next-line
-            this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
-            if (!e.target.value) {
-                this.setState({ activeState: true });
-            } else {
-                this.setState({ activeState: false });
-            }
+        // eslint-disable-next-line
+        this.setState({ imgFile: e.target.files[0], filename: e.target.value.replace(/^.*[\\\/]/, '') });
+        if (!e.target.value) {
+            this.setState({ activeState: true });
+        } else {
+            this.setState({ activeState: false });
         }
     }
 
@@ -41,9 +39,8 @@ class UploadImage extends React.Component {
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
             formData.append("depth", this.props.replyTo.depth + 1);
-        }
-
-        if (this.props.post) {
+            this.createPost(formData);
+        } else if (this.props.post) {
             formData.append("postId", this.props.post._id)
             this.editPost(formData);
         } else {

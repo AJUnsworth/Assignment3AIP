@@ -274,7 +274,7 @@ class Thread extends React.Component {
         const post = this.state.post;
         if (this.props.currentUser) {
             if (post.userId._id === this.props.currentUser.id) {
-                if (this.state.replies.length ||
+                if (post.totalReplies ||
                     post.reactions.like > 0 ||
                     post.reactions.love > 0 ||
                     post.reactions.tears > 0 ||
@@ -398,7 +398,7 @@ class Thread extends React.Component {
 
     render() {
         let deleteMessage;
-        if (this.state.replies.length) {
+        if (this.state.post.totalReplies) {
             deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
         } else {
             deleteMessage = "Are you sure you want to delete this post? This action cannot be reversed.";

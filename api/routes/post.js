@@ -38,7 +38,7 @@ router.post("/create", authenticate, async function (req, res, next) {
         //Checks if the post is a reply, otherwise it is a main post
         if (req.body.replyTo) {
             const parentPost = await Post.findOne({ _id: req.body.replyTo });
-            if(!parentPost) {
+            if (!parentPost) {
                 return res.sendStatus(404);
             }
 
@@ -466,11 +466,12 @@ router.get("/metrics", function (req, res) {
 router.get("/:postId", function (req, res) {
     const postId = req.params.postId;
 
-    Post.findOne({ _id: postId }).populate("userId").then(post => {
+    Post.findOne({ _id: postId }).populate("userId").populate("totalReplies").then(post => {
         if (!post) {
             return res.sendStatus(404);
         } else {
-            return res.json(post);
+            const totalReplies = post.totalReplies;
+            return res.json({ totalReplies, ...post.toJSON() });
         }
     })
         .catch(() => res.sendStatus(404));
