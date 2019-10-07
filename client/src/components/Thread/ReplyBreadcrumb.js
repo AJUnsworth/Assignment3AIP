@@ -63,9 +63,9 @@ class ReplyBreadcrumb extends React.Component {
 
     render() {
         return (
-            <div>
+            <div xs={12} sm={12} md={12} lg={12} xl={12}>
                 <h6 className="breadcrumbTitle">This image is part of the following thread</h6>
-                <Breadcrumb>
+                <Breadcrumb xs={12} sm={12} md={12} lg={12} xl={12}>
                     {this.renderReplyParents()}
                 </Breadcrumb>
             </div>

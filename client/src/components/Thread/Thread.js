@@ -197,6 +197,14 @@ class Thread extends React.Component {
             })
     }
 
+    displayFlagged = () => {
+        if (this.state.post.flagged) {
+            return (
+                <h5 className="text-danger">Note: This post has been flagged as it contains text or inappropriate content</h5>
+            );
+        }
+    }
+
     displayPopularReplies = (refresh) => {
         const self = this;
         let skippedPosts;
@@ -315,7 +323,7 @@ class Thread extends React.Component {
             const user = this.state.post.userId;
             return (
                 <div className="content">
-                    <Row>
+                    <Row xs={12} sm={12} md={12} lg={12} xl={12}>
                         {this.renderBreadcrumb()}
                     </Row>
                     <Row className="threadTop">
@@ -326,6 +334,7 @@ class Thread extends React.Component {
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
                             <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" />
+                            {this.displayFlagged()}
                             {this.renderQuickActions()}
                         </Col>
                     </Row>
