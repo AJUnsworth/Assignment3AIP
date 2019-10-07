@@ -190,7 +190,7 @@ router.get("/getPostReaction", function (req, res) {
 router.get("/:userId", function (req, res) {
     const userId = req.params.userId;
 
-    User.findOne({ _id: userId }).populate("posts").then(user => {
+    User.findOne({ _id: userId }).populate({ path: "posts", match: { flagged: false } }).then(user => {
         if (!user) {
             return res.sendStatus(404);
         } else {
