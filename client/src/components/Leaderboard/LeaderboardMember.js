@@ -8,7 +8,6 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import "./LeaderboardMember.css";
 
 class LeaderboardMember extends React.Component {
-
     render() {
         return (
             <Row className="LeaderboardMember align-items-center">

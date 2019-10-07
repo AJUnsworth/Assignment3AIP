@@ -50,50 +50,18 @@ class Leaderboard extends React.Component {
             });
     }
 
-    displayFlaggedUsers() {
-        const self = this;
-        this.setState({ loading: true });
-        const skipped = this.state.members.length;
-
-        fetch(`/users/flagged?skipped=${skipped}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
-            .then(response => {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            members: [...prevState.members, ...data.users],
-                            isShowMoreDisabled: prevState.members.length + data.users.length === data.userCount,
-                            loading: false
-                        }));
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while trying to load the leaderboard, please try refreshing the page",
-                        "Error loading leaderboard",
-                        5000
-                    );
-                }
-            });
-    }
-
-    handleShowMore = () => {
-        this.displayFlaggedUsers();
-    }
-
     renderLeaderboardButtons() {
-        if (!this.props.isAdminPage) {
-            return (
-                <>
-                    <h1>Leaderboard</h1>
-                    <h6>Total number of reactions across all posts</h6>
-                    <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
-                        <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
-                        <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
-                        <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
-                    </ToggleButtonGroup>
-                </>
-            );
-        }
+        return (
+            <>
+                <h1>Leaderboard</h1>
+                <h6>Total number of reactions across all posts</h6>
+                <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
+                    <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
+                    <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
+                    <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
+                </ToggleButtonGroup>
+            </>
+        );
     }
 
     renderLeaderboard() {
@@ -110,7 +78,7 @@ class Leaderboard extends React.Component {
         return (
             <div className="Leaderboard">
                 {this.renderLeaderboardButtons()}
-                { this.renderLeaderboard() }
+                {this.renderLeaderboard()}
             </div >
         );
     }

@@ -187,20 +187,6 @@ router.get("/getPostReaction", function (req, res) {
     });
 });
 
-router.get("/flagged", async function (req, res) {
-    let skipped = parseInt(req.query.skipped) || 0;
-
-    const userCount = await User.countDocuments({ flagged: true });
-
-    User.find({ flagged: true })
-        .limit(10)
-        .skip(skipped)
-        .exec(function (err, users) {
-            if (err) return res.status(404);
-            return res.json({ users, userCount });
-        });
-});
-
 router.get("/:userId", function (req, res) {
     const userId = req.params.userId;
 

@@ -1,9 +1,13 @@
 import React from "react";
 import { NotificationManager } from "react-notifications";
-import authenticate from "../Authentication/Authenticate";
+import { Link } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
+import authenticate from "../Authentication/Authenticate";
+import ImageGrid from "..//Image/ImageGrid";
 import Navbar from "../Navbar/Navbar";
-import ContentFrame from "../Image/ContentFrame";
 
 class Admin extends React.Component {
     constructor(props) {
@@ -45,7 +49,25 @@ class Admin extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <ContentFrame isAdminPage={true} displayPosts={this.displayPosts} {...this.state} {...this.props} />
+                <Container>
+                    <Row>
+                        <Col xs={12} sm={12} md={8} lg={8} xl={8}>
+                            <h1>
+                                Welcome&nbsp;
+                                <Link to={this.props.currentUser ? "/user/" + this.props.currentUser.id : "/login"}>
+                                    {this.props.currentUser ? this.props.currentUser.username : ""}
+                                </Link>
+                            </h1>
+                            <h4>All flagged posts can be seen below</h4>
+                            {/*<ImageActionsButton/>*/}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} sm={12} md={8} lg={8} xl={8}>
+                            <ImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         );
     }
