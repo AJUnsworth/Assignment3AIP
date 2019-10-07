@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
 
@@ -80,8 +81,13 @@ class UploadImage extends React.Component {
                 if (response.status === 200) {
                     response.json().then(data => {
                         self.setState(self.initialState);
-                        self.props.handleUpdatePost(data);
-                        NotificationManager.success("Your image has been posted!", "Post successful");
+                        if (data.flagged) {
+                            self.props.history.push("/");
+                            NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
+                        } else {
+                            self.props.handleUpdatePost(data);
+                            NotificationManager.success("Your image has been updated!", "Post successful");
+                        }
                     });
                 } else if (response.status === 405) {
                     NotificationManager.error(
@@ -137,4 +143,4 @@ class UploadImage extends React.Component {
 
 }
 
-export default UploadImage;
+export default withRouter(UploadImage);

@@ -101,7 +101,6 @@ class Thread extends React.Component {
                     const contentType = response.headers.get("content-type");
                     if (contentType.includes('application/json')) {
                         response.json().then(data => {
-                            console.log(data);
                             if (data.flagged) {
                                 self.props.history.push("/");
                                 NotificationManager.success("Post has been been flagged for containing text or innapropriate content", "Post reported");

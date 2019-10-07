@@ -16,41 +16,41 @@ class AdminImageGrid extends React.Component {
         this.props.displayPosts();
     }
 
-    renderPosts() {
+    renderShowMoreButton() {
         if (this.props.loading) {
             return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
         } else {
-            /*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/
-            const posts = this.props.posts && this.props.posts.map((post, index) => {
-                return <ImageFrame key={index} post={post} />
-            });
-
             return (
-                <>
-                    <Masonry
-                        breakpointCols={{
-                            default: 3,
-                            1100: 2,
-                            700: 1}}
-                        className="my-masonry-grid"
-                        columnClassName="my-masonry-grid_column"
-                    >
-                        {posts}
-                    </Masonry>
-                    <div className="showMoreBtnContainer">
-                        {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
-                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
-                    </div>
-                </>
+                <div className="showMoreBtnContainer">
+                    {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
+                    <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
+                </div>
             );
         }
     }
 
     render() {
+        const posts = this.props.posts && this.props.posts.map((post, index) => {
+            return <ImageFrame key={index} post={post} />
+        });
+
         return (
             <div>
                 <div className="adminImageGrid">
-                    {this.renderPosts()}
+                    {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
+                    <Masonry
+                        breakpointCols={{
+                            default: 3,
+                            1100: 2,
+                            700: 1
+                        }}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column"
+                    >
+                        {posts}
+                    </Masonry>
+
+                    {this.renderShowMoreButton()}
                 </div>
             </div>
         );

@@ -15,7 +15,8 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            currentUser: null
+            currentUser: null,
+            loading: false
         };
     }
 
@@ -43,12 +44,16 @@ class App extends React.Component {
     }
 
     logout = () => {
+        this.setState({ loading: true });
         const self = this;
         fetch("/users/logout", {
             method: "POST"
         })
             .then(function (response) {
-                self.setState({ currentUser: null });
+                self.setState({ 
+                    currentUser: null, 
+                    loading: false 
+                });
             });
     };
     
