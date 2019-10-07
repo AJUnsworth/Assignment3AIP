@@ -19,13 +19,10 @@ class LeaderboardMember extends React.Component {
                         {this.props.member.username}
                     </Link>
                 </Col>
-                <Col xs={4} sm={4} md={4} lg={4} xl={4}>
-                    <Row className="align-self-end">
+                <Col xs={4} sm={4} md={{ span: 3, offset: 1 }} lg={{ span: 3, offset: 1 }} xl={{ span: 3, offset: 1 }} className="float-right">
+                    <Row className="align-self-end align-items-center">
                         <label className="LeaderboardRank">{this.props.member.totalUserReactions}</label>
                         <FontAwesomeIcon icon={faHeart} className="iconSpacing rhsIcon text-danger" />
-                    </Row>
-                    <Row>
-                        <label className="leaderboardLabel">Total reactions</label>
                     </Row>
                 </Col>
             </Row>

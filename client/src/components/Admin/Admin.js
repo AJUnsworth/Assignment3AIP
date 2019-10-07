@@ -49,10 +49,10 @@ class Admin extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <Container>
-                    <Row>
+                <Container className="contentFrame">
+                    <Row className="rowPadding">
                         <Col xs={12} sm={12} md={8} lg={8} xl={8}>
-                            <h1>
+                            <h1 className="welcomeMessage">
                                 Welcome&nbsp;
                                 <Link to={this.props.currentUser ? "/user/" + this.props.currentUser.id : "/login"}>
                                     {this.props.currentUser ? this.props.currentUser.username : ""}
@@ -63,7 +63,7 @@ class Admin extends React.Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} sm={12} md={8} lg={8} xl={8}>
+                        <Col xs={12} sm={12} md={12} lg={8} xl={12} className="contentFrameGrid">
                             <ImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
                         </Col>
                     </Row>

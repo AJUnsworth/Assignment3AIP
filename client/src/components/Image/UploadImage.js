@@ -106,7 +106,7 @@ class UploadImage extends React.Component {
                     <h6>Add a thread...</h6>
                     <div className="input-group">
                         <Form.Group>
-                            <Button variant="secondary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
+                            <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
                                 Upload
                             </Button>
                         </Form.Group>

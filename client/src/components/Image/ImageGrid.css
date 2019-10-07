@@ -28,6 +28,11 @@
 
 .showMoreBtnContainer {
     margin: 2vw auto 1vw auto;
+    text-align: center;
+}
+
+.showMoreBtnContainer h6 {
+    margin-bottom: 30px;
 }
 
 #uploadButton {
@@ -58,4 +63,8 @@
 .loadingPostIcon {
     margin: 3vh auto 0px auto;
     display: block;
+}
+
+.noPadding {
+    margin: 0px;
 }

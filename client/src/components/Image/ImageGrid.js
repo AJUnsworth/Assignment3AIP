@@ -153,7 +153,7 @@ class ImageGrid extends React.Component {
         return (
             <div>
                 <div className="imageGrid">
-                    <Container>
+                    <Container className="noPadding">
                         <Row>
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
