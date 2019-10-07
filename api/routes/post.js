@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 
+const authenticate = require("../services/authenticate");
 const { uploadImage, deleteImage } = require("../services/image-upload");
 const checkImageAppropriateness = require("../services/cloud-vision");
 const Post = require("../models/post");
@@ -11,7 +12,7 @@ const singleUpload = uploadImage.single("image");
 
 //The create route is based off a tutorial from Medium.com that can no longer be located
 //A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
-router.post("/create", function (req, res, next) {
+router.post("/create", authenticate, function (req, res, next) {
     //Upload image to S3 bucket then create a new post if successful
     singleUpload(req, res, function (err) {
         if (!req.file || req.file === undefined) {
@@ -53,7 +54,7 @@ router.post("/create", function (req, res, next) {
     });
 });
 
-router.post("/delete", async function (req, res) {
+router.post("/delete", authenticate, async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
@@ -97,7 +98,7 @@ router.post("/delete", async function (req, res) {
     }
 });
 
-router.post("/approve", async function (req, res) {
+router.post("/approve", authenticate, async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
 
@@ -123,7 +124,7 @@ router.post("/approve", async function (req, res) {
     }
 });
 
-router.post("/report", async function (req, res) {
+router.post("/report", authenticate, async function (req, res) {
     const postId = req.body.postId;
     const userId = req.body.userId;
     const user = await User.findOne({ _id: userId });
@@ -155,7 +156,7 @@ router.post("/report", async function (req, res) {
     }
 });
 
-router.post("/edit", function (req, res, next) {
+router.post("/edit", authenticate, function (req, res, next) {
     //Fix later by implementing with Multer
     singleUpload(req, res, function (err) {
         const postId = req.body.postId;
@@ -259,7 +260,7 @@ router.get("/getPopular", function (req, res) {
         });
 });
 
-router.get("/flagged", async function (req, res) {
+router.get("/flagged", authenticate, async function (req, res) {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
 
     const postCount = await Post.countDocuments({ flagged: true });
@@ -315,7 +316,7 @@ router.get("/getPopularUserPosts", function (req, res) {
         });
 });
 
-router.post("/addReaction", function (req, res) {
+router.post("/addReaction", authenticate, function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;
@@ -404,7 +405,7 @@ router.get("/repliesPopular", function (req, res) {
 });
 
 
-router.post("/removeReaction", function (req, res) {
+router.post("/removeReaction", authenticate, function (req, res) {
     const userId = req.body.userId;
     const postId = req.body.postId;
     const reactionType = req.body.reactionType;

@@ -71,47 +71,69 @@ router.post("/login", (req, res) => {
                         },
                     );
 
+                    //Based on SO post by Hitesh Anshani on comparing dates in the last 24 hours
+                    //See https://stackoverflow.com/questions/51405133/check-if-a-date-is-24-hours-old/51405446
+                    //Get a 24 hours in milliseconds
+                    const day = 24 * 60 * 60 * 1000;
+                    let dayAgo = user.lastLoggedIn - day;
+
                     //Find users ipAddress and login time for checking if the account is a potential sock puppet
                     //Based on user topkek's answer on how to get a user's IP address in Node
                     //See https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-                    user.lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-                    user.lastLoggedIn = Date.now();
+                    const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-                    User.find({ lastIpAddress: user.lastIpAddress }).where("_id").ne(user._id).then(users => {
-                        let matchingUsersCount = 1;
-
-                        for (let i = 0; i < users.length; i++) {
-                            //Based on SO post by Hitesh Anshani on comparing dates in the last 24 hours
-                            //See https://stackoverflow.com/questions/51405133/check-if-a-date-is-24-hours-old/51405446
-
-                            //Get a 24 hours in milliseconds
-                            const day = 24 * 60 * 60 * 1000;
-                            const dayAgo = user.lastLoggedIn - day;
-
-                            //Flag potential sock puppets when account was last logged in less than a day ago
-                            //if (users[i].lastLoggedIn >= dayAgo) {
-                            //    matchingUsersCount++;
-                            //    if (matchingUsersCount >= 3) {
-                            //        return res.sendStatus(405);
-                            //    }
-                            //}
-                        }
+                    if (user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) {
+                        user.lastIpAddress = lastIpAddress;
+                        user.lastLoggedIn = Date.now();
 
                         user.save(err => {
                             if (!err) {
                                 return res
                                     .cookie("token", token, { httpOnly: true })
-                                    .json({ 
-                                        id: user._id, 
-                                        username: user.username, 
-                                        email: user.email, 
+                                    .json({
+                                        id: user._id,
+                                        username: user.username,
+                                        email: user.email,
                                         isAdmin: user.isAdmin
                                     });
                             } else {
                                 return res.sendStatus(500);
                             }
                         });
-                    });
+                    } else {
+                        User.find({ lastIpAddress: lastIpAddress }).where("_id").ne(user._id).then(users => {
+                            let matchingUsersCount = 1;
+
+                            for (let i = 0; i < users.length; i++) {
+
+                                //Flag potential sock puppets when account was last logged in less than a day ago
+                                if (users[i].lastLoggedIn >= dayAgo) {
+                                    matchingUsersCount++;
+                                    if (matchingUsersCount >= 3) {
+                                        return res.sendStatus(405);
+                                    }
+                                }
+                            }
+
+                            user.lastIpAddress = lastIpAddress;
+                            user.lastLoggedIn = Date.now();
+
+                            user.save(err => {
+                                if (!err) {
+                                    return res
+                                        .cookie("token", token, { httpOnly: true })
+                                        .json({
+                                            id: user._id,
+                                            username: user.username,
+                                            email: user.email,
+                                            isAdmin: user.isAdmin
+                                        });
+                                } else {
+                                    return res.sendStatus(500);
+                                }
+                            });
+                        });
+                    }
                 } else {
                     return res.status(404).json({ password: "Username or password incorrect" });
                 }
@@ -164,7 +186,7 @@ router.get("/getCurrentUser", authenticate, function (req, res) {
     return res.json(userData);
 });
 
-router.get("/getPostReaction", function (req, res) {
+router.get("/getPostReaction", authenticate, function (req, res) {
     const postId = req.query.post_id;
     const userId = req.query.user_id;
 
@@ -204,7 +226,7 @@ router.get("/:userId", function (req, res) {
             return res.json({ reactionCount, postCount, ...user.toJSON() });
         }
     })
-    .catch(() => res.sendStatus(404));
+        .catch(() => res.sendStatus(404));
 });
 
 module.exports = router;

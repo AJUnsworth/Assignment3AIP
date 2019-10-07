@@ -37,7 +37,8 @@ const userSchema = new Schema({
         type: String
     },
     lastLoggedIn: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
     isAdmin: {
         type: Boolean,
