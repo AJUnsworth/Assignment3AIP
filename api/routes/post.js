@@ -55,7 +55,8 @@ router.post("/create", authenticate, async function (req, res, next) {
                 .save()
                 .then(post => res.json(post))
                 .catch(() => res.sendStatus(500));
-        });
+        })
+            .catch(() => res.sendStatus(500));
     });
 });
 
