@@ -23,3 +23,4 @@ To start the frontend only - npm run start:client
 * Use arrow functions whereever possible
 * Always attribute code if taken from an external source using comments
 * Always use const static variables and let for dynamic variables
+* Use async/await instead of promises in long method with multiple returned promises

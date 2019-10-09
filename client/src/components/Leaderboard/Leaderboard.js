@@ -30,7 +30,7 @@ class Leaderboard extends React.Component {
         const self = this;
         this.setState({ loading: true });
 
-        fetch(`/leaderboard?limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+        fetch(`/users/leaderboard?limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
             .then(response => {
                 if (response.status === 200) {
                     response.json().then(function (data) {

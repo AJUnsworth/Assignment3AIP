@@ -8,7 +8,6 @@ require("dotenv").config();
 
 const postRouter = require("./routes/post");
 const usersRouter = require("./routes/users");
-const leaderboardRouter = require("./routes/leaderboard");
 
 const app = express();
 
@@ -20,7 +19,6 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.use("/post", postRouter);
 app.use("/users", usersRouter);
-app.use("/leaderboard", leaderboardRouter);
 
 //For static website hosting
 app.get("/*", (req, res) => {

@@ -1,8 +1,6 @@
-const express = require("express");
-const router = express.Router();
 const Post = require("../models/post");
 
-router.get("/", function (req, res) {
+exports.leaderboard_get = (req, res) => {
     let limit = parseInt(req.query.limit) || 5;
     Post.aggregate([
       {
@@ -22,7 +20,4 @@ router.get("/", function (req, res) {
             if (err) return res.status(404);
             return res.json(members);
         });
-});
-
-
-module.exports = router;
+}
