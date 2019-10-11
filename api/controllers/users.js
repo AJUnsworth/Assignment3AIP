@@ -123,12 +123,6 @@ exports.user_logout = (req, res) => {
     return res.clearCookie("token").sendStatus(200);
 };
 
-//CheckToken route is based on tutorial by Faizan Virani from Medium.com
-//See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
-exports.user_check_token = (req, res) => {
-    return res.sendStatus(200);
-};
-
 exports.user_get_current = (req, res) => {
     return res.json(req.decoded);
 };

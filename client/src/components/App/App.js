@@ -24,7 +24,7 @@ class App extends React.Component {
     componentDidMount() {
         const self = this;
         if (!this.state.currentUser) {
-            fetch("/users/getCurrentUser", {
+            fetch("/users/current", {
                 method: "GET"
             })
                 .then(response => {

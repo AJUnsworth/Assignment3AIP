@@ -32,7 +32,7 @@ class ReactionGrid extends React.Component {
     }
 
     async getUserReaction() {
-        const response = await fetch("/users/getPostReaction?post_id=" + this.props.post._id, {
+        const response = await fetch("/users/reaction?post_id=" + this.props.post._id, {
             method: "GET"
         });
 
@@ -67,69 +67,40 @@ class ReactionGrid extends React.Component {
 
             this.setState({ loading: true });
 
-            if (reactionType === originalReactionType) {
-                fetch("/post/removeReaction", {
-                    method: "POST",
-                    body: requestBody,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            response.json().then(data => {
+            fetch("/post/react", {
+                method: "POST",
+                body: requestBody,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            if (originalReactionType !== reactionType) {
                                 self.setState({
-                                    activeReaction: "None selected",
+                                    activeReaction: reactionType,
                                     reactions: data,
                                     loading: false
                                 });
-                                self.props.handleReactionUpdate(data);
-                            });
-                        } else {
-                            self.setState({ loading: false });
-                            NotificationManager.error(
-                                "Looks like something went wrong while reacting to the post, please try refreshing the page",
-                                "Error reacting to post",
-                                5000
-                            );
-                        }
-                    });
-            } else {
-                fetch("/post/addReaction", {
-                    method: "POST",
-                    body: requestBody,
-                    headers: {
-                        "Content-Type": "application/json"
+                            } else {
+                                self.setState({
+                                    activeReaction: null,
+                                    reactions: data,
+                                    loading: false
+                                });
+                            }
+                            self.props.handleReactionUpdate(data);
+                        });
+                    } else {
+                        self.setState({ loading: false });
+                        NotificationManager.error(
+                            "Looks like something went wrong while reacting to the post, please try refreshing the page",
+                            "Error reacting to post",
+                            5000
+                        );
                     }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            response.json().then(data => {
-                                if (originalReactionType) {
-                                    self.setState({
-                                        activeReaction: reactionType,
-                                        reactions: data,
-                                        loading: false
-                                    });
-                                } else {
-                                    self.setState({
-                                        activeReaction: reactionType,
-                                        reactions: data,
-                                        loading: false
-                                    });
-                                }
-                                self.props.handleReactionUpdate(data);
-                            });
-                        } else {
-                            self.setState({ loading: false });
-                            NotificationManager.error(
-                                "Looks like something went wrong while reacting to the post, please try refreshing the page",
-                                "Error reacting to post",
-                                5000
-                            );
-                        }
-                    });
-            }
+                });
         } else {
             this.setState({ showSuggestLogin: true });
         }
