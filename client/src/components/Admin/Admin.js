@@ -59,12 +59,11 @@ class Admin extends React.Component {
                                 </Link>
                             </h1>
                             <h4>All flagged posts can be seen below</h4>
-                            {/*<ImageActionsButton/>*/}
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={12} sm={12} md={12} lg={8} xl={12} className="contentFrameGrid">
-                            <ImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
+                            <ImageGrid {...this.props} displayLatest={this.displayPosts} {...this.state} />
                         </Col>
                     </Row>
                 </Container>

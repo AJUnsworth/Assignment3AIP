@@ -121,7 +121,7 @@ class UploadImageForm extends React.Component {
             })
     }
 
-    renderUploadButton() {
+    renderUploadText() {
         if (this.state.loading) {
             return <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;
         } else {
@@ -152,7 +152,7 @@ class UploadImageForm extends React.Component {
                         </div>
                         <Form.Group>
                             <Button variant="primary" id="uploadButton" type="submit" name="uploadBtn" disabled={this.state.activeState} onClick={this.handleFileUpload}>
-                                {this.renderUploadButton()}
+                                {this.renderUploadText()}
                             </Button>
                         </Form.Group>
                     </div>

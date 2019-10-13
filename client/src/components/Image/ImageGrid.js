@@ -14,16 +14,8 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
-        if (!props.sortBy) {
-            this.state = {
-                sortBy: "latest",
-                showResults: true
-            }
-        } else {
-            this.state = {
-                sortBy: props.sortBy,
-                showResults: true
-            }
+        this.state = {
+            sortBy: "latest"
         }
     };
 
@@ -44,15 +36,18 @@ class ImageGrid extends React.Component {
             this.props.displayLatest(false);
         } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(false);
-        }    
+        }
     }
 
-    handleSortBy = (value) => {
-        this.setState({ sortBy: value });
+    handleSortBy = (sortingMethod) => {
+        this.setState({ sortBy: sortingMethod }, () => this.handleNewPosts());
     }
 
     renderFileUpload() {
-        if (!this.props.currentUser || (this.props.post && !this.props.post.imageUrl) || this.props.user) {
+        if (!this.props.currentUser ||
+            (this.props.post && !this.props.post.imageUrl) ||
+            this.props.user
+            ) {
             return null;
         } else {
             return (
@@ -84,20 +79,24 @@ class ImageGrid extends React.Component {
         return (
             <div>
                 <div className="imageGrid">
-                    <Container className="noPadding">
-                        <Row>
-                            {/*Render upload button only if there is a current user set*/}
-                            {this.renderFileUpload()}
-                            <SortImageButtons {...this.props} handleSortBy={this.handleSortBy}/>
-                        </Row>
-                    </Container>
+                    {/*Render file upload and sorting only if two display methods exist*/}
+                    {this.props.displayLatest && this.props.displayPopular &&
+                        <Container className="noPadding">
+                            <Row>
+                                {/*Render upload button only if there is a current user set*/}
+                                {this.renderFileUpload()}
+                                <SortImageButtons {...this.state} {...this.props} handleSortBy={this.handleSortBy} />
+                            </Row>
+                        </Container>
+                    }
 
                     {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
                     <Masonry
                         breakpointCols={{
                             default: 3,
                             1100: 2,
-                            700: 1}}
+                            700: 1
+                        }}
                         className="my-masonry-grid"
                         columnClassName="my-masonry-grid_column"
                     >
