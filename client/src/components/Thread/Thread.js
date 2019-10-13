@@ -16,7 +16,7 @@ import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
 import ReplyBreadcrumb from "./ReplyBreadcrumb";
-import UploadImage from "../Image/UploadImage";
+import UploadImageForm from "../Image/Functions/UploadImageForm";
 
 class Thread extends React.Component {
     constructor() {
@@ -438,7 +438,7 @@ class Thread extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <h5>Select an image to replace your post</h5>
-                            <UploadImage
+                            <UploadImageForm
                                 currentUser={this.props.currentUser}
                                 post={this.state.post}
                                 handleUpdatePost={this.handleUpdatePost}
