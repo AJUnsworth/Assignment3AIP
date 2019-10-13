@@ -17,39 +17,24 @@ class ReplyBreadcrumb extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ replyParents: [this.props.post] }, () => {
-            this.getReplyThread();
-        });
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.post !== this.props.post) {
-            this.setState({ replyParents: [this.props.post] }, () => {
-                this.getReplyThread();
-            });
-        }
+        this.getReplyThread();
     }
 
     async getReplyThread() {
         if (this.props.post.replyTo) {
-            for (let depth = 0; depth < this.props.post.depth; depth++) {
-                //Always check replyParents on first member of the array as they are appended to the beggining
-                const response = await fetch("/post/" + this.state.replyParents[0].replyTo, {
-                    method: "GET"
-                });
+            const response = await fetch("/post/reply/parents?post_id=" + this.props.post._id, {
+                method: "GET"
+            });
 
-                if (response.status === 200) {
-                    const data = await response.json();
-                    this.setState(prevState => ({
-                        replyParents: [data, ...prevState.replyParents]
-                    }));
-                } else {
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading the post, please try refreshing the page",
-                        "Error loading post",
-                        5000
-                    );
-                }
+            if (response.status === 200) {
+                const data = await response.json();
+                this.setState({ replyParents: data });
+            } else {
+                NotificationManager.error(
+                    "Looks like something went wrong while loading the post, please try refreshing the page",
+                    "Error loading post",
+                    5000
+                );
             }
             this.setState({ loading: false });
         }
@@ -78,8 +63,6 @@ class ReplyBreadcrumb extends React.Component {
                 </Breadcrumb>
             </div>
         );
-
-
     }
 }
 

@@ -156,6 +156,8 @@ router.get("/metrics", PostsController.post_metrics);
  */ 
 router.get("/flagged", authenticate, AdminController.posts_flagged_get);
 
+router.get("/reply/parents", PostsController.post_reply_parents_get);
+
 //Rename this route
 router.get("/getThumbnails", PostsController.posts_latest_get);
 
