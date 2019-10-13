@@ -1,16 +1,14 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Masonry from 'react-masonry-css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import SortImageButtons from "./Functions/SortImage";
+import UploadImageForm from "./Functions/UploadImageForm";
 import ImageFrame from "./ImageFrame";
-import UploadImage from "./UploadImage";
 import "./ImageGrid.css";
 
 class ImageGrid extends React.Component {
@@ -27,9 +25,7 @@ class ImageGrid extends React.Component {
                 showResults: true
             }
         }
-
     };
-
 
     componentDidMount() {
         this.handleNewPosts();
@@ -55,11 +51,6 @@ class ImageGrid extends React.Component {
         }
     }
 
-
-    handleSortBy = (value) => {
-        this.setState({ sortBy: value })
-    }
-
     handleShowMore = () => {
         if (this.state.sortBy === 'latest') {
             this.props.displayPosts(false);
@@ -80,42 +71,12 @@ class ImageGrid extends React.Component {
         }
     }
 
-    handleLatestFilter = () => {
-        if (this.state.sortBy === 'popular' || this.state.sortBy === 'latest') {
-            this.props.displayPosts(true)
-            this.handleSortBy('latest');
-        }
-        if (this.state.sortBy === 'usersPopular' || this.state.sortBy === 'usersRecent') {
-            this.props.displayRecentUserPosts(true)
-            this.handleSortBy('usersRecent');
-        }
-        if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
-            this.props.displayRecentReplies(true)
-            this.handleSortBy('repliesRecent');
-        }
-    }
-
-    handlePopularFilter = () => {
-        if (this.state.sortBy === 'popular' || this.state.sortBy === 'latest') {
-            this.props.displayPopular(true)
-            this.handleSortBy('popular');
-        }
-        if (this.state.sortBy === 'usersPopular' || this.state.sortBy === 'usersRecent') {
-            this.props.displayPopularUserPosts(true)
-            this.handleSortBy('usersPopular');
-        }
-        if (this.state.sortBy === 'repliesRecent' || this.state.sortBy === 'repliesPopular') {
-            this.props.displayPopularReplies(true)
-            this.handleSortBy('repliesPopular');
-        }
-    }
-
     renderFileUpload() {
         if (!this.props.currentUser || (this.props.post && !this.props.post.imageUrl) || this.props.user) {
             return null;
         } else {
             return (
-                <UploadImage {...this.props} handleNewPosts={this.handleNewPosts} />
+                <UploadImageForm {...this.props} handleNewPosts={this.handleNewPosts} />
             );
         }
     }
@@ -147,13 +108,7 @@ class ImageGrid extends React.Component {
                         <Row>
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
-                            <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-                                {this.state.showResults ? <div><h6>Sort by</h6><ToggleButtonGroup type="radio" defaultValue={1} name="sortBy" >
-                                    <ToggleButton variant="secondary" value={1} onClick={this.handleLatestFilter}>Latest</ToggleButton>
-                                    <ToggleButton variant="secondary" value={2} onClick={this.handlePopularFilter}>Most Popular</ToggleButton>
-                                </ToggleButtonGroup></div> : null}
-
-                            </Col>
+                            <SortImageButtons {...this.props}/>
                         </Row>
                     </Container>
 

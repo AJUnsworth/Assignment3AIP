@@ -7,7 +7,7 @@ import "./Button.css";
 function LoginButton(props) {
     return (
         <Link to="/login/">
-            <Button variant="outline-light" className="authenticationButton">Log in / Register</Button>
+            <Button variant="outline-light" className="navbarButton">Log in / Register</Button>
         </Link>
     );
 }

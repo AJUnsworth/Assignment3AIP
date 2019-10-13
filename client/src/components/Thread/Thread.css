@@ -27,7 +27,7 @@
     border-radius: 10px 10px 0px 0px;
 }
 
-.commentsText{
+.commentLabel{
     padding-left:30px;
     font-style: normal;
     font-weight: bold;
@@ -41,7 +41,7 @@
     border-radius: 10px;
 }
 
-.threadDesc{
+.threadActions{
     text-align: center;
     margin-top: 50px;
 }

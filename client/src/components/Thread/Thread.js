@@ -16,7 +16,7 @@ import ImageGrid from "../Image/ImageGrid";
 import ReactionGrid from "./ReactionGrid";
 import "./Thread.css";
 import ReplyBreadcrumb from "./ReplyBreadcrumb";
-import UploadImage from "../Image/UploadImage";
+import UploadImageForm from "../Image/Functions/UploadImageForm";
 
 class Thread extends React.Component {
     constructor() {
@@ -366,7 +366,7 @@ class Thread extends React.Component {
                         <Col xs={12} sm={12} md={12} lg={8} xl={8} className="threadImg">
                             <ThreadImage imageUrl={this.state.post.imageUrl} />
                         </Col>
-                        <Col xs={12} sm={12} md={12} lg={4} xl={4} className="threadDesc">
+                        <Col xs={12} sm={12} md={12} lg={4} xl={4} className="threadActions">
                             <h1 className="profileName">Post by</h1>
                             <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
                             <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" handleReactionUpdate={this.handleReactionUpdate} />
@@ -377,7 +377,7 @@ class Thread extends React.Component {
                     <Row>
                         <Col>
                             <div className="comments">
-                                <h2 className="commentsText">Comments</h2>
+                                <h2 className="commentLabel">Comments</h2>
                                 <ImageGrid displayRecentReplies={this.displayRecentReplies}
                                     displayPopularReplies={this.displayPopularReplies}
                                     sortBy='repliesRecent'
@@ -438,7 +438,7 @@ class Thread extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <h5>Select an image to replace your post</h5>
-                            <UploadImage
+                            <UploadImageForm
                                 currentUser={this.props.currentUser}
                                 post={this.state.post}
                                 handleUpdatePost={this.handleUpdatePost}
