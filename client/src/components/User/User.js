@@ -171,7 +171,13 @@ class User extends React.Component {
 
                     <div className="myPosts">
                         <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
-                        <ImageGrid displayPopularUserPosts={this.displayPopularUserPosts} displayRecentUserPosts={this.displayRecentUserPosts} sortBy='usersRecent' {...this.state} {...this.props} />
+                        <ImageGrid 
+                            displayLatest={this.displayRecentUserPosts} 
+                            displayPopular={this.displayPopularUserPosts} 
+                            sortBy='latest' 
+                            {...this.state} 
+                            {...this.props} 
+                        />
                     </div>
                 </div>
             );

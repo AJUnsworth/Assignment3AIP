@@ -33,42 +33,22 @@ class ImageGrid extends React.Component {
 
     handleNewPosts = () => {
         if (this.state.sortBy === 'latest') {
-            this.props.displayPosts(true);
+            this.props.displayLatest(true);
         } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(true);
-        }
-        else if (this.state.sortBy === 'usersRecent') {
-            this.props.displayRecentUserPosts(true);
-        }
-        else if (this.state.sortBy === 'usersPopular') {
-            this.props.displayPopularUserPosts(true);
-        }
-        else if (this.state.sortBy === 'repliesRecent') {
-            this.props.displayRecentReplies(true);
-        }
-        else if (this.state.sortBy === 'repliesPopular') {
-            this.props.displayPopularReplies(true);
         }
     }
 
     handleShowMore = () => {
         if (this.state.sortBy === 'latest') {
-            this.props.displayPosts(false);
+            this.props.displayLatest(false);
         } else if (this.state.sortBy === 'popular') {
             this.props.displayPopular(false);
-        }
-        else if (this.state.sortBy === 'usersRecent') {
-            this.props.displayRecentUserPosts(false);
-        }
-        else if (this.state.sortBy === 'usersPopular') {
-            this.props.displayPopularUserPosts(false);
-        }
-        else if (this.state.sortBy === 'repliesRecent') {
-            this.props.displayRecentReplies(false);
-        }
-        else if (this.state.sortBy === 'repliesPopular') {
-            this.props.displayPopularReplies(false);
-        }
+        }    
+    }
+
+    handleSortBy = (value) => {
+        this.setState({ sortBy: value });
     }
 
     renderFileUpload() {
@@ -108,7 +88,7 @@ class ImageGrid extends React.Component {
                         <Row>
                             {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
-                            <SortImageButtons {...this.props}/>
+                            <SortImageButtons {...this.props} handleSortBy={this.handleSortBy}/>
                         </Row>
                     </Container>
 

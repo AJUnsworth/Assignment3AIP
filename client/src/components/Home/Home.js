@@ -14,7 +14,7 @@ class Home extends React.Component {
         }
     }
 
-    displayPosts = (refresh) => {
+    displayLatest = (refresh) => {
         const self = this;
         let skippedPosts;
         this.setState({ loading: true });
@@ -99,7 +99,7 @@ class Home extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <ContentFrame displayPosts={this.displayPosts} displayPopular={this.displayPopular} {...this.state} {...this.props} />
+                <ContentFrame displayLatest={this.displayLatest} displayPopular={this.displayPopular} {...this.state} {...this.props} />
             </div>
         );
     }

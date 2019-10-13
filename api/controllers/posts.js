@@ -339,14 +339,11 @@ exports.posts_user_popular_get = (req, res) => {
 
 exports.posts_replies_latest_get = (req, res) => {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId = mongoose.Types.ObjectId(req.query.userId);
+    const postId = mongoose.Types.ObjectId(req.query.postId);
 
     Post.aggregate([
-        { '$match': { 'userId': userId, 'flagged': false } },
-        {
-            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
-        },
-        { '$sort': { 'totalReactions': -1 } },
+        { '$match': { 'replyTo': postId, 'flagged': false } },
+        { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
                 metadata: [{ $count: "totalCount" }],

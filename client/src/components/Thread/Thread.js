@@ -378,9 +378,9 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentLabel">Comments</h2>
-                                <ImageGrid displayRecentReplies={this.displayRecentReplies}
-                                    displayPopularReplies={this.displayPopularReplies}
-                                    sortBy='repliesRecent'
+                                <ImageGrid displayLatest={this.displayRecentReplies}
+                                    displayPopular={this.displayPopularReplies}
+                                    sortBy='latest'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}
