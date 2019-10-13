@@ -381,6 +381,26 @@ exports.posts_replies_popular_get = (req, res) => {
         });
 };
 
+exports.post_reply_parents_get = async (req, res) => {
+    const postId = req.query.post_id;
+
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+        return res.sendStatus(404);
+    }
+
+    let replyChain = [post];
+    for (let depth = 0; depth < post.depth; depth++) {
+        const parentPost = await Post.findOne({ _id: replyChain[0].replyTo});
+        if (!parentPost) {
+            return res.sendStatus(404);
+        }
+        replyChain.unshift(parentPost);
+    }
+
+    return res.json(replyChain);
+}
+
 exports.post_get = (req, res) => {
     const postId = req.params.postId;
 
