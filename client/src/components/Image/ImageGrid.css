@@ -20,12 +20,6 @@
     flex-wrap: wrap;
 }
 
-.badgePill {
-    position: static !important;
-    margin: 0px 15px 0px 0px !important;
-    float: left;
-}
-
 .showMoreBtnContainer {
     margin: 2vw auto 1vw auto;
     text-align: center;
