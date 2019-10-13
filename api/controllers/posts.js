@@ -2,7 +2,7 @@ const Post = require("../models/post");
 const User = require("../models/user");
 
 const mongoose = require('mongoose');
-const { uploadImage, deleteImage } = require("../services/image-upload");
+const { uploadImage, deleteImage } = require("../services/s3");
 const checkImageAppropriateness = require("../services/cloud-vision");
 
 const singleUpload = uploadImage.single("image");

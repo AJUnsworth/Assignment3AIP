@@ -1,7 +1,7 @@
 const vision = require('@google-cloud/vision');
 const client = new vision.ImageAnnotatorClient();
 
-async function checkImageAppropriateness(imageUrl) {
+checkImageAppropriateness = async imageUrl => {
     //Format request for Google Cloud Vision API
     const request = {
         image: {
@@ -18,26 +18,19 @@ async function checkImageAppropriateness(imageUrl) {
     };
 
     const [result] = await client.annotateImage(request);
-    if (result.textAnnotations.length) {
-        return true;
-    }
-
-    if (checkAdultContent(result.safeSearchAnnotation.adult)) {
-        return true;
-    }
-
-    if (checkAdultContent(result.safeSearchAnnotation.violence)) {
-        return true;
-    }
-
-    if (checkAdultContent(result.safeSearchAnnotation.racy)) {
+    if (
+        result.textAnnotations.length || 
+        checkAdultContent(result.safeSearchAnnotation.adult) ||
+        checkAdultContent(result.safeSearchAnnotation.violence) ||
+        checkAdultContent(result.safeSearchAnnotation.racy)
+        ) {
         return true;
     }
 
     return false;
 }
 
-function checkAdultContent(category) {
+checkAdultContent = category => {
     if (category == "POSSIBLE" || category == "LIKELY" || category == "VERY_LIKELY") {
         return true;
     } else {
