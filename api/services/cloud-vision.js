@@ -1,11 +1,16 @@
 const vision = require('@google-cloud/vision');
 const client = new vision.ImageAnnotatorClient();
+const fetch = require('fetch-base64');
 
 checkImageAppropriateness = async imageUrl => {
     //Format request for Google Cloud Vision API
-    const request = {
+    const image = await fetch.remote(imageUrl);
+
+    let request = {
         image: {
-            source: { imageUri: imageUrl }
+            source: {
+                imageUri: imageUrl
+            }
         },
         features: [
             {
@@ -17,7 +22,28 @@ checkImageAppropriateness = async imageUrl => {
         ]
     };
 
-    const [result] = await client.annotateImage(request);
+    let [result] = await client.annotateImage(request);
+
+    //Make a second request using downloaded image if S3 url cannot be accessed
+    if (result.error) {
+        const image = await fetch.remote(imageUrl);
+        request = {
+            image: {
+                content: image[0]
+            },
+            features: [
+                {
+                    type: "TEXT_DETECTION"
+                },
+                {
+                    type: "SAFE_SEARCH_DETECTION"
+                }
+            ]
+        };
+
+        [result] = await client.annotateImage(request);
+    }
+    
     if (
         result.textAnnotations.length || 
         checkAdultContent(result.safeSearchAnnotation.adult) ||
