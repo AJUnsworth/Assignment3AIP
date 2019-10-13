@@ -7,7 +7,7 @@ import "./Button.css";
 function AdminButton(props) {
     return (
         <Link to="/admin/">
-            <Button variant="outline-light authenticationButton" >
+            <Button variant="outline-light navbarButton" >
                 Admin Page
             </Button>
         </Link>

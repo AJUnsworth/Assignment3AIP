@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 // Upload image component is built on top of a component found online
 // Source: https://mdbootstrap.com/docs/react/forms/file-input/
 
-class UploadImage extends React.Component {
+class UploadImageForm extends React.Component {
     constructor() {
         super()
         this.initialState = {
@@ -163,4 +163,4 @@ class UploadImage extends React.Component {
 
 }
 
-export default withRouter(UploadImage);
+export default withRouter(UploadImageForm);

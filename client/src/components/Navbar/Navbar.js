@@ -34,7 +34,7 @@ class Navbar extends React.Component {
             <div className="navbar">
                 <div className="navbarContent">
                     <Link to="/">
-                        <img src={Logo} alt="logo" className="navbarSizing" />
+                        <img src={Logo} alt="logo" className="navbarLogo" />
                     </Link>
                     {this.renderNavButtons()}
                 </div>

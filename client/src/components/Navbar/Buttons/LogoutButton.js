@@ -25,7 +25,7 @@ function LogoutButton(props) {
 
     return (
         <>
-            <Button onClick={handleShowLogout} variant="outline-light" className="authenticationButton"> Log out </Button>
+            <Button onClick={handleShowLogout} variant="outline-light" className="navbarButton"> Log out </Button>
 
             <Modal show={showLogout} onHide={handleCloseLogout}>
                 <Modal.Header closeButton>
