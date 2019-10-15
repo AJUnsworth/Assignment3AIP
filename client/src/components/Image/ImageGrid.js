@@ -14,37 +14,28 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
-        if (!props.sortBy) {
-            this.state = {
-                sortBy: "latest",
-                showResults: true
-            }
-        } else {
-            this.state = {
-                sortBy: props.sortBy,
-                showResults: true
-            }
-        }
+        let sortBy = props.sortBy ? props.sortBy: "latest";
+        this.state = {sortBy: sortBy, showResults: true}
     };
 
     componentDidMount() {
         this.handleNewPosts();
     }
 
-    handleNewPosts = () => {
+    handlePosts = (shouldRefresh) => {
         if (this.state.sortBy === 'latest') {
-            this.props.displayLatest(true);
+            this.props.displayLatest(shouldRefresh);
         } else if (this.state.sortBy === 'popular') {
-            this.props.displayPopular(true);
+            this.props.displayPopular(shouldRefresh);
         }
     }
 
+    handleNewPosts = () => {
+        this.handlePosts(true);
+    }
+
     handleShowMore = () => {
-        if (this.state.sortBy === 'latest') {
-            this.props.displayLatest(false);
-        } else if (this.state.sortBy === 'popular') {
-            this.props.displayPopular(false);
-        }    
+        this.handlePosts(false);    
     }
 
     handleSortBy = (value) => {
