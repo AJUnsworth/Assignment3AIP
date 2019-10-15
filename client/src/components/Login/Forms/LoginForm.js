@@ -7,13 +7,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { NotificationManager } from "react-notifications";
 
-import Logo from "../../images/Seenit Logo_white.png";
-import "./Authentication.css";
+import Logo from "../../../../src/images/Seenit Logo_white.png";
+import "./LoginForm.css";
 
 // Form uses skeleton code & logic from React Bootstrap Documentation
 // https://react-bootstrap.github.io/components/forms/#forms-validation-native
 
-class Authentication extends React.Component {
+class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -120,4 +120,4 @@ class Authentication extends React.Component {
     };
 }
 
-export default withRouter(Authentication);
+export default withRouter(LoginForm);

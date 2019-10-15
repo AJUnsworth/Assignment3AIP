@@ -11,6 +11,7 @@
     "aws-sdk": "^2.524.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.3.1",
+    "chai-sorted": "^0.2.0",
     "classnames": "^2.2.6",
     "concurrently": "^4.1.2",
     "cookie-parser": "^1.4.4",
@@ -35,6 +36,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.0.1",
     "react-test-renderer": "^16.9.0",
+    "supertest": "^4.0.2",
     "validator": "^11.1.0"
   },
   "scripts": {

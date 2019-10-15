@@ -1,7 +1,7 @@
 import React from "react";
 
-import PlaceholderImage from "../../images/imageremovedplaceholder.png";
-import ReactionCounter from "../Thread/ReactionCounter";
+import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
+import ReactionCounter from "./Functions/ReactionCounter";
 import "./ImageFrame.css";
 
 class ImageFrame extends React.Component {

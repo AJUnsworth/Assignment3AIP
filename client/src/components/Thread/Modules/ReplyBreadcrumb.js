@@ -3,8 +3,8 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import { showError } from "../../errors";
-import PlaceholderImage from "../../images/imageremovedplaceholder.png";
+import { showError } from "../../../errors";
+import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
 import "./ReplyBreadcrumb.css";
 
 class ReplyBreadcrumb extends React.Component {

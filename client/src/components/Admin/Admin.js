@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 
 import { showError } from "../../errors";
 import authenticate from "../Authentication/Authenticate";
-import ImageGrid from "../Image/ImageGrid";
+import ImageGrid from "../ImageGrid/ImageGrid";
 import Navbar from "../Navbar/Navbar";
 
 class Admin extends React.Component {
@@ -42,7 +42,7 @@ class Admin extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <Container className="contentFrame">
+                <Container className="homeContent">
                     <Row className="rowPadding">
                         <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                             <h1 className="welcomeMessage">
@@ -55,7 +55,7 @@ class Admin extends React.Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} sm={12} md={12} lg={8} xl={12} className="contentFrameGrid">
+                        <Col xs={12} sm={12} md={12} lg={8} xl={12} className="homeContentGrid">
                             <ImageGrid {...this.props} displayLatest={this.displayPosts} {...this.state} />
                         </Col>
                     </Row>

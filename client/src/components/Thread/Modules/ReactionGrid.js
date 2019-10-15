@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { withRouter } from "react-router-dom";
 
-import { showError } from "../../errors";
+import { showError } from "../../../errors";
 import "./ReactionGrid.css";
 
 class ReactionGrid extends React.Component {

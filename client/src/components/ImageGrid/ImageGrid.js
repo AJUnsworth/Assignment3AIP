@@ -6,37 +6,36 @@ import Masonry from 'react-masonry-css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import SortImageButtons from "./Functions/SortImage";
+import SortImageButtons from "./Functions/SortImageButtons";
 import UploadImageForm from "./Functions/UploadImageForm";
-import ImageFrame from "./ImageFrame";
+import ImageFrame from "./ImageFrame/ImageFrame";
 import "./ImageGrid.css";
 
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            sortBy: "latest"
-        }
+        let sortBy = props.sortBy ? props.sortBy: "latest";
+        this.state = {sortBy: sortBy, showResults: true}
     };
 
     componentDidMount() {
         this.handleNewPosts();
     }
 
-    handleNewPosts = () => {
+    handlePosts = (shouldRefresh) => {
         if (this.state.sortBy === 'latest') {
-            this.props.displayLatest(true);
+            this.props.displayLatest(shouldRefresh);
         } else if (this.state.sortBy === 'popular') {
-            this.props.displayPopular(true);
+            this.props.displayPopular(shouldRefresh);
         }
     }
 
+    handleNewPosts = () => {
+        this.handlePosts(true);
+    }
+
     handleShowMore = () => {
-        if (this.state.sortBy === 'latest') {
-            this.props.displayLatest(false);
-        } else if (this.state.sortBy === 'popular') {
-            this.props.displayPopular(false);
-        }
+        this.handlePosts(false);    
     }
 
     handleSortBy = (sortingMethod) => {
