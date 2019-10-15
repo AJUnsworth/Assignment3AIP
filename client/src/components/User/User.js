@@ -24,7 +24,7 @@ class User extends React.Component {
     async componentDidMount() {
         const { userId } = this.props.match.params;
 
-        const response = await fetch("/users/" + userId, {
+        const response = await fetch(`/users/${userId}`, {
             method: "GET"
         });
 
@@ -50,8 +50,8 @@ class User extends React.Component {
         } else {
             skippedPosts = 0;
         }
-
-        const response = await fetch(`/post/getRecentUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`);
+        
+        const response = await fetch(`/users/${userId}/latest?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 
@@ -86,7 +86,7 @@ class User extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/getPopularUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/users/${userId}/popular?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 

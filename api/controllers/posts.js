@@ -50,21 +50,21 @@ exports.post_create = async (req, res) => {
             newPost
                 .save()
                 .then(post => res.json(post))
-                .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
+                .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
         })
-            .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
+            .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
     });
 };
 
 exports.post_edit = async (req, res, next) => {
     //Fix later by implementing with Multer
     singleUpload(req, res, function (err) {
-        const postId = req.body.postId;
+        const postId = req.params.postId;
         const userId = req.decoded.id;
 
         Post.findOne({ _id: postId }).populate("replies").then(async post => {
             if (!post) {
-                return res.send(404).json({ error: errors.POST_NOT_FOUND });
+                return res.status(404).json({ error: errors.POST_NOT_FOUND });
             } else if (!post.replies.length && !post.totalReactions) {
                 //singleUpload(req, res, function (err) {
                 if (err) next(err);
@@ -77,7 +77,7 @@ exports.post_edit = async (req, res, next) => {
                 if (post.imageUrl) {
                     //deleteImage only returns error messages if any issues occur
                     const err = await deleteImage(post.imageUrl)
-                    if (err) return res.send(500).json({ error: errors.SERVER_ERROR });
+                    if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
                 }
 
                 //Remove only the image if the post has replies to replace with a placeholder
@@ -105,12 +105,12 @@ exports.post_edit = async (req, res, next) => {
 }
 
 exports.post_delete = async (req, res) => {
-    const postId = req.body.postId;
+    const postId = req.params.postId;
     const userId = req.decoded.id;
 
     const post = await Post.findOne({ _id: postId }).populate("replies");
     if (!post) {
-        return res.send(404).json({ error: errors.POST_NOT_FOUND });
+        return res.status(404).json({ error: errors.POST_NOT_FOUND });
     }
 
     if (post.userId != userId) {
@@ -144,7 +144,7 @@ exports.post_delete = async (req, res) => {
 };
 
 exports.post_report = async (req, res) => {
-    const postId = req.body.postId;
+    const postId = req.params.postId;
     const userId = req.decoded.id;
 
     const user = await User.findOne({ _id: userId });
@@ -185,7 +185,7 @@ exports.post_report = async (req, res) => {
 
 exports.post_react = async (req, res) => {
     const userId = req.decoded.id;
-    const postId = req.body.postId;
+    const postId = req.params.postId;
     const reactionType = req.body.reactionType;
 
     const user = await User.findOne({ _id: userId });
@@ -236,7 +236,7 @@ exports.post_react = async (req, res) => {
 };
 
 exports.post_metrics = (req, res) => {
-    const postId = req.query.post_id;
+    const postId = req.params.postId;
 
     Post.findOne({ _id: postId })
         .populate({ path: "totalReplies", match: { flagged: false } })
@@ -303,50 +303,9 @@ exports.posts_popular_get = (req, res) => {
         });
 };
 
-exports.posts_user_latest_get = (req, res) => {
-    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId = mongoose.Types.ObjectId(req.query.userId);
-
-    Post.aggregate([
-        { '$match': { 'userId': userId, 'flagged': false } },
-        { '$sort': { 'createdAt': -1 } },
-        {
-            $facet: {
-                metadata: [{ $count: "totalCount" }],
-                results: [{ $skip: skippedPosts }, { $limit: 10 }]
-            }
-        }])
-        .exec(function (err, posts) {
-            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
-            return res.json(posts[0]);
-        });
-};
-
-exports.posts_user_popular_get = (req, res) => {
-    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const userId = mongoose.Types.ObjectId(req.query.userId);
-
-    Post.aggregate([
-        { '$match': { 'userId': userId, 'flagged': false } },
-        {
-            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
-        },
-        { '$sort': { 'totalReactions': -1 } },
-        {
-            $facet: {
-                metadata: [{ $count: "totalCount" }],
-                results: [{ $skip: skippedPosts }, { $limit: 10 }]
-            }
-        }])
-        .exec(function (err, posts) {
-            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
-            return res.json(posts[0]);
-        });
-};
-
 exports.posts_replies_latest_get = (req, res) => {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const postId = mongoose.Types.ObjectId(req.query.postId);
+    const postId = mongoose.Types.ObjectId(req.params.postId);
 
     Post.aggregate([
         { '$match': { 'replyTo': postId, 'flagged': false } },
@@ -365,7 +324,7 @@ exports.posts_replies_latest_get = (req, res) => {
 
 exports.posts_replies_popular_get = (req, res) => {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    const postId = mongoose.Types.ObjectId(req.query.postId);
+    const postId = mongoose.Types.ObjectId(req.params.postId);
 
     Post.aggregate([
         { '$match': { 'replyTo': postId, 'flagged': false } },
@@ -386,7 +345,7 @@ exports.posts_replies_popular_get = (req, res) => {
 };
 
 exports.post_reply_parents_get = async (req, res) => {
-    const postId = req.query.post_id;
+    const postId = req.params.postId;
 
     const post = await Post.findOne({ _id: postId });
     if (!post) {

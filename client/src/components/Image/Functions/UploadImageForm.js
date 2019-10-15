@@ -43,7 +43,6 @@ class UploadImageForm extends React.Component {
             formData.append("depth", this.props.replyTo.depth + 1);
             this.createPost(formData);
         } else if (this.props.post) {
-            formData.append("postId", this.props.post._id)
             this.editPost(formData);
         } else {
             this.createPost(formData);
@@ -76,9 +75,10 @@ class UploadImageForm extends React.Component {
     }
 
     async editPost(formData) {
+        const postId = this.props.post._id;
         this.setState({ loading: true });
 
-        const response = await fetch('/post/edit', {
+        const response = await fetch(`/post/${postId}/edit`, {
             method: 'POST',
             body: formData
         });

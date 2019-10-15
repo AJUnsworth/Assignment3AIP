@@ -25,13 +25,8 @@ class ImageActionsButton extends React.Component {
     handleApprove = async () => {
         this.setState({ showApprove: false });
 
-        const requestBody = JSON.stringify({
-            postId: this.props.post._id
-        });
-
-        const response = await fetch("/post/approve", {
+        const response = await fetch(`/post/${this.props.post._id}/approve`, {
             method: "POST",
-            body: requestBody,
             headers: {
                 "Content-Type": "application/json"
             }

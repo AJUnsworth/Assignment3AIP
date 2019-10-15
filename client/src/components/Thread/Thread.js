@@ -37,7 +37,7 @@ class Thread extends React.Component {
     async componentDidMount() {
         const { postId } = this.props.match.params;
 
-        const response = await fetch("/post/" + postId, {
+        const response = await fetch(`/post/${postId}` , {
             method: "GET"
         });
 
@@ -91,11 +91,8 @@ class Thread extends React.Component {
     }
 
     handleReportImage = async () => {
-        const requestBody = JSON.stringify({ postId: this.state.post._id });
-
-        const response = await fetch("/post/report", {
+        const response = await fetch(`/post/${this.state.post._id}/report`, {
             method: "POST",
-            body: requestBody,
             headers: {
                 "Content-Type": "application/json"
             }
@@ -137,7 +134,7 @@ class Thread extends React.Component {
             postId: this.state.post._id
         });
 
-        const response = await fetch("/post/delete", {
+        const response = await fetch(`/post/${this.state.post._id}/delete`, {
             method: "POST",
             body: requestBody,
             headers: {
@@ -174,7 +171,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/${postId}/latest?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 
@@ -217,7 +214,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/${postId}/popular?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 

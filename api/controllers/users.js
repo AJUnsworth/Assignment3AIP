@@ -1,5 +1,7 @@
 const User = require("../models/user");
+const Post = require("../models/post")
 
+const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -31,7 +33,7 @@ exports.user_create = async (req, res) => {
             newUser
                 .save()
                 .then(user => res.json(user))
-                .catch(() => res.send(500).json({ errors: errors.SERVER_ERROR }));
+                .catch(() => res.status(500).json({ errors: errors.SERVER_ERROR }));
         });
     });
 };
@@ -78,7 +80,7 @@ exports.user_login = async (req, res) => {
             if (users[i].lastLoggedIn >= dayAgo) {
                 matchingUsersCount++;
                 if (matchingUsersCount >= 3) {
-                    return res.send(405).json({ error: errors.POTENTIAL_SOCKPUPPET });
+                    return res.status(405).json({ error: errors.POTENTIAL_SOCKPUPPET });
                 }
             }
         }
@@ -115,7 +117,7 @@ exports.user_login = async (req, res) => {
                     isAdmin: user.isAdmin
                 });
         } else {
-            return res.send(500).json({ errors: errors.SERVER_ERROR });
+            return res.status(500).json({ errors: errors.SERVER_ERROR });
         }
     });
 };
@@ -130,11 +132,11 @@ exports.user_get_current = (req, res) => {
 
 exports.user_reaction_get = (req, res) => {
     const postId = req.query.post_id;
-    const userId = req.decoded.id;
+    const userId = req.params.userId;
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
-            return res.send(404).json({ error: errors.USER_NOT_FOUND });
+            return res.status(404).json({ error: errors.USER_NOT_FOUND });
         }
 
         const likedPosts = user.likedPosts;
@@ -156,7 +158,7 @@ exports.user_get = (req, res) => {
 
     User.findOne({ _id: userId }).populate({ path: "posts", match: { flagged: false } }).then(user => {
         if (!user) {
-            return res.send(404).json({ error: errors.USER_NOT_FOUND });
+            return res.status(404).json({ error: errors.USER_NOT_FOUND });
         }
 
         var reactionCount = 0;
@@ -168,5 +170,47 @@ exports.user_get = (req, res) => {
 
         return res.json({ reactionCount, postCount, ...user.toJSON() });
     })
-        .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
+        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
+};
+
+exports.user_latest_get = (req, res) => {
+    console.log("test");
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId = mongoose.Types.ObjectId(req.params.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'flagged': false } },
+        { '$sort': { 'createdAt': -1 } },
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
+            return res.json(posts[0]);
+        });
+};
+
+exports.user_popular_get = (req, res) => {
+    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const userId = mongoose.Types.ObjectId(req.params.userId);
+
+    Post.aggregate([
+        { '$match': { 'userId': userId, 'flagged': false } },
+        {
+            '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+        },
+        { '$sort': { 'totalReactions': -1 } },
+        {
+            $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skippedPosts }, { $limit: 10 }]
+            }
+        }])
+        .exec(function (err, posts) {
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
+            return res.json(posts[0]);
+        });
 };

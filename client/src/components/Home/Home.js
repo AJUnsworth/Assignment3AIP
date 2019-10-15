@@ -24,7 +24,7 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/getThumbnails?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/latest?skippedPosts=${skippedPosts}`);
         const data = await response.json();
 
         if (response.status === 200) {
@@ -57,7 +57,7 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/getPopular?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/popular?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 

@@ -86,24 +86,6 @@ router.get("/checkAdmin", authenticate, AdminController.admin_check);
 router.get("/current", authenticate, UsersController.user_get_current);
 
 /**
- * Checks and returns if user has reacted to a post
- * Requires an authenticated token.
- * 
- * Path: users/reaction
- * 
- * Method: Get
- * 
- * * Parameters:
- *      postId: the ID of the current post
- * 
- * Response:
- *      200: Returns reaction type
- *      401: User has invalid/no token
- *      404: User cannot be found
- */ 
-router.get("/reaction", authenticate, UsersController.user_reaction_get);
-
-/**
  * Returns top users based on number of reactions
  * 
  * Path: users/leaderboard
@@ -131,5 +113,27 @@ router.get("/leaderboard", LeaderboardController.leaderboard_get);
  *      404: User cannot be found
  */ 
 router.get("/:userId", UsersController.user_get);
+
+/**
+ * Checks and returns if user has reacted to a post
+ * Requires an authenticated token.
+ * 
+ * Path: users/reaction
+ * 
+ * Method: Get
+ * 
+ * * Parameters:
+ *      postId: the ID of the current post
+ * 
+ * Response:
+ *      200: Returns reaction type
+ *      401: User has invalid/no token
+ *      404: User cannot be found
+ */ 
+router.get("/:userId/reaction", authenticate, UsersController.user_reaction_get);
+
+router.get("/:userId/latest", UsersController.user_latest_get);
+
+router.get("/:userId/popular", UsersController.user_popular_get);
 
 module.exports = router;

@@ -30,7 +30,7 @@ class ReactionCounter extends React.Component {
     loadMetrics() {
         const self = this;
         this.setState({ loading: true });
-        fetch("/post/metrics?post_id=" + this.props.post._id, {
+        fetch(`/post/${this.props.post._id}/metrics`, {
             method: "GET"
         })
             .then(response => {

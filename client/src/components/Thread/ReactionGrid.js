@@ -28,7 +28,7 @@ class ReactionGrid extends React.Component {
     }
 
     async getUserReaction() {
-        const response = await fetch("/users/reaction?post_id=" + this.props.post._id, {
+        const response = await fetch(`/users/${this.props.currentUser.id}/reaction?post_id=${this.props.post._id}`, {
             method: "GET"
         });
 
@@ -52,13 +52,12 @@ class ReactionGrid extends React.Component {
             const reactionType = e.currentTarget.id;
 
             const requestBody = JSON.stringify({
-                postId: this.props.post._id,
                 reactionType: reactionType
             });
 
             this.setState({ loading: true });
 
-            const response = await fetch("/post/react", {
+            const response = await fetch(`/post/${this.props.post._id}/react`, {
                 method: "POST",
                 body: requestBody,
                 headers: {

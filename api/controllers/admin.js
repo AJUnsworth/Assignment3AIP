@@ -12,7 +12,7 @@ exports.admin_check = async (req, res) => {
 };
 
 exports.post_approve = async (req, res) => {
-    const postId = req.body.postId;
+    const postId = req.params.postId;
     const userId = req.decoded.id;
 
     const post = await Post.findOne({ _id: postId });
