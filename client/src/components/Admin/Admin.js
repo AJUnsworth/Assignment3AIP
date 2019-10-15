@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+import Errors from "../../errors";
 import authenticate from "../Authentication/Authenticate";
 import ImageGrid from "../Image/ImageGrid";
 import Navbar from "../Navbar/Navbar";
@@ -19,30 +20,29 @@ class Admin extends React.Component {
         }
     }
 
-    displayPosts = () => {
+    displayPosts = async () => {
         const self = this;
         const skippedPosts = this.state.posts.length;
         this.setState({ loading: true });
 
-        fetch(`/post/flagged?skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            posts: [...prevState.posts, ...data.posts],
-                            isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
-                            loading: false
-                        }));
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading posts, please try refreshing the page",
-                        "Error loading posts",
-                        5000
-                    );
-                }
-            })
+        const response = await fetch(`/post/flagged?skippedPosts=${skippedPosts}`);
+        const data = await response.json();
+
+        if (response.status === 200) {
+            self.setState(prevState => ({
+                posts: [...prevState.posts, ...data.posts],
+                isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
+                loading: false
+            }));
+        } else {
+            const error = Errors.getError(data.error);
+            self.setState({ loading: false });
+            NotificationManager.error(
+                error.message,
+                error.title,
+                5000
+            );
+        }
     }
 
     render() {

@@ -32,7 +32,7 @@ class App extends React.Component {
                         response.json().then(data => {
                             self.setUser(data);
                         });
-                    } else if (response.status === 401 && response === "Invalid token") {
+                    } else if (response.status === 401) {
                         this.props.history.push("/login");
                     }
                 });
@@ -49,18 +49,18 @@ class App extends React.Component {
         fetch("/users/logout", {
             method: "POST"
         })
-            .then(function (response) {
-                self.setState({ 
-                    currentUser: null, 
-                    loading: false 
+            .then(() => {
+                self.setState({
+                    currentUser: null,
+                    loading: false
                 });
             });
     };
-    
+
 
     render() {
         return (
-            
+
             <Router>
                 <Switch>
                     {/*Code for passing props to routes is based on an example by Tyler McGinnis. 
@@ -69,7 +69,7 @@ class App extends React.Component {
                     <Route path="/admin" render={(props) => <Admin {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/thread/:postId" render={(props) => <Thread {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/login" render={(props) => <LoginContainer {...props} setUser={this.setUser} logout={this.logout} />} />
-                    <Route path="/user/:userId" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />   
+                    <Route path="/user/:userId" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route render={(props) => <MissingPage {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                 </Switch>
                 <NotificationContainer />

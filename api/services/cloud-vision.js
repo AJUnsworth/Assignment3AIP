@@ -4,8 +4,6 @@ const fetch = require('fetch-base64');
 
 checkImageAppropriateness = async imageUrl => {
     //Format request for Google Cloud Vision API
-    const image = await fetch.remote(imageUrl);
-
     let request = {
         image: {
             source: {
@@ -43,13 +41,13 @@ checkImageAppropriateness = async imageUrl => {
 
         [result] = await client.annotateImage(request);
     }
-    
+
     if (
-        result.textAnnotations.length || 
+        result.textAnnotations.length ||
         checkAdultContent(result.safeSearchAnnotation.adult) ||
         checkAdultContent(result.safeSearchAnnotation.violence) ||
         checkAdultContent(result.safeSearchAnnotation.racy)
-        ) {
+    ) {
         return true;
     }
 
