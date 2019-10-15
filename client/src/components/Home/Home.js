@@ -1,6 +1,6 @@
 import React from "react";
-import { NotificationManager } from "react-notifications";
 
+import { showError } from "../../errors";
 import Navbar from "../Navbar/Navbar";
 import HomeContent from "./Content/HomeContent";
 
@@ -14,8 +14,7 @@ class Home extends React.Component {
         }
     }
 
-    displayLatest = (refresh) => {
-        const self = this;
+    displayLatest = async (refresh) => {
         let skippedPosts;
         this.setState({ loading: true });
 
@@ -25,37 +24,30 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getThumbnails?skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                posts: [...prevState.posts, ...data.results],
-                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                                loading: false
-                            }));
-                        }  else {
-                            self.setState({ 
-                                posts: data.results, 
-                                isShowMoreDisabled: data.results.length < 10,
-                                loading: false
-                            });
-                        }
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading posts, please try refreshing the page",
-                        "Error loading posts",
-                        5000
-                    );
-                }
-            })
+        const response = await fetch(`/post/getThumbnails?skippedPosts=${skippedPosts}`);
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    posts: [...prevState.posts, ...data.results],
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                    loading: false
+                }));
+            } else {
+                this.setState({
+                    posts: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loading: false
+                });
+            }
+        } else {
+            showError(data.error);
+            this.setState({ loading: false });
+        }
     }
 
-    displayPopular = (refresh) => {
-        const self = this;
+    displayPopular = async refresh => {
         let skippedPosts;
         this.setState({ loading: true });
 
@@ -65,34 +57,28 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getPopular?skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                posts: [...prevState.posts, ...data.results],
-                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                                loading: false
-                            }))
-                            
-                        } else {
-                            self.setState({
-                                posts: data.results,
-                                isShowMoreDisabled: data.results.length < 10,
-                                loading: false
-                            });
-                        }
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading posts, please try refreshing the page",
-                        "Error loading posts",
-                        5000
-                    );
-                }
-            });
+        const response = await fetch(`/post/getPopular?skippedPosts=${skippedPosts}`);
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    posts: [...prevState.posts, ...data.results],
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                    loading: false
+                }));
+            } else {
+                this.setState({
+                    posts: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loading: false
+                });
+            }
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
     render() {

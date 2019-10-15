@@ -9,6 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import { showError } from "../../errors";
 import ImageActionsButton from "../User/Admin/ImageActionsButton";
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./Modules/ThreadImage";
@@ -34,28 +35,32 @@ class Thread extends React.Component {
         }
     }
 
-    componentDidMount() {
-        const self = this;
+    async componentDidMount() {
         const { postId } = this.props.match.params;
-        fetch("/post/" + postId, {
+
+        const response = await fetch("/post/" + postId, {
             method: "GET"
-        })
-            .then(function (response) {
-                if (response.status === 404) {
-                    self.props.history.push("/");
-                }
-                response.json().then(function (data) {
-                    if (data.flagged) {
-                        fetch("/users/checkAdmin")
-                            .then(res => {
-                                if (res.status !== 200) {
-                                    self.props.history.push("/");
-                                }
-                            });
-                    }
-                    self.setState({ post: data, loading: false });
-                })
-            })
+        });
+
+        if (response.status === 404) {
+            this.props.history.push("/");
+        } else {
+            const data = await response.json();
+
+            if (data.flagged) {
+                this.checkAdmin();
+            }
+
+            this.setState({ post: data, loading: false });
+        }
+    }
+
+    async checkAdmin() {
+        const response = await fetch("/users/checkAdmin");
+
+        if (response.status !== 200) {
+            this.props.history.push("/");
+        }
     }
 
     handleShowReport = () => {
@@ -86,39 +91,35 @@ class Thread extends React.Component {
         this.setState({ post: updatedPost });
     }
 
-    handleReportImage = () => {
-        const self = this;
+    handleReportImage = async () => {
         const requestBody = JSON.stringify({ postId: this.state.post._id });
 
-        fetch("/post/report", {
+        const response = await fetch("/post/report", {
             method: "POST",
             body: requestBody,
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(function (response) {
-                if (response.status === 200) {
-                    const contentType = response.headers.get("content-type");
-                    if (contentType.includes('application/json')) {
-                        response.json().then(data => {
-                            if (data.flagged) {
-                                self.props.history.push("/");
-                                NotificationManager.success("Post has been been flagged for containing text or innapropriate content", "Post reported");
-                            }
-                        });
-                    } else {
-                        NotificationManager.success("The post has been reported successfully", "Post Reported");
-                    }
+        });
+
+        if (response.status === 200) {
+            const contentType = response.headers.get("content-type");
+            if (contentType.includes('application/json')) {
+                const data = await response.json();
+                if (data.flagged) {
+                    this.props.history.push("/");
+                    NotificationManager.success("Post has been been flagged for containing text or innapropriate content", "Post reported");
                 }
-                else if (response.status === 405) {
-                    NotificationManager.error("You have already reported this post", "Report Unsuccessful");
-                }
-                else {
-                    NotificationManager.error("An error has occured.", "Error");
-                }
-                self.setState({ showReport: false });
-            })
+            } else {
+                NotificationManager.success("The post has been reported successfully", "Post Reported");
+            }
+        }
+        else {
+            const data = await response.json();
+            showError(data.error);
+        }
+
+        this.setState({ showReport: false });
     }
 
     handleReactionUpdate = (reactions) => {
@@ -130,53 +131,40 @@ class Thread extends React.Component {
         }));
     }
 
-    handleDeletePost = () => {
+    handleDeletePost = async () => {
         this.setState({ showDelete: false });
 
         const requestBody = JSON.stringify({
             postId: this.state.post._id
         });
 
-        const self = this;
-        fetch("/post/delete", {
+        const response = await fetch("/post/delete", {
             method: "POST",
             body: requestBody,
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(function (response) {
-                if (response.status === 200) {
-                    //Code to check if response is JSON
-                    //See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Headers
-                    const contentType = response.headers.get("content-type");
-                    if (contentType.includes('application/json')) {
-                        response.json().then(data => {
-                            self.setState({ post: data });
-                            NotificationManager.success("Post image removed successfully", "Post image deleted");
-                        });
-                    } else {
-                        NotificationManager.success("Post removed successfully", "Post deleted");
-                        self.props.history.push("/");
-                    }
-                } else if (response.status === 403) {
-                    NotificationManager.error(
-                        "Looks like this is someone else's post",
-                        "Cannot delete post",
-                        5000
-                    );
-                } else {
-                    NotificationManager.error(
-                        "Looks like something went wrong while deleting the post, please try again later",
-                        "Error deleting post",
-                        5000
-                    );
-                }
-            })
+        });
+
+        if (response.status === 200) {
+            //Code to check if response is JSON
+            //See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Headers
+            const contentType = response.headers.get("content-type");
+            if (contentType.includes('application/json')) {
+                const data = await response.json()
+                this.setState({ post: data });
+                NotificationManager.success("Post image removed successfully", "Post image deleted");
+            } else {
+                NotificationManager.success("Post removed successfully", "Post deleted");
+                this.props.history.push("/");
+            }
+        } else {
+            const data = await response.json();
+            showError(data.error);
+        }
     }
 
-    displayRecentReplies = (refresh) => {
-        const self = this;
+    displayRecentReplies = async refresh => {
         let skippedPosts;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
@@ -187,32 +175,28 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                replies: [...prevState.replies, ...data.results],
-                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                                loadingReplies: false
-                            }));
+        const response = await fetch(`/post/repliesRecent?postId=${postId}&skippedPosts=${skippedPosts}`);
 
-                        } else {
-                            self.setState({
-                                replies: data.results,
-                                isShowMoreDisabled: data.results.length < 10,
-                                loadingReplies: false
-                            });
-                        }
-                    });
-                }
-            })
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    replies: [...prevState.replies, ...data.results],
+                    isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                    loadingReplies: false
+                }));
+            } else {
+                this.setState({
+                    replies: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loadingReplies: false
+                });
+            }
+        } else {
+            this.setState({ loadingReplies: false });
+            showError(data.error);
+        }
     }
 
     displayFlagged = () => {
@@ -223,8 +207,7 @@ class Thread extends React.Component {
         }
     }
 
-    displayPopularReplies = (refresh) => {
-        const self = this;
+    displayPopularReplies = async refresh => {
         let skippedPosts;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
@@ -235,32 +218,29 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                replies: [...prevState.replies, ...data.results],
-                                isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                                loadingReplies: false
-                            }));
+        const response = await fetch(`/post/repliesPopular?postId=${postId}&skippedPosts=${skippedPosts}`);
 
-                        } else {
-                            self.setState({
-                                replies: data.results,
-                                isShowMoreDisabled: data.results.length < 10,
-                                loadingReplies: false
-                            });
-                        }
-                    });
-                }
-            })
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    replies: [...prevState.replies, ...data.results],
+                    isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
+                    loadingReplies: false
+                }));
+
+            } else {
+                this.setState({
+                    replies: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loadingReplies: false
+                });
+            }
+        } else {
+            this.setState({ loadingReplies: false });
+            showError(data.error);
+        }
     }
 
     renderBreadcrumb() {

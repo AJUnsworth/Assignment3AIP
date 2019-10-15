@@ -1,10 +1,10 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faComments, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { NotificationManager } from "react-notifications";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+import { showError } from "../../errors";
 import Navbar from "../Navbar/Navbar";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import "./User.css";
@@ -21,33 +21,26 @@ class User extends React.Component {
         }
     }
 
-    componentDidMount() {
-        const self = this;
+    async componentDidMount() {
         const { userId } = this.props.match.params;
-        fetch("/users/" + userId, {
+
+        const response = await fetch("/users/" + userId, {
             method: "GET"
-        })
-            .then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState({ user: data, loadingContent: false });
-                    });
-                } else if (response.status === 404) {
-                    self.props.history.push("/");
-                } else {
-                    self.setState({ loadingContent: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading the user page, please try refreshing the page",
-                        "Error loading user page",
-                        5000
-                    );
-                }
-            })
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            this.setState({ user: data, loadingContent: false })
+        } else if (response.status === 404) {
+            this.props.history.push("/");
+        } else {
+            this.setState({ loadingContent: false });
+            showError(data.error);
+        }
     }
 
-
-    displayRecentUserPosts = (refresh) => {
-        const self = this;
+    displayRecentUserPosts = async refresh => {
         let skippedPosts;
         const { userId } = this.props.match.params;
         this.setState({ loading: true });
@@ -58,35 +51,31 @@ class User extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getRecentUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                posts: [...prevState.posts, ...data.results],
-                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                                loading: false
-                            }));
-                        } else {
-                            self.setState({ 
-                                posts: data.results, 
-                                isShowMoreDisabled: data.results.length < 10,
-                                loading: false
-                            });
-                        }
-                    });
-                }
-            })
+        const response = await fetch(`/post/getRecentUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`);
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    posts: [...prevState.posts, ...data.results],
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                    loading: false
+                }));
+            } else {
+                this.setState({
+                    posts: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loading: false
+                });
+            }
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
-    displayPopularUserPosts = (refresh) => {
-        const self = this;
+    displayPopularUserPosts = async refresh => {
         let skippedPosts;
         const { userId } = this.props.match.params;
         this.setState({ loading: true });
@@ -97,31 +86,28 @@ class User extends React.Component {
             skippedPosts = 0;
         }
 
-        fetch(`/post/getPopularUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 404) {
-                    response.json().then(function (data) {
-                        //self.setState({ errors: data });
-                    });
-                }
-                else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        if (!refresh) {
-                            self.setState(prevState => ({
-                                posts: [...prevState.posts, ...data.results],
-                                isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                                loading: false
-                            }));
-                        } else {
-                            self.setState({ 
-                                posts: data.results, 
-                                isShowMoreDisabled: data.results.length < 10,
-                                loading: false
-                            });
-                        }
-                    });
-                }
-            })
+        const response = await fetch(`/post/getPopularUserPosts/?userId=${userId}&skippedPosts=${skippedPosts}`);
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (!refresh) {
+                this.setState(prevState => ({
+                    posts: [...prevState.posts, ...data.results],
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
+                    loading: false
+                }));
+            } else {
+                this.setState({
+                    posts: data.results,
+                    isShowMoreDisabled: data.results.length < 10,
+                    loading: false
+                });
+            }
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
     renderUserContent() {
@@ -144,11 +130,11 @@ class User extends React.Component {
                                 </h1>
                             </Col>
                             <Col
-                                xs={{ span:11, offset:1}}
-                                sm={{ span:11, offset:1}}
-                                md={{ span:4, offset:2}}
-                                lg={{ span:5, offset:3}}
-                                xl={{ span:4, offset:4}}>
+                                xs={{ span: 11, offset: 1 }}
+                                sm={{ span: 11, offset: 1 }}
+                                md={{ span: 4, offset: 2 }}
+                                lg={{ span: 5, offset: 3 }}
+                                xl={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col className="verticalColPadding textCentred">
                                         <h2>
@@ -171,12 +157,12 @@ class User extends React.Component {
 
                     <div className="myPosts">
                         <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
-                        <ImageGrid 
-                            displayLatest={this.displayRecentUserPosts} 
-                            displayPopular={this.displayPopularUserPosts} 
-                            sortBy='latest' 
-                            {...this.state} 
-                            {...this.props} 
+                        <ImageGrid
+                            displayLatest={this.displayRecentUserPosts}
+                            displayPopular={this.displayPopularUserPosts}
+                            sortBy='latest'
+                            {...this.state}
+                            {...this.props}
                         />
                     </div>
                 </div>

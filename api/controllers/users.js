@@ -3,6 +3,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const errors = require("../services/errors");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
@@ -30,7 +31,7 @@ exports.user_create = async (req, res) => {
             newUser
                 .save()
                 .then(user => res.json(user))
-                .catch(err => res.send(500).json(err));
+                .catch(() => res.send(500).json({ errors: errors.SERVER_ERROR }));
         });
     });
 };
@@ -48,12 +49,12 @@ exports.user_login = async (req, res) => {
 
     user = await User.findOne({ username });
     if (!user) {
-        return res.status(404).json({ password: "Username or password is incorrect" });
+        return res.status(400).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
     }
 
-    const isMatch = bcrypt.compare(password, user.password)
+    const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.status(404).json({ password: "Username or password is incorrect" });
+        return res.status(400).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
     }
 
     //Based on SO post by Hitesh Anshani on comparing dates in the last 24 hours
@@ -77,7 +78,7 @@ exports.user_login = async (req, res) => {
             if (users[i].lastLoggedIn >= dayAgo) {
                 matchingUsersCount++;
                 if (matchingUsersCount >= 3) {
-                    return res.sendStatus(405);
+                    return res.send(405).json({ error: errors.POTENTIAL_SOCKPUPPET });
                 }
             }
         }
@@ -114,7 +115,7 @@ exports.user_login = async (req, res) => {
                     isAdmin: user.isAdmin
                 });
         } else {
-            return res.sendStatus(500);
+            return res.send(500).json({ errors: errors.SERVER_ERROR });
         }
     });
 };
@@ -133,7 +134,7 @@ exports.user_reaction_get = (req, res) => {
 
     User.findOne({ _id: userId }).then(user => {
         if (!user) {
-            return res.sendStatus(404);
+            return res.send(404).json({ error: errors.USER_NOT_FOUND });
         }
 
         const likedPosts = user.likedPosts;
@@ -155,7 +156,7 @@ exports.user_get = (req, res) => {
 
     User.findOne({ _id: userId }).populate({ path: "posts", match: { flagged: false } }).then(user => {
         if (!user) {
-            return res.sendStatus(404);
+            return res.send(404).json({ error: errors.USER_NOT_FOUND });
         }
 
         var reactionCount = 0;
@@ -167,5 +168,5 @@ exports.user_get = (req, res) => {
 
         return res.json({ reactionCount, postCount, ...user.toJSON() });
     })
-        .catch(() => res.sendStatus(404));
+        .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
 };

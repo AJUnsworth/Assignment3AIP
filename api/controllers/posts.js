@@ -4,19 +4,18 @@ const User = require("../models/user");
 const mongoose = require('mongoose');
 const { uploadImage, deleteImage } = require("../services/s3");
 const checkImageAppropriateness = require("../services/cloud-vision");
+const errors = require("../services/errors");
 
 const singleUpload = uploadImage.single("image");
 
 //The create route is based off a tutorial from Medium.com that can no longer be located
 //A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
-exports.post_create = async (req, res, next) => {
+exports.post_create = async (req, res) => {
     //Upload image to S3 bucket then create a new post if successful
     singleUpload(req, res, async function (err) {
-        if (!req.file || req.file === undefined) {
-            return res.sendStatus(400);
+        if (!req.file || req.file === undefined || err) {
+            return res.status(400).json({ error: errors.CANNOT_UPLOAD_IMAGE });
         }
-
-        if (err) next(err);
 
         const newPost = new Post({
             userId: req.decoded.id,
@@ -36,7 +35,7 @@ exports.post_create = async (req, res, next) => {
         if (req.body.replyTo) {
             const parentPost = await Post.findOne({ _id: req.body.replyTo });
             if (!parentPost) {
-                return res.sendStatus(404);
+                return res.status(404).json({ error: errors.POST_NOT_FOUND });
             }
 
             newPost.replyTo = req.body.replyTo;
@@ -51,9 +50,9 @@ exports.post_create = async (req, res, next) => {
             newPost
                 .save()
                 .then(post => res.json(post))
-                .catch(() => res.sendStatus(500));
+                .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
         })
-            .catch(() => res.sendStatus(500));
+            .catch(() => res.send(500).json({ error: errors.SERVER_ERROR }));
     });
 };
 
@@ -65,20 +64,20 @@ exports.post_edit = async (req, res, next) => {
 
         Post.findOne({ _id: postId }).populate("replies").then(async post => {
             if (!post) {
-                return res.sendStatus(404);
+                return res.send(404).json({ error: errors.POST_NOT_FOUND });
             } else if (!post.replies.length && !post.totalReactions) {
                 //singleUpload(req, res, function (err) {
                 if (err) next(err);
 
                 //User should only be able to delete their posts
                 if (post.userId != userId) {
-                    return res.sendStatus(403);
+                    return res.status(403).json({ error: errors.INVALID_USER });
                 }
 
                 if (post.imageUrl) {
                     //deleteImage only returns error messages if any issues occur
                     const err = await deleteImage(post.imageUrl)
-                    if (err) return res.sendStatus(500);
+                    if (err) return res.send(500).json({ error: errors.SERVER_ERROR });
                 }
 
                 //Remove only the image if the post has replies to replace with a placeholder
@@ -96,10 +95,10 @@ exports.post_edit = async (req, res, next) => {
                                     return res.json(populatedPost);
                                 });
                         })
-                        .catch(() => res.sendStatus(500));
+                        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
                 });
             } else {
-                return res.sendStatus(405);
+                return res.status(405).json({ error: errors.CANNOT_EDIT_POST });
             }
         });
     });
@@ -111,17 +110,17 @@ exports.post_delete = async (req, res) => {
 
     const post = await Post.findOne({ _id: postId }).populate("replies");
     if (!post) {
-        return res.sendStatus(404);
+        return res.send(404).json({ error: errors.POST_NOT_FOUND });
     }
 
     if (post.userId != userId) {
-        return res.sendStatus(403);
+        return res.status(403).json({ error: errors.INVALID_USER });
     }
 
     if (post.imageUrl) {
         //deleteImage only returns error messages if any issues occur
         const err = await deleteImage(post.imageUrl)
-        if (err) return res.sendStatus(500);
+        if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
     }
 
     if (Array.isArray(post.replies) && post.replies.length) {
@@ -135,12 +134,12 @@ exports.post_delete = async (req, res) => {
                         return res.json(populatedPost);
                     });
             })
-            .catch(() => res.sendStatus(500));
+            .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
     } else {
         post
             .remove()
             .then(() => res.sendStatus(200))
-            .catch(() => res.sendStatus(500));
+            .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
     }
 };
 
@@ -150,25 +149,33 @@ exports.post_report = async (req, res) => {
 
     const user = await User.findOne({ _id: userId });
     if (!user) {
-        return res.sendStatus(404);
+        return res.status(404).json({ error: errors.USER_NOT_FOUND });
     }
 
     const indexOfPost = user.reportedPosts.findIndex(reportedPost => reportedPost.reportedPost == postId);
     if (indexOfPost != -1) {
-        return res.sendStatus(405)
+        return res.status(405).json({ error: errors.POST_ALREADY_REPORTED });
     }
 
     Post.findOneAndUpdate({ _id: postId }, { $inc: { reports: 1 } }, { new: true }, function (err, post) {
         if (err) {
-            return res.sendStatus(400)
+            return res.status(500).json({ error: errors.SERVER_ERROR });
+        }
+
+        if (!post) {
+            return res.status(404).json({ error: errors.POST_NOT_FOUND });
         }
 
         user.reportedPosts.push({ reportedPost: postId });
-        user.save().catch(() => res.sendStatus(500));
+        user
+            .save()
+            .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
 
         if (post.reports >= 20) {
             post.flagged = true
-            post.save().then(updatedPost => res.json(updatedPost))
+            post.save()
+                .then(updatedPost => res.json(updatedPost))
+                .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
         }
         else {
             return res.sendStatus(200);
@@ -183,12 +190,12 @@ exports.post_react = async (req, res) => {
 
     const user = await User.findOne({ _id: userId });
     if (!user) {
-        return res.sendStatus(404);
+        return res.status(404).json({ error: errors.USER_NOT_FOUND });
     }
 
     const post = await Post.findOne({ _id: postId });
     if (!post) {
-        return res.sendStatus(404);
+        return res.status(404).json({ error: errors.POST_NOT_FOUND });
     }
 
     //Find if user has already liked the post
@@ -218,14 +225,14 @@ exports.post_react = async (req, res) => {
 
     user
         .save()
-        .catch(() => res.sendStatus(500));;
+        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
 
     post
         .save()
         .then(updatedPost => {
             return res.json(updatedPost.reactions);
         })
-        .catch(() => res.sendStatus(500));
+        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
 };
 
 exports.post_metrics = (req, res) => {
@@ -235,7 +242,7 @@ exports.post_metrics = (req, res) => {
         .populate({ path: "totalReplies", match: { flagged: false } })
         .then(post => {
             if (!post) {
-                return res.sendStatus(404);
+                return res.status(404).json({ error: errors.POST_NOT_FOUND });
             } else {
                 return res.json({
                     totalReactions: post.totalReactions,
@@ -265,7 +272,7 @@ exports.posts_latest_get = (req, res) => {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(500);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -291,7 +298,7 @@ exports.posts_popular_get = (req, res) => {
         }
     ])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -310,7 +317,7 @@ exports.posts_user_latest_get = (req, res) => {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -332,7 +339,7 @@ exports.posts_user_popular_get = (req, res) => {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -351,7 +358,7 @@ exports.posts_replies_latest_get = (req, res) => {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -373,7 +380,7 @@ exports.posts_replies_popular_get = (req, res) => {
             }
         }])
         .exec(function (err, posts) {
-            if (err) return res.status(404);
+            if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
             return res.json(posts[0]);
         });
 };
@@ -383,14 +390,14 @@ exports.post_reply_parents_get = async (req, res) => {
 
     const post = await Post.findOne({ _id: postId });
     if (!post) {
-        return res.sendStatus(404);
+        return res.status(404).json({ error: errors.POST_NOT_FOUND });
     }
 
     let replyChain = [post];
     for (let depth = 0; depth < post.depth; depth++) {
-        const parentPost = await Post.findOne({ _id: replyChain[0].replyTo});
+        const parentPost = await Post.findOne({ _id: replyChain[0].replyTo });
         if (!parentPost) {
-            return res.sendStatus(404);
+            return res.status(404).json({ error: errors.POST_NOT_FOUND });
         }
         replyChain.unshift(parentPost);
     }
@@ -403,11 +410,11 @@ exports.post_get = (req, res) => {
 
     Post.findOne({ _id: postId }).populate("userId").populate("totalReplies").then(post => {
         if (!post) {
-            return res.sendStatus(404);
+            return res.status(404).json({ error: errors.POST_NOT_FOUND });
         } else {
             const totalReplies = post.totalReplies;
             return res.json({ totalReplies, ...post.toJSON() });
         }
     })
-        .catch(() => res.sendStatus(404));
+        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
 };
