@@ -6,29 +6,25 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { withRouter } from "react-router-dom";
 
+import { showError } from "../../errors";
 import "./ReactionGrid.css";
 
 class ReactionGrid extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            reactions: {},
             activeReaction: "None selected",
             loading: true,
             showSuggestLogin: false
         };
     }
 
-    async componentDidMount() {
-        const post = this.props.post;
+    componentDidMount() {
         if (this.props.currentUser) {
-            await this.getUserReaction();
+            this.getUserReaction();
         }
 
-        this.setState({
-            reactions: post.reactions,
-            loading: false
-        });
+        this.setState({ loading: false });
     }
 
     async getUserReaction() {
@@ -36,19 +32,16 @@ class ReactionGrid extends React.Component {
             method: "GET"
         });
 
+        const data = await response.json();
+
         if (response.status === 200) {
-            const activeReaction = await response.json();
-            this.setState({ activeReaction: activeReaction });
+            this.setState({ activeReaction: data });
         } else {
-            NotificationManager.error(
-                "Looks like something went wrong while loading the post, please try refreshing the page",
-                "Error loading posts",
-                5000
-            );
+            showError(data.error);
         }
     }
 
-    addReaction = e => {
+    react = async e => {
         if (!this.props.post.imageUrl) {
             NotificationManager.warning(
                 "Since this post is deleted, it can't be reacted to",
@@ -56,8 +49,6 @@ class ReactionGrid extends React.Component {
                 5000
             );
         } else if (this.props.currentUser) {
-            const self = this;
-            const originalReactionType = this.state.activeReaction;
             const reactionType = e.currentTarget.id;
 
             const requestBody = JSON.stringify({
@@ -67,40 +58,26 @@ class ReactionGrid extends React.Component {
 
             this.setState({ loading: true });
 
-            fetch("/post/react", {
+            const response = await fetch("/post/react", {
                 method: "POST",
                 body: requestBody,
                 headers: {
                     "Content-Type": "application/json"
                 }
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            if (originalReactionType !== reactionType) {
-                                self.setState({
-                                    activeReaction: reactionType,
-                                    reactions: data,
-                                    loading: false
-                                });
-                            } else {
-                                self.setState({
-                                    activeReaction: null,
-                                    reactions: data,
-                                    loading: false
-                                });
-                            }
-                            self.props.handleReactionUpdate(data);
-                        });
-                    } else {
-                        self.setState({ loading: false });
-                        NotificationManager.error(
-                            "Looks like something went wrong while reacting to the post, please try refreshing the page",
-                            "Error reacting to post",
-                            5000
-                        );
-                    }
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                this.setState({
+                    activeReaction: reactionType,
+                    loading: false
                 });
+                this.props.handleReactionUpdate(data);
+            } else {
+                this.setState({ loading: false });
+                showError(data.error);
+            }
         } else {
             this.setState({ showSuggestLogin: true });
         }
@@ -114,40 +91,41 @@ class ReactionGrid extends React.Component {
         this.props.history.push("/login");
     }
 
-    renderLoading() {
+    renderGrid() {
         if (this.state.loading) {
             return <FontAwesomeIcon id="loading" className="fa-5x" icon={faSpinner} spin />;
         }
         else {
+            const reactions = this.props.post.reactions;
             return (
                 <table className="reactionTable">
                     <tbody>
                         <tr>
                             <td>
-                                <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.like}</h1>
+                                <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.like}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.laugh}</h1>
+                                <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.laugh}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.love}</h1>
+                                <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.love}</h1>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.wow}</h1>
+                                <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.wow}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.tears}</h1>
+                                <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.tears}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.addReaction} />
-                                <h1 className="reactionCount">{this.state.reactions.angry}</h1>
+                                <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <h1 className="reactionCount">{reactions.angry}</h1>
                             </td>
                         </tr>
                     </tbody>
@@ -159,7 +137,7 @@ class ReactionGrid extends React.Component {
     render() {
         return (
             <div className="reactionGrid">
-                {this.renderLoading()}
+                {this.renderGrid()}
 
                 <Modal show={this.state.showSuggestLogin} onHide={this.handleCloseSuggestLogin}>
                     <Modal.Header closeButton>

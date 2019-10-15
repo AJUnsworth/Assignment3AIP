@@ -1,10 +1,10 @@
 import React from "react";
-import { NotificationManager } from "react-notifications";
 import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+import { showError } from "../../errors";
 import authenticate from "../Authentication/Authenticate";
 import ImageGrid from "../Image/ImageGrid";
 import Navbar from "../Navbar/Navbar";
@@ -19,30 +19,23 @@ class Admin extends React.Component {
         }
     }
 
-    displayPosts = () => {
-        const self = this;
+    displayPosts = async () => {
         const skippedPosts = this.state.posts.length;
         this.setState({ loading: true });
 
-        fetch(`/post/flagged?skippedPosts=${skippedPosts}`)
-            .then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState(prevState => ({
-                            posts: [...prevState.posts, ...data.posts],
-                            isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
-                            loading: false
-                        }));
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while loading posts, please try refreshing the page",
-                        "Error loading posts",
-                        5000
-                    );
-                }
-            })
+        const response = await fetch(`/post/flagged?skippedPosts=${skippedPosts}`);
+        const data = await response.json();
+
+        if (response.status === 200) {
+            this.setState(prevState => ({
+                posts: [...prevState.posts, ...data.posts],
+                isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
+                loading: false
+            }));
+        } else {
+            showError(data.error);
+            this.setState({ loading: false });
+        }
     }
 
     render() {
@@ -59,12 +52,11 @@ class Admin extends React.Component {
                                 </Link>
                             </h1>
                             <h4>All flagged posts can be seen below</h4>
-                            {/*<ImageActionsButton/>*/}
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={12} sm={12} md={12} lg={8} xl={12} className="contentFrameGrid">
-                            <ImageGrid {...this.props} displayPosts={this.displayPosts} {...this.state} />
+                            <ImageGrid {...this.props} displayLatest={this.displayPosts} {...this.state} />
                         </Col>
                     </Row>
                 </Container>

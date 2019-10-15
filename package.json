@@ -19,6 +19,7 @@
     "debug": "~2.6.9",
     "dotenv": "^8.1.0",
     "express": "^4.16.4",
+    "fetch-base64": "^2.1.2",
     "geckodriver": "^1.16.2",
     "http-errors": "~1.6.3",
     "is-empty": "^1.2.0",
@@ -43,7 +44,7 @@
     "start:server": "nodemon api/app.js",
     "start:client": "cd client && npm start",
     "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "build": "cd client && react-scripts build",
+    "build": "cd client && set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test:server": "set NODE_ENV=test && mocha --timeout 10000",
     "test:client": "cd test/client && cypress run"
   },
