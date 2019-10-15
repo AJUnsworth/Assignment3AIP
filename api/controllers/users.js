@@ -12,11 +12,11 @@ const validateLoginInput = require("../validation/login");
 //Register and login routes are based on a tutorial by Rishi Prasad
 //See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
 exports.user_create = async (req, res) => {
-    const { errors, isValid } = await validateRegisterInput(req.body);
+    const { validationErrors, isValid } = await validateRegisterInput(req.body);
 
     // Check validation
     if (!isValid) {
-        return res.status(400).json(errors);
+        return res.status(400).json(validationErrors);
     }
 
     const newUser = new User({
@@ -39,11 +39,11 @@ exports.user_create = async (req, res) => {
 };
 
 exports.user_login = async (req, res) => {
-    const { errors, isValid } = validateLoginInput(req.body);
+    const { validationErrors, isValid } = validateLoginInput(req.body);
 
     // Check validation
     if (!isValid) {
-        return res.status(400).json(errors);
+        return res.status(400).json(validationErrors);
     }
 
     const username = req.body.username;

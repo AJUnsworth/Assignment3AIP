@@ -5,8 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { NotificationManager } from "react-notifications";
 
+import { showError, getError } from "../../../errors";
 import Logo from "../../../../src/images/Seenit Logo_white.png";
 import "./LoginForm.css";
 
@@ -28,43 +28,34 @@ class LoginForm extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    handleSubmit = e => {
+    handleSubmit = async e => {
         e.preventDefault();
-        const self = this;
         this.setState({ loading: true });
 
-        fetch("/users/login", {
+        const response = await fetch("/users/login", {
             method: "POST",
             body: JSON.stringify(this.state),
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(function (response) {
-                self.setState({ loading: false });
-                if (response.status === 404 || response.status === 400) {
-                    response.json().then(function (data) {
-                        self.setState({ errors: data });
-                    });
-                } else if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.props.setUser(data);
-                        self.props.history.push("/");
-                    });
-                } else if (response.status === 405) {
-                    NotificationManager.error(
-                        "Too many accounts have logged in from the same location in the past 24 hours, please use one of the previously used accounts",
-                        "Too many logins",
-                        7000
-                    );
-                } else {
-                    NotificationManager.error(
-                        "Looks like something went wrong while logging in, please try again later",
-                        "Error logging in",
-                        5000
-                    );
-                }
-            });
+        });
+
+        const data = await response.json();
+
+        this.setState({ loading: false });
+
+        if (response.status === 400) {
+            //Assign validation error messages to new object
+            let errors = {};
+            Object.keys(data).forEach(key => errors[key] = getError(data[key]).message);
+
+            this.setState({ errors: errors });
+        } else if (response.status === 200) {
+            this.props.setUser(data);
+            this.props.history.push("/");
+        } else {
+            showError(data.error);
+        }
     }
 
     render() {

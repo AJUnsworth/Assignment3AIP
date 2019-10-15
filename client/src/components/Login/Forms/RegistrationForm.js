@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+import { showError, getError } from "../../../errors";
 import "./RegistrationForm.css";
 
 // Form uses skeleton code & logic from React Bootstrap Documentation
@@ -30,40 +31,37 @@ class RegistrationForm extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    handleSubmit = e => {
+    handleSubmit = async e => {
         e.preventDefault();
-        const self = this;
         this.setState({ loading: true });
 
-        fetch("/users/register", {
+        const response = await fetch("/users/register", {
             method: "POST",
             body: JSON.stringify(this.state),
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(function (response) {
-                if (response.status === 400) {
-                    response.json().then(function (data) {
-                        self.setState({
-                            errors: data,
-                            loading: false
-                        });
-                    })
-                }
-                else if (response.status === 200) {
-                    self.setState(self.initialState);
-                    NotificationManager.success("Account created successfully", "Account Registered");
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while creating an account, please try again later",
-                        "Error registering account",
-                        5000
-                    );
+        });
 
-                }
+        const data = await response.json();
+
+        if (response.status === 400) {
+            //Assign validation error messages to new object
+            let errors = {};
+            Object.keys(data).forEach(key => errors[key] = getError(data[key]).message);
+
+            this.setState({
+                errors: errors,
+                loading: false
             });
+        }
+        else if (response.status === 200) {
+            this.setState(this.initialState);
+            NotificationManager.success("Account created successfully", "Account Registered");
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
     render() {

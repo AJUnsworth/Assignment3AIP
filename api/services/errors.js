@@ -20,6 +20,6 @@ const errors = {
     INCORRECT_USERNAME_OR_PASSWORD: "INCORRECT_USERNAME_OR_PASSWORD",
     INVALID_TOKEN: "INVALID_TOKEN",
     TOKEN_NOT_FOUND: "TOKEN_NOT_FOUND"
-}
+};
 
-module.export = errors;
+module.exports = errors;
