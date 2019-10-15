@@ -2,7 +2,7 @@ import React from "react";
 import { NotificationManager } from "react-notifications";
 
 import Navbar from "../Navbar/Navbar";
-import ContentFrame from "../Image/ContentFrame";
+import HomeContent from "./Content/HomeContent";
 
 class Home extends React.Component {
     constructor(props) {
@@ -99,7 +99,7 @@ class Home extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <ContentFrame displayLatest={this.displayLatest} displayPopular={this.displayPopular} {...this.state} {...this.props} />
+                <HomeContent displayLatest={this.displayLatest} displayPopular={this.displayPopular} {...this.state} {...this.props} />
             </div>
         );
     }

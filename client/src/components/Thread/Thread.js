@@ -11,12 +11,13 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import ImageActionsButton from "../User/Admin/ImageActionsButton";
 import Navbar from "../Navbar/Navbar";
-import ThreadImage from "./ThreadImage";
-import ImageGrid from "../Image/ImageGrid";
-import ReactionGrid from "./ReactionGrid";
+import ThreadImage from "./Modules/ThreadImage";
+import ImageGrid from "../ImageGrid/ImageGrid";
+import ReactionGrid from "./Modules/ReactionGrid";
 import "./Thread.css";
-import ReplyBreadcrumb from "./ReplyBreadcrumb";
-import UploadImageForm from "../Image/Functions/UploadImageForm";
+import ReplyBreadcrumb from "./Modules/ReplyBreadcrumb";
+import UploadImageForm from "../ImageGrid/Functions/UploadImageForm";
+
 
 class Thread extends React.Component {
     constructor() {

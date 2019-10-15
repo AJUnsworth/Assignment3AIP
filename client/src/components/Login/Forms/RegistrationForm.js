@@ -6,12 +6,12 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-import "./Registration.css";
+import "./RegistrationForm.css";
 
 // Form uses skeleton code & logic from React Bootstrap Documentation
 // https://react-bootstrap.github.io/components/forms/#forms-validation-native
 
-class Registration extends React.Component {
+class RegistrationForm extends React.Component {
     constructor(props) {
         super(props);
         this.initialState = {
@@ -146,4 +146,4 @@ class Registration extends React.Component {
     };
 }
 
-export default Registration;
+export default RegistrationForm;

@@ -1,15 +1,15 @@
-.contentFrame {
+.homeContent {
     width: 80%;
     max-width: 80%;
     height: auto;
     margin: 2% 10% 0% 10%;
 }
 
-.contentFrame h2{
+.homeContent h2{
     margin-bottom: 60px;
 }
 
-.contentFrameGrid {
+.homeContentGrid {
     padding-left: 1vw;
     padding-right: 1vw;
     width: 100px;

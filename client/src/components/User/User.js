@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import Navbar from "../Navbar/Navbar";
-import ImageGrid from "../Image/ImageGrid";
+import ImageGrid from "../ImageGrid/ImageGrid";
 import "./User.css";
 
 class User extends React.Component {

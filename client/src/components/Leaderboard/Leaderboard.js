@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import LeaderboardMember from "./LeaderboardMember";
+import LeaderboardMember from "./Members/LeaderboardMember";
 import "./Leaderboard.css";
 
 class Leaderboard extends React.Component {

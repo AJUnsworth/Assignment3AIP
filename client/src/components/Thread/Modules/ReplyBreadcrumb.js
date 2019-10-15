@@ -4,7 +4,7 @@ import { NotificationManager } from "react-notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import PlaceholderImage from "../../images/imageremovedplaceholder.png";
+import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
 import "./ReplyBreadcrumb.css";
 
 class ReplyBreadcrumb extends React.Component {

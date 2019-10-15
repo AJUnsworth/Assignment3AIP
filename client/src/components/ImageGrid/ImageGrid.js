@@ -6,9 +6,9 @@ import Masonry from 'react-masonry-css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import SortImageButtons from "./Functions/SortImage";
+import SortImageButtons from "./Functions/SortImageButtons";
 import UploadImageForm from "./Functions/UploadImageForm";
-import ImageFrame from "./ImageFrame";
+import ImageFrame from "./ImageFrame/ImageFrame";
 import "./ImageGrid.css";
 
 class ImageGrid extends React.Component {

@@ -1,6 +1,6 @@
 import React from "react";
 import "./ThreadImage.css";
-import PlaceholderImage from "../../images/imageremovedplaceholder.png";
+import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
 
 class ThreadImage extends React.Component {
     render() {

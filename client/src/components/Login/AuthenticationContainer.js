@@ -2,23 +2,23 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Authentication from "./Authentication";
-import Registration from "./Registration";
-import "./LoginContainer.css";
+import LoginForm from "./Forms/LoginForm";
+import RegistrationForm from "./Forms/RegistrationForm";
+import "./AuthenticationContainer.css";
 
-class LoginContainer extends React.Component {
+class AuthenticationContainer extends React.Component {
     render() {
         return (
             <Row>
                 <Col className="loginColumn panel">
-                    <Authentication {...this.props} />
+                    <LoginForm {...this.props} />
                 </Col>
                 <Col className="loginColumn col-md-8 col-lg-8 col-xl-9">
-                    <Registration />
+                    <RegistrationForm />
                 </Col>
             </Row>
         );
     }
 }
 
-export default LoginContainer;
+export default AuthenticationContainer;

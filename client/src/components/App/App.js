@@ -7,7 +7,7 @@ import "react-notifications/lib/notifications.css";
 import Home from "../Home/Home";
 import Admin from "../Admin/Admin";
 import Thread from "../Thread/Thread";
-import LoginContainer from "../Login/LoginContainer";
+import AuthenticationContainer from "../Login/AuthenticationContainer";
 import User from "../User/User";
 import MissingPage from "../MissingPage/MissingPage";
 
@@ -68,7 +68,7 @@ class App extends React.Component {
                     <Route path="/" exact render={(props) => <Home {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/admin" render={(props) => <Admin {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/thread/:postId" render={(props) => <Thread {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
-                    <Route path="/login" render={(props) => <LoginContainer {...props} setUser={this.setUser} logout={this.logout} />} />
+                    <Route path="/login" render={(props) => <AuthenticationContainer {...props} setUser={this.setUser} logout={this.logout} />} />
                     <Route path="/user/:userId" render={(props) => <User {...props} currentUser={this.state.currentUser} logout={this.logout} />} />   
                     <Route render={(props) => <MissingPage {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                 </Switch>

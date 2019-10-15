@@ -4,16 +4,16 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Leaderboard from "../Leaderboard/Leaderboard";
-import ImageGrid from "./ImageGrid";
-import "./ContentFrame.css";
+import Leaderboard from "../../Leaderboard/Leaderboard";
+import ImageGrid from "../../ImageGrid/ImageGrid";
+import "./HomeContent.css";
 
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
 
-function ContentFrame(props) {
+function HomeContent(props) {
     return (
-        <Container className="contentFrame">
+        <Container className="homeContent">
             <Row className="rowPadding">
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                     <h1 className="welcomeMessage">
@@ -30,7 +30,7 @@ function ContentFrame(props) {
                 </Col>
             </Row>
             <Row>
-                <Col xs={12} sm={12} md={12} lg={9} xl={9} className="contentFrameGrid">
+                <Col xs={12} sm={12} md={12} lg={9} xl={9} className="homeContentGrid">
                     <ImageGrid {...props} />
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -41,4 +41,4 @@ function ContentFrame(props) {
     );
 }
 
-export default ContentFrame;
+export default HomeContent;
