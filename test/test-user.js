@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('User', function () {
 
-    beforeEach((done) => {
+    afterEach((done) => {
         User.deleteMany({ username: new RegExp("test") }, (_error) => {
             done();
         });
@@ -55,7 +55,7 @@ describe('User', function () {
                         .send(user2)
                         .end(function (err, res) {
                             res.should.have.status(400);
-                            res.body.email.should.be.eql("Email is already registered");
+                            res.body.email.should.be.eql("Email address is already registered");
                             done();
                         })
                 });
