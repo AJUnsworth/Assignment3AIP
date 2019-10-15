@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import { NotificationManager } from "react-notifications";
 import { withRouter } from "react-router-dom";
 
+import { showError } from "../../../errors";
+
 class ImageActionsButton extends React.Component {
     constructor(props) {
         super(props);
@@ -20,39 +22,28 @@ class ImageActionsButton extends React.Component {
         this.setState({ showApprove: false });
     }
 
-    handleApprove = () => {
+    handleApprove = async () => {
         this.setState({ showApprove: false });
 
         const requestBody = JSON.stringify({
             postId: this.props.post._id
         });
 
-        const self = this;
-        fetch("/post/approve", {
+        const response = await fetch("/post/approve", {
             method: "POST",
             body: requestBody,
             headers: {
                 "Content-Type": "application/json"
             }
-        })
-            .then(function (response) {
-                if (response.status === 200) {
-                    NotificationManager.success("Post has been successfully approved", "Approved");
-                    self.props.history.push("/admin");
-                } else if (response.status === 403) {
-                    NotificationManager.error(
-                        "Looks like you don't have permission to approve this",
-                        "Cannot approve post",
-                        5000
-                    );
-                } else {
-                    NotificationManager.error(
-                        "Looks like something went wrong while approving the post, please try again later",
-                        "Error approving post",
-                        5000
-                    );
-                }
-            })
+        });
+
+        if (response.status === 200) {
+            NotificationManager.success("Post has been approved successfully", "Approved");
+            this.props.history.push("/admin");
+        } else {
+            const data = await response.json();
+            showError(data.error);
+        }
     }
 
     render() {

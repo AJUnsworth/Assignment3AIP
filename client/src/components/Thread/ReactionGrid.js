@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { withRouter } from "react-router-dom";
 
+import { showError } from "../../errors";
 import "./ReactionGrid.css";
 
 class ReactionGrid extends React.Component {
@@ -31,19 +32,16 @@ class ReactionGrid extends React.Component {
             method: "GET"
         });
 
+        const data = await response.json();
+
         if (response.status === 200) {
-            const activeReaction = await response.json();
-            this.setState({ activeReaction: activeReaction });
+            this.setState({ activeReaction: data });
         } else {
-            NotificationManager.error(
-                "Looks like something went wrong while loading the post, please try refreshing the page",
-                "Error loading posts",
-                5000
-            );
+            showError(data.error);
         }
     }
 
-    react = e => {
+    react = async e => {
         if (!this.props.post.imageUrl) {
             NotificationManager.warning(
                 "Since this post is deleted, it can't be reacted to",
@@ -51,8 +49,6 @@ class ReactionGrid extends React.Component {
                 5000
             );
         } else if (this.props.currentUser) {
-            const self = this;
-            const originalReactionType = this.state.activeReaction;
             const reactionType = e.currentTarget.id;
 
             const requestBody = JSON.stringify({
@@ -62,38 +58,26 @@ class ReactionGrid extends React.Component {
 
             this.setState({ loading: true });
 
-            fetch("/post/react", {
+            const response = await fetch("/post/react", {
                 method: "POST",
                 body: requestBody,
                 headers: {
                     "Content-Type": "application/json"
                 }
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            if (originalReactionType !== reactionType) {
-                                self.setState({
-                                    activeReaction: reactionType,
-                                    loading: false
-                                });
-                            } else {
-                                self.setState({
-                                    activeReaction: null,
-                                    loading: false
-                                });
-                            }
-                            self.props.handleReactionUpdate(data);
-                        });
-                    } else {
-                        self.setState({ loading: false });
-                        NotificationManager.error(
-                            "Looks like something went wrong while reacting to the post, please try refreshing the page",
-                            "Error reacting to post",
-                            5000
-                        );
-                    }
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                this.setState({
+                    activeReaction: reactionType,
+                    loading: false
                 });
+                this.props.handleReactionUpdate(data);
+            } else {
+                this.setState({ loading: false });
+                showError(data.error);
+            }
         } else {
             this.setState({ showSuggestLogin: true });
         }

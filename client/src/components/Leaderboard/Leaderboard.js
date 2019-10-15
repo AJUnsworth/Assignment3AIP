@@ -1,10 +1,10 @@
 import React from "react";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
-import { NotificationManager } from "react-notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import { showError } from "../../errors";
 import LeaderboardMember from "./LeaderboardMember";
 import "./Leaderboard.css";
 
@@ -26,28 +26,22 @@ class Leaderboard extends React.Component {
         }
     }
 
-    displayLeaderboard(limit) {
-        const self = this;
+    async displayLeaderboard(limit) {
         this.setState({ loading: true });
 
-        fetch(`/users/leaderboard?limit=${limit}`) //Using fetch from https://developers.google.com/web/updates/2015/03/introduction-to-fetch
-            .then(response => {
-                if (response.status === 200) {
-                    response.json().then(function (data) {
-                        self.setState({
-                            members: data,
-                            loading: false
-                        });
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while trying to load the leaderboard, please try refreshing the page",
-                        "Error loading leaderboard",
-                        5000
-                    );
-                }
+        const response = await fetch(`/users/leaderboard?limit=${limit}`);
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            this.setState({
+                members: data,
+                loading: false
             });
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
     renderLeaderboardButtons() {

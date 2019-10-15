@@ -1,4 +1,6 @@
-//Dictionary of error messages and titles by code
+import { NotificationManager } from "react-notifications";
+
+//Dictionary of error messages and titles by type
 const Errors = {
     SERVER_ERROR: {
         title: "Internal server error",
@@ -83,14 +85,24 @@ const Errors = {
 }
 
 //Locates error message from dictionary of tokens
-const getError = error => {
-    const errorMessage = Errors[error];
+const getError = errorType => {
+    const error = Errors[errorType];
 
     //Returns default error message if error does not exist in dictionary
-    if (!errorMessage)
+    if (!error)
         return Errors.SERVER_ERROR;
 
-    return errorMessage;
+    return error;
 }
 
-export default { getError };
+const showError = errorType => {
+    const error = getError(errorType);
+
+    NotificationManager.error(
+        error.message,
+        error.title,
+        5000
+    );
+}
+
+export { getError, showError };

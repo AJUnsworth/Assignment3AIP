@@ -1,11 +1,10 @@
 import React from "react";
-import { NotificationManager } from "react-notifications";
 import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Errors from "../../errors";
+import { showError } from "../../errors";
 import authenticate from "../Authentication/Authenticate";
 import ImageGrid from "../Image/ImageGrid";
 import Navbar from "../Navbar/Navbar";
@@ -21,7 +20,6 @@ class Admin extends React.Component {
     }
 
     displayPosts = async () => {
-        const self = this;
         const skippedPosts = this.state.posts.length;
         this.setState({ loading: true });
 
@@ -29,19 +27,14 @@ class Admin extends React.Component {
         const data = await response.json();
 
         if (response.status === 200) {
-            self.setState(prevState => ({
+            this.setState(prevState => ({
                 posts: [...prevState.posts, ...data.posts],
                 isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
                 loading: false
             }));
         } else {
-            const error = Errors.getError(data.error);
-            self.setState({ loading: false });
-            NotificationManager.error(
-                error.message,
-                error.title,
-                5000
-            );
+            showError(data.error);
+            this.setState({ loading: false });
         }
     }
 

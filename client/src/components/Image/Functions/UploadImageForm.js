@@ -5,6 +5,8 @@ import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
 
+import { showError } from "../../../errors";
+
 // Upload image component is built on top of a component found online
 // Source: https://mdbootstrap.com/docs/react/forms/file-input/
 
@@ -48,77 +50,54 @@ class UploadImageForm extends React.Component {
         }
     }
 
-    createPost(formData) {
+    async createPost(formData) {
         this.setState({ loading: true });
-        const self = this;
-        fetch('/post/create',
-            {
-                method: 'POST',
-                body: formData
-            }).then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(post => {
-                        if (post.flagged) {
-                            NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
-                        } else {
-                            NotificationManager.success("Your image has been posted!", "Post successful");
-                        }
-                        self.setState(self.initialState);
-                        self.props.handleNewPosts();
-                    });
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong while creating a post, please try again later",
-                        "Error creating post",
-                        5000
-                    );
-                }
-            });
+
+        const response = await fetch('/post/create', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            if (data.flagged) {
+                NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
+            } else {
+                NotificationManager.success("Your image has been posted!", "Post successful");
+            }
+
+            this.setState(this.initialState);
+            this.props.handleNewPosts();
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
-    editPost(formData) {
+    async editPost(formData) {
         this.setState({ loading: true });
-        const self = this;
-        fetch('/post/edit',
-            {
-                method: 'POST',
-                body: formData
-            }).then(function (response) {
-                if (response.status === 200) {
-                    response.json().then(data => {
-                        self.setState(self.initialState);
-                        if (data.flagged) {
-                            self.props.history.push("/");
-                            NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
-                        } else {
-                            self.props.handleUpdatePost(data);
-                            NotificationManager.success("Your image has been updated!", "Post successful");
-                        }
-                    });
-                } else if (response.status === 405) {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like someone has already reacted or replied to this post",
-                        "Cannot edit post",
-                        5000
-                    );
-                } else if (response.status === 400) {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Please only upload .jpg, .png or .gif files",
-                        "Cannot upload post",
-                        5000
-                    );
-                } else {
-                    self.setState({ loading: false });
-                    NotificationManager.error(
-                        "Looks like something went wrong when trying to edit this post, please try again later",
-                        "Error editing post",
-                        5000
-                    );
-                }
-            })
+
+        const response = await fetch('/post/edit', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+            this.setState(this.initialState);
+            if (data.flagged) {
+                this.props.history.push("/");
+                NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
+            } else {
+                this.props.handleUpdatePost(data);
+                NotificationManager.success("Your image has been updated!", "Post successful");
+            }
+        } else {
+            this.setState({ loading: false });
+            showError(data.error);
+        }
     }
 
     renderUploadText() {

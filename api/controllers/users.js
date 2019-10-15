@@ -49,12 +49,12 @@ exports.user_login = async (req, res) => {
 
     user = await User.findOne({ username });
     if (!user) {
-        return res.status(404).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
+        return res.status(400).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
     }
 
     const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.status(404).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
+        return res.status(400).json({ password: errors.INCORRECT_USERNAME_OR_PASSWORD });
     }
 
     //Based on SO post by Hitesh Anshani on comparing dates in the last 24 hours
