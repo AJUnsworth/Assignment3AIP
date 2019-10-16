@@ -174,7 +174,6 @@ exports.user_get = (req, res) => {
 };
 
 exports.user_latest_get = (req, res) => {
-    console.log("test");
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
     const userId = mongoose.Types.ObjectId(req.params.userId);
 

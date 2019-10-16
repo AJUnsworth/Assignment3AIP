@@ -14,7 +14,7 @@ class Home extends React.Component {
         }
     }
 
-    displayLatest = async (refresh) => {
+    displayPosts = async (refresh, method) => {
         let skippedPosts;
         this.setState({ loading: true });
 
@@ -24,7 +24,7 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/latest?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/${method}?skippedPosts=${skippedPosts}`);
         const data = await response.json();
 
         if (response.status === 200) {
@@ -44,40 +44,6 @@ class Home extends React.Component {
         } else {
             showError(data.error);
             this.setState({ loading: false });
-        }
-    }
-
-    displayPopular = async refresh => {
-        let skippedPosts;
-        this.setState({ loading: true });
-
-        if (!refresh) {
-            skippedPosts = this.state.posts.length;
-        } else {
-            skippedPosts = 0;
-        }
-
-        const response = await fetch(`/post/popular?skippedPosts=${skippedPosts}`);
-
-        const data = await response.json();
-
-        if (response.status === 200) {
-            if (!refresh) {
-                this.setState(prevState => ({
-                    posts: [...prevState.posts, ...data.results],
-                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                    loading: false
-                }));
-            } else {
-                this.setState({
-                    posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loading: false
-                });
-            }
-        } else {
-            this.setState({ loading: false });
-            showError(data.error);
         }
     }
 
@@ -85,7 +51,7 @@ class Home extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <HomeContent displayLatest={this.displayLatest} displayPopular={this.displayPopular} {...this.state} {...this.props} />
+                <HomeContent displayPosts={this.displayPosts} {...this.state} {...this.props} />
             </div>
         );
     }

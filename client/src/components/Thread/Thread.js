@@ -38,7 +38,7 @@ class Thread extends React.Component {
     async componentDidMount() {
         const { postId } = this.props.match.params;
 
-        const response = await fetch(`/post/${postId}` , {
+        const response = await fetch(`/post/${postId}`, {
             method: "GET"
         });
 
@@ -161,7 +161,7 @@ class Thread extends React.Component {
         }
     }
 
-    displayRecentReplies = async refresh => {
+    displayReplies = async (refresh, method) => {
         let skippedPosts;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
@@ -172,7 +172,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/${postId}/latest?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/post/${postId}/${method}?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 
@@ -201,42 +201,6 @@ class Thread extends React.Component {
             return (
                 <h5 className="text-danger">Note: This post has been flagged as it contains text or inappropriate content</h5>
             );
-        }
-    }
-
-    displayPopularReplies = async refresh => {
-        let skippedPosts;
-        const { postId } = this.props.match.params;
-        this.setState({ loadingReplies: true });
-
-        if (!refresh) {
-            skippedPosts = this.state.replies.length;
-        } else {
-            skippedPosts = 0;
-        }
-
-        const response = await fetch(`/post/${postId}/popular?skippedPosts=${skippedPosts}`);
-
-        const data = await response.json();
-
-        if (response.status === 200) {
-            if (!refresh) {
-                this.setState(prevState => ({
-                    replies: [...prevState.replies, ...data.results],
-                    isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                    loadingReplies: false
-                }));
-
-            } else {
-                this.setState({
-                    replies: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loadingReplies: false
-                });
-            }
-        } else {
-            this.setState({ loadingReplies: false });
-            showError(data.error);
         }
     }
 
@@ -331,6 +295,8 @@ class Thread extends React.Component {
     }
 
     renderThread() {
+        const showUpload = this.state.post.imageUrl ? true : false;
+
         if (this.state.loading) {
             return <FontAwesomeIcon id="loading" className="fa-10x loadIconColor" icon={faSpinner} spin />;
         } else {
@@ -356,15 +322,15 @@ class Thread extends React.Component {
                         <Col>
                             <div className="comments">
                                 <h2 className="commentLabel">Comments</h2>
-                                <ImageGrid displayLatest={this.displayRecentReplies}
-                                    displayPopular={this.displayPopularReplies}
+                                <ImageGrid
+                                    displayPosts={this.displayReplies}
                                     sortBy='latest'
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}
                                     loading={this.state.loadingReplies}
                                     isShowMoreDisabled={this.state.isShowMoreDisabled}
-                                    post={this.state.post}
+                                    showUpload={showUpload}
                                 />
                             </div>
                         </Col>

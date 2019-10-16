@@ -56,7 +56,13 @@ class Admin extends React.Component {
                     </Row>
                     <Row>
                         <Col xs={12} sm={12} md={12} lg={8} xl={12} className="homeContentGrid">
-                            <ImageGrid {...this.props} displayLatest={this.displayPosts} {...this.state} />
+                            <ImageGrid
+                                {...this.props}
+                                {...this.state}
+                                displayPosts={this.displayPosts}
+                                showFilters={false}
+                                showUpload={false}
+                            />
                         </Col>
                     </Row>
                 </Container>

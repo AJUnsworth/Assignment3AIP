@@ -14,8 +14,8 @@ import "./ImageGrid.css";
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
-        let sortBy = props.sortBy ? props.sortBy: "latest";
-        this.state = {sortBy: sortBy, showResults: true}
+        let sortBy = props.sortBy ? props.sortBy : "latest";
+        this.state = { sortBy: sortBy };
     };
 
     componentDidMount() {
@@ -23,11 +23,7 @@ class ImageGrid extends React.Component {
     }
 
     handlePosts = (shouldRefresh) => {
-        if (this.state.sortBy === 'latest') {
-            this.props.displayLatest(shouldRefresh);
-        } else if (this.state.sortBy === 'popular') {
-            this.props.displayPopular(shouldRefresh);
-        }
+        this.props.displayPosts(shouldRefresh, this.state.sortBy);
     }
 
     handleNewPosts = () => {
@@ -35,7 +31,7 @@ class ImageGrid extends React.Component {
     }
 
     handleShowMore = () => {
-        this.handlePosts(false);    
+        this.handlePosts(false);
     }
 
     handleSortBy = (sortingMethod) => {
@@ -43,12 +39,7 @@ class ImageGrid extends React.Component {
     }
 
     renderFileUpload() {
-        if (!this.props.currentUser ||
-            (this.props.post && !this.props.post.imageUrl) ||
-            this.props.user
-            ) {
-            return null;
-        } else {
+        if (this.props.currentUser && this.props.showUpload) {
             return (
                 <UploadImageForm {...this.props} handleNewPosts={this.handleNewPosts} />
             );
@@ -60,12 +51,10 @@ class ImageGrid extends React.Component {
             return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
         } else {
             return (
-                <>
-                    <div className="showMoreBtnContainer">
-                        {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
-                        <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
-                    </div>
-                </>
+                <div className="showMoreBtnContainer">
+                    {this.props.isShowMoreDisabled && <h6 >There are no more posts to display.</h6>}
+                    <Button variant="info" disabled={this.props.isShowMoreDisabled} onClick={this.handleShowMore}>Show More</Button>
+                </div>
             );
         }
     }
@@ -78,16 +67,16 @@ class ImageGrid extends React.Component {
         return (
             <div>
                 <div className="imageGrid">
-                    {/*Render file upload and sorting only if two display methods exist*/}
-                    {this.props.displayLatest && this.props.displayPopular &&
-                        <Container className="noPadding">
-                            <Row>
-                                {/*Render upload button only if there is a current user set*/}
-                                {this.renderFileUpload()}
+                    <Container className="noPadding">
+                        <Row>
+                            {/*Render upload button only if there is a current user set*/}
+                            {this.renderFileUpload()}
+                            {
+                                this.props.showFilters &&
                                 <SortImageButtons {...this.state} {...this.props} handleSortBy={this.handleSortBy} />
-                            </Row>
-                        </Container>
-                    }
+                            }
+                        </Row>
+                    </Container>
 
                     {/*ALL Masonry Component and associated CSS is from: https://github.com/paulcollett/react-masonry-css*/}
                     <Masonry
@@ -108,5 +97,10 @@ class ImageGrid extends React.Component {
         );
     }
 }
+
+ImageGrid.defaultProps = {
+    showFilters: true,
+    showUpload: true
+};
 
 export default ImageGrid;

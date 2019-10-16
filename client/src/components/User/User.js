@@ -40,7 +40,7 @@ class User extends React.Component {
         }
     }
 
-    displayRecentUserPosts = async refresh => {
+    displayPosts = async (refresh, method) => {
         let skippedPosts;
         const { userId } = this.props.match.params;
         this.setState({ loading: true });
@@ -51,42 +51,7 @@ class User extends React.Component {
             skippedPosts = 0;
         }
         
-        const response = await fetch(`/users/${userId}/latest?skippedPosts=${skippedPosts}`);
-
-        const data = await response.json();
-
-        if (response.status === 200) {
-            if (!refresh) {
-                this.setState(prevState => ({
-                    posts: [...prevState.posts, ...data.results],
-                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                    loading: false
-                }));
-            } else {
-                this.setState({
-                    posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loading: false
-                });
-            }
-        } else {
-            this.setState({ loading: false });
-            showError(data.error);
-        }
-    }
-
-    displayPopularUserPosts = async refresh => {
-        let skippedPosts;
-        const { userId } = this.props.match.params;
-        this.setState({ loading: true });
-
-        if (!refresh) {
-            skippedPosts = this.state.posts.length;
-        } else {
-            skippedPosts = 0;
-        }
-
-        const response = await fetch(`/users/${userId}/popular?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/users/${userId}/${method}?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 
@@ -111,6 +76,9 @@ class User extends React.Component {
     }
 
     renderUserContent() {
+        //Allows only current user to post from their user page
+        const showUpload = this.props.currentUser && this.props.currentUser.id === this.state.user._id ? true : false;
+
         if (this.state.loadingContent) {
             return <FontAwesomeIcon id="loading" className="fa-10x loadingIcon loadIconColor" icon={faSpinner} spin />;
         } else {
@@ -158,9 +126,9 @@ class User extends React.Component {
                     <div className="myPosts">
                         <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
                         <ImageGrid
-                            displayLatest={this.displayRecentUserPosts}
-                            displayPopular={this.displayPopularUserPosts}
+                            displayPosts={this.displayPosts}
                             sortBy='latest'
+                            showUpload={showUpload}
                             {...this.state}
                             {...this.props}
                         />
