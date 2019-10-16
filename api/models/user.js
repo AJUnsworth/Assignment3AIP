@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const likedPostSchema = new Schema({
-    postId: {
+    post: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post"
     },
@@ -53,7 +53,7 @@ const userSchema = new Schema({
 userSchema.virtual("posts", {
     ref: "Post",
     localField: "_id",
-    foreignField: "userId"
+    foreignField: "user"
 });
 
 const User = mongoose.model("User", userSchema);

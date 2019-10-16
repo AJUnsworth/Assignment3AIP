@@ -18,7 +18,7 @@ exports.post_create = async (req, res) => {
         }
 
         const newPost = new Post({
-            userId: req.decoded.id,
+            user: req.decoded.id,
             imageUrl: req.file.location,
             reports: 0,
             reactions: {
@@ -70,7 +70,7 @@ exports.post_edit = async (req, res, next) => {
                 if (err) next(err);
 
                 //User should only be able to delete their posts
-                if (post.userId != userId) {
+                if (post.user != userId) {
                     return res.status(403).json({ error: errors.INVALID_USER });
                 }
 
@@ -90,7 +90,7 @@ exports.post_edit = async (req, res, next) => {
                     post
                         .save()
                         .then(updatedPost => {
-                            updatedPost.populate("userId").execPopulate()
+                            updatedPost.populate("user").execPopulate()
                                 .then(populatedPost => {
                                     return res.json(populatedPost);
                                 });
@@ -113,7 +113,7 @@ exports.post_delete = async (req, res) => {
         return res.status(404).json({ error: errors.POST_NOT_FOUND });
     }
 
-    if (post.userId != userId) {
+    if (post.user != userId) {
         return res.status(403).json({ error: errors.INVALID_USER });
     }
 
@@ -129,7 +129,7 @@ exports.post_delete = async (req, res) => {
         post
             .save()
             .then(updatedPost => {
-                updatedPost.populate("userId").execPopulate()
+                updatedPost.populate("user").execPopulate()
                     .then(populatedPost => {
                         return res.json(populatedPost);
                     });
@@ -200,7 +200,7 @@ exports.post_react = async (req, res) => {
 
     //Find if user has already liked the post
     const likedPosts = user.likedPosts;
-    const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
+    const indexOfPost = likedPosts.findIndex(likedPost => likedPost.post == postId);
 
     if (indexOfPost != -1) {
         const likedPost = likedPosts[indexOfPost];
@@ -367,7 +367,7 @@ exports.post_reply_parents_get = async (req, res) => {
 exports.post_get = (req, res) => {
     const postId = req.params.postId;
 
-    Post.findOne({ _id: postId }).populate("userId").populate("totalReplies").then(post => {
+    Post.findOne({ _id: postId }).populate("user").populate("totalReplies").then(post => {
         if (!post) {
             return res.status(404).json({ error: errors.POST_NOT_FOUND });
         } else {

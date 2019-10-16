@@ -140,7 +140,7 @@ exports.user_reaction_get = (req, res) => {
         }
 
         const likedPosts = user.likedPosts;
-        const indexOfPost = likedPosts.findIndex(likedPost => likedPost.postId == postId);
+        const indexOfPost = likedPosts.findIndex(likedPost => likedPost.post == postId);
 
         //Only return reactionType when a likedPost exists for a user
         if (indexOfPost != -1) {
@@ -178,7 +178,7 @@ exports.user_latest_get = (req, res) => {
     const userId = mongoose.Types.ObjectId(req.params.userId);
 
     Post.aggregate([
-        { '$match': { 'userId': userId, 'flagged': false } },
+        { '$match': { 'user': userId, 'flagged': false } },
         { '$sort': { 'createdAt': -1 } },
         {
             $facet: {
@@ -197,7 +197,7 @@ exports.user_popular_get = (req, res) => {
     const userId = mongoose.Types.ObjectId(req.params.userId);
 
     Post.aggregate([
-        { '$match': { 'userId': userId, 'flagged': false } },
+        { '$match': { 'user': userId, 'flagged': false } },
         {
             '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
         },

@@ -214,83 +214,47 @@ class Thread extends React.Component {
 
     renderQuickActions() {
         const post = this.state.post;
-        if (this.props.currentUser) {
-            if (post.userId._id === this.props.currentUser.id) {
-                if (post.totalReplies ||
-                    post.reactions.like > 0 ||
-                    post.reactions.love > 0 ||
-                    post.reactions.tears > 0 ||
-                    post.reactions.angry > 0 ||
-                    post.reactions.laugh > 0 ||
-                    post.reactions.wow > 0) {
-                    if (!this.state.post.imageUrl) {
-                        return null;
-                    }
-                    if (this.props.currentUser.isAdmin) {
-                        return (
-                            <div className="quickActions">
-                                <h6>Quick Actions</h6>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
-                                    <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
-                                </ButtonGroup>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="quickActions">
-                            <h6>Quick Actions</h6>
-                            <ButtonGroup>
-                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
-                            </ButtonGroup>
-                        </div>
-                    );
-                } else {
-                    if (this.props.currentUser.isAdmin) {
-                        return (
-                            <div className="quickActions">
-                                <h6>Quick Actions</h6>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
-                                    <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                                    <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
-                                </ButtonGroup>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="quickActions">
-                            <h6>Quick Actions</h6>
-                            <ButtonGroup>
-                                <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
-                                <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
-                            </ButtonGroup>
-                        </div>
-                    );
-                }
+        const currentUser = this.props.currentUser;
+
+        if (currentUser && post.imageUrl) {
+            let showApprove = false;
+            let showDelete = false;
+            let showEdit = false;
+            let showReport = false;
+
+            if (post.user._id === currentUser.id) {
+                showDelete = true;
+                showEdit = !post.totalReplies
+                    && post.reactions.like === 0
+                    && post.reactions.love === 0
+                    && post.reactions.tears === 0
+                    && post.reactions.angry === 0
+                    && post.reactions.laugh === 0
+                    && post.reactions.wow === 0;
+            } else {
+                showReport = !currentUser.isAdmin;
             }
-            else {
-                if (this.props.currentUser.isAdmin) {
-                    return (
-                        <div className="quickActions">
-                            {post.flagged && <h6>Quick Actions</h6>}
-                            <ButtonGroup>
-                                <ImageActionsButton handleDeletePost={this.handleDeletePost} {...this.props} {...this.state} />
-                            </ButtonGroup>
-                        </div>
-                    )
-                }
-                if (post.imageUrl) {
-                    return (
-                        <div className="quickActions">
-                            <h6>Quick Actions</h6>
-                            <ButtonGroup>
-                                <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
-                            </ButtonGroup>
-                        </div>
-                    );
-                }
-            }
+            showApprove = post.flagged && currentUser.isAdmin;
+            console.log(showDelete);
+            return (
+                <div className="quickActions">
+                    <h6>Quick Actions</h6>
+                    <ButtonGroup>
+                        {showDelete &&
+                            <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
+                        }
+                        {showEdit &&
+                            <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                        }
+                        {showApprove &&
+                            <ImageActionsButton {...this.props} {...this.state} />
+                        }
+                        {showReport &&
+                            <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
+                        }
+                    </ButtonGroup>
+                </div>
+            );
         }
     }
 
@@ -300,7 +264,7 @@ class Thread extends React.Component {
         if (this.state.loading) {
             return <FontAwesomeIcon id="loading" className="fa-10x loadIconColor" icon={faSpinner} spin />;
         } else {
-            const user = this.state.post.userId;
+            const user = this.state.post.user;
             return (
                 <div className="content">
                     <Row xs={12} sm={12} md={12} lg={12} xl={12}>

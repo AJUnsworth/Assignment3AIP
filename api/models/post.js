@@ -29,7 +29,7 @@ const reactionsSchema = new Schema({
 });
 
 const postSchema = new Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
