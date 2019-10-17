@@ -19,14 +19,10 @@ class Leaderboard extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.isAdminPage) {
-            this.displayFlaggedUsers();
-        } else {
-            this.displayLeaderboard();
-        }
+        this.displayLeaderboard();
     }
 
-    async displayLeaderboard(limit) {
+    displayLeaderboard = async limit => {
         this.setState({ loading: true });
 
         const response = await fetch(`/users/leaderboard?limit=${limit}`);
@@ -34,14 +30,12 @@ class Leaderboard extends React.Component {
         const data = await response.json();
 
         if (response.status === 200) {
-            this.setState({
-                members: data,
-                loading: false
-            });
+            this.setState({ members: data });
         } else {
-            this.setState({ loading: false });
             showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     renderLeaderboardButtons() {
@@ -49,10 +43,10 @@ class Leaderboard extends React.Component {
             <>
                 <h1>Leaderboard</h1>
                 <h6>Total number of reactions across all posts</h6>
-                <ToggleButtonGroup type="radio" name="options" defaultValue={1} className="shift">
-                    <ToggleButton value={1} variant="secondary" onClick={() => { this.displayLeaderboard(5) }}>Top 5</ToggleButton>
-                    <ToggleButton value={2} variant="secondary" onClick={() => { this.displayLeaderboard(10) }}>Top 10</ToggleButton>
-                    <ToggleButton value={3} variant="secondary" onClick={() => { this.displayLeaderboard(20) }}>Top 20</ToggleButton>
+                <ToggleButtonGroup type="radio" name="options" defaultValue={5} onChange={this.displayLeaderboard} className="shift">
+                    <ToggleButton value={5} variant="secondary"> Top 5 </ToggleButton>
+                    <ToggleButton value={10} variant="secondary"> Top 10 </ToggleButton>
+                    <ToggleButton value={20} variant="secondary"> Top 20 </ToggleButton>
                 </ToggleButtonGroup>
             </>
         );
