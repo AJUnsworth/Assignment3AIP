@@ -21,8 +21,7 @@ exports.leaderboard_get = (req, res) => {
       '$project': { 'totalUserReactions': 1, 'username': '$user.username' }
     }, { '$limit': parseInt(limit) }
   ])
-
-    .exec(function (err, members) {
+    .exec((err, members) => {
       if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
       return res.json(members);
     });

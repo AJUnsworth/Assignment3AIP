@@ -10,9 +10,9 @@ const singleUpload = uploadImage.single("image");
 
 //The create route is based off a tutorial from Medium.com that can no longer be located
 //A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
-exports.post_create = async (req, res) => {
+exports.post_create = (req, res) => {
     //Upload image to S3 bucket then create a new post if successful
-    singleUpload(req, res, async function (err) {
+    singleUpload(req, res, async err => {
         if (!req.file || req.file === undefined || err) {
             return res.status(400).json({ error: errors.CANNOT_UPLOAD_IMAGE });
         }
@@ -31,43 +31,42 @@ exports.post_create = async (req, res) => {
             }
         });
 
-        //Checks if the post is a reply, otherwise it is a main post
-        if (req.body.replyTo) {
-            const parentPost = await Post.findOne({ _id: req.body.replyTo });
-            if (!parentPost) {
-                return res.status(404).json({ error: errors.POST_NOT_FOUND });
+        try {
+            //Checks if the post is a reply, otherwise it is a main post
+            if (req.body.replyTo) {
+                const parentPost = await Post.findOne({ _id: req.body.replyTo });
+                if (!parentPost) {
+                    return res.status(404).json({ error: errors.POST_NOT_FOUND });
+                }
+
+                newPost.replyTo = req.body.replyTo;
+                newPost.depth = req.body.depth;
             }
 
-            newPost.replyTo = req.body.replyTo;
-            newPost.depth = req.body.depth;
-        }
-
-        checkImageAppropriateness(req.file.location).then(result => {
+            const result = await checkImageAppropriateness(req.file.location);
             if (result) {
                 newPost.flagged = true;
             }
 
-            newPost
-                .save()
-                .then(post => res.json(post))
-                .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
-        })
-            .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
+            const post = await newPost.save();
+            return res.json(post);
+        } catch (error) {
+            return res.status(500).json({ error: errors.SERVER_ERROR });
+        }
     });
 };
 
-exports.post_edit = async (req, res, next) => {
-    //Fix later by implementing with Multer
-    singleUpload(req, res, function (err) {
-        const postId = req.params.postId;
-        const userId = req.decoded.id;
+exports.post_edit = async (req, res) => {
+    const postId = req.params.postId;
 
-        Post.findOne({ _id: postId }).populate("replies").then(async post => {
-            if (!post) {
-                return res.status(404).json({ error: errors.POST_NOT_FOUND });
-            } else if (!post.replies.length && !post.totalReactions) {
-                //singleUpload(req, res, function (err) {
-                if (err) next(err);
+    try {
+        const post = await Post.findOne({ _id: postId }).populate("replies");
+        if (!post) {
+            return res.status(404).json({ error: errors.POST_NOT_FOUND });
+        } else if (!post.replies.length && !post.totalReactions) {
+            singleUpload(req, res, async err => {
+                if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
+                const userId = req.decoded.id;
 
                 //User should only be able to delete their posts
                 if (post.user != userId) {
@@ -76,32 +75,28 @@ exports.post_edit = async (req, res, next) => {
 
                 if (post.imageUrl) {
                     //deleteImage only returns error messages if any issues occur
-                    const err = await deleteImage(post.imageUrl)
+                    const err = await deleteImage(post.imageUrl);
                     if (err) return res.status(500).json({ error: errors.SERVER_ERROR });
                 }
 
                 //Remove only the image if the post has replies to replace with a placeholder
                 post.imageUrl = req.file.location;
-                checkImageAppropriateness(req.file.location).then(result => {
-                    if (result) {
-                        post.flagged = true;
-                    }
 
-                    post
-                        .save()
-                        .then(updatedPost => {
-                            updatedPost.populate("user").execPopulate()
-                                .then(populatedPost => {
-                                    return res.json(populatedPost);
-                                });
-                        })
-                        .catch(() => res.status(500).json({ error: errors.SERVER_ERROR }));
-                });
-            } else {
-                return res.status(405).json({ error: errors.CANNOT_EDIT_POST });
-            }
-        });
-    });
+                const result = await checkImageAppropriateness(req.file.location);
+                if (result) {
+                    post.flagged = true;
+                }
+
+                const updatedPost = await post.save();
+                const populatedPost = await updatedPost.populate("user").execPopulate();
+                return res.json(populatedPost);
+            });
+        } else {
+            return res.status(405).json({ error: errors.CANNOT_EDIT_POST });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: errors.SERVER_ERROR });
+    }
 }
 
 exports.post_delete = async (req, res) => {
@@ -217,7 +212,7 @@ exports.post_react = async (req, res) => {
         }
     } else {
         user.likedPosts.push({
-            postId: postId,
+            post: postId,
             reactionType: reactionType
         });
         post.reactions[reactionType]++;
