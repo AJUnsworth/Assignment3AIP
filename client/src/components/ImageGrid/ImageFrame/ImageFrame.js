@@ -1,7 +1,7 @@
 import React from "react";
 
 import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
-import ReactionCounter from "./Functions/ReactionCounter";
+import MetricCounter from "./Functions/MetricCounter";
 import "./ImageFrame.css";
 
 class ImageFrame extends React.Component {
@@ -11,7 +11,7 @@ class ImageFrame extends React.Component {
             //Otherwise, the page does not reload the component
             <a href={"/thread/" + this.props.post._id}>
                 <div className="imageFrame">
-                    <ReactionCounter post={this.props.post} />
+                    <MetricCounter post={this.props.post} />
                     {/* eslint-disable-next-line */}
                     <img src={this.props.post.imageUrl ? this.props.post.imageUrl : PlaceholderImage} className="image" />
                 </div>
