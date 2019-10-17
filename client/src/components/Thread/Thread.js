@@ -235,7 +235,7 @@ class Thread extends React.Component {
                 showReport = !currentUser.isAdmin;
             }
             showApprove = post.flagged && currentUser.isAdmin;
-            console.log(showDelete);
+
             return (
                 <div className="quickActions">
                     <h6>Quick Actions</h6>
