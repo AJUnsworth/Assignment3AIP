@@ -41,18 +41,24 @@ class UploadImageForm extends React.Component {
         if (this.props.replyTo) {
             formData.append("replyTo", this.props.replyTo._id);
             formData.append("depth", this.props.replyTo.depth + 1);
-            this.createPost(formData);
-        } else if (this.props.post) {
-            this.editPost(formData);
-        } else {
-            this.createPost(formData);
         }
+
+        this.createPost(formData);
     }
 
     async createPost(formData) {
         this.setState({ loading: true });
+        
+        const isEdit = this.props.post ? true : false;
 
-        const response = await fetch('/post/create', {
+        let requestUrl;
+        if (isEdit) {
+            requestUrl = `${this.props.post._id}/edit`;
+        } else {
+            requestUrl = `create`;
+        }
+
+        const response = await fetch(`/post/${requestUrl}`, {
             method: 'POST',
             body: formData
         });
@@ -62,38 +68,18 @@ class UploadImageForm extends React.Component {
         if (response.status === 200) {
             if (data.flagged) {
                 NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
+                if (isEdit) {
+                    this.props.history.push("/");
+                }
+            } else if (isEdit) {
+                this.props.handleUpdatePost(data);
+                NotificationManager.success("Your image has been updated!", "Edit successful");
             } else {
+                this.props.handleNewPosts();
                 NotificationManager.success("Your image has been posted!", "Post successful");
             }
 
             this.setState(this.initialState);
-            this.props.handleNewPosts();
-        } else {
-            this.setState({ loading: false });
-            showError(data.error);
-        }
-    }
-
-    async editPost(formData) {
-        const postId = this.props.post._id;
-        this.setState({ loading: true });
-
-        const response = await fetch(`/post/${postId}/edit`, {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.status === 200) {
-            this.setState(this.initialState);
-            if (data.flagged) {
-                this.props.history.push("/");
-                NotificationManager.warning("This post may contain text or innapropriate content and requires approval before it can be viewed", "Flagged Post");
-            } else {
-                this.props.handleUpdatePost(data);
-                NotificationManager.success("Your image has been updated!", "Post successful");
-            }
         } else {
             this.setState({ loading: false });
             showError(data.error);
