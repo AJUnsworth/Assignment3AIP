@@ -50,18 +50,16 @@ class RegistrationForm extends React.Component {
             let errors = {};
             Object.keys(data).forEach(key => errors[key] = getError(data[key]).message);
 
-            this.setState({
-                errors: errors,
-                loading: false
-            });
+            this.setState({ errors: errors });
         }
         else if (response.status === 200) {
             this.setState(this.initialState);
             NotificationManager.success("Account created successfully", "Account Registered");
         } else {
-            this.setState({ loading: false });
             showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     render() {

@@ -168,20 +168,19 @@ class Thread extends React.Component {
             if (!refresh) {
                 this.setState(prevState => ({
                     replies: [...prevState.replies, ...data.results],
-                    isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount,
-                    loadingReplies: false
+                    isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
                 this.setState({
                     replies: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loadingReplies: false
+                    isShowMoreDisabled: data.results.length < 10
                 });
             }
         } else {
-            this.setState({ loadingReplies: false });
             showError(data.error);
         }
+
+        this.setState({ loadingReplies: false });
     }
 
     displayFlagged = () => {

@@ -42,8 +42,6 @@ class LoginForm extends React.Component {
 
         const data = await response.json();
 
-        this.setState({ loading: false });
-
         if (response.status === 400) {
             //Assign validation error messages to new object
             let errors = {};
@@ -56,6 +54,8 @@ class LoginForm extends React.Component {
         } else {
             showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     render() {

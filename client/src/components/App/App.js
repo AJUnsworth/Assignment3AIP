@@ -21,21 +21,18 @@ class App extends React.Component {
     }
 
 
-    componentDidMount() {
-        const self = this;
+    async componentDidMount() {
         if (!this.state.currentUser) {
-            fetch("/users/current", {
+            const response = await fetch("/users/current", {
                 method: "GET"
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            self.setUser(data);
-                        });
-                    } else if (response.status === 401) {
-                        this.props.history.push("/login");
-                    }
-                });
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                this.setUser(data);
+            } else if (response.status === 401) {
+                this.props.history.push("/login");
+            }
         }
     }
 
@@ -43,18 +40,16 @@ class App extends React.Component {
         this.setState({ currentUser: userData });
     }
 
-    logout = () => {
+    logout = async () => {
         this.setState({ loading: true });
-        const self = this;
-        fetch("/users/logout", {
+        await fetch("/users/logout", {
             method: "POST"
-        })
-            .then(() => {
-                self.setState({
-                    currentUser: null,
-                    loading: false
-                });
-            });
+        });
+
+        this.setState({
+            currentUser: null,
+            loading: false
+        });
     };
 
 

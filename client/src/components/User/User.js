@@ -31,13 +31,14 @@ class User extends React.Component {
         const data = await response.json();
 
         if (response.status === 200) {
-            this.setState({ user: data, loadingContent: false })
+            this.setState({ user: data });
         } else if (response.status === 404) {
             this.props.history.push("/");
         } else {
-            this.setState({ loadingContent: false });
             showError(data.error);
         }
+
+        this.setState({ loadingContent: false });
     }
 
     displayPosts = async (refresh, method) => {
@@ -59,20 +60,19 @@ class User extends React.Component {
             if (!refresh) {
                 this.setState(prevState => ({
                     posts: [...prevState.posts, ...data.results],
-                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                    loading: false
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
                 this.setState({
                     posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loading: false
+                    isShowMoreDisabled: data.results.length < 10
                 });
             }
         } else {
-            this.setState({ loading: false });
             showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     renderUserContent() {

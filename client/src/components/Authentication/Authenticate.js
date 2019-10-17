@@ -14,17 +14,15 @@ function authenticate(ComponentToProtect) {
             };
         }
 
-        componentDidMount() {
-            fetch("/users/checkAdmin")
-                .then(res => {
-                    if (res.status === 200) {
-                        this.setState({ loading: false });
-                    } else if (res.status === 403) {
-                        this.setState({ loading: false, redirectTo: "/" });
-                    } else {
-                        this.setState({ loading: false, redirectTo: "/login" });
-                    }
-                });
+        async componentDidMount() {
+            const response = await fetch("/users/checkAdmin");
+            if (response.status === 403) {
+                this.setState({ redirectTo: "/" });
+            } else if (response.status === 404 || response.status === 500) {
+                this.setState({ redirectTo: "/login" });
+            }
+            
+            this.setState({ loading: false });
         }
 
         render() {
