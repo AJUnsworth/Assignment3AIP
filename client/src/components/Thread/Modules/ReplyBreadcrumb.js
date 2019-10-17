@@ -44,7 +44,7 @@ class ReplyBreadcrumb extends React.Component {
         } else {
             return (this.state.replyParents.map((post, index) => {
                 return (
-                    <Breadcrumb.Item key={index} href={"/thread/" + post._id}>
+                    <Breadcrumb.Item key={post._id} href={"/thread/" + post._id}>
                         <img src={(!post.flagged && post.imageUrl) ? post.imageUrl : PlaceholderImage} className="breadcrumbImage" alt={post.user.username + "'s post"} />
                     </Breadcrumb.Item>
                 );

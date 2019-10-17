@@ -5,11 +5,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { showError } from "../../errors";
+import ActionModal from "../ActionModal/ActionModal";
 import ImageActionsButton from "../User/Admin/ImageActionsButton";
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./Modules/ThreadImage";
@@ -31,7 +31,7 @@ class Thread extends React.Component {
             showReport: false,
             loading: true,
             loadingReplies: true,
-            isShowMoreDisabled: false,
+            isShowMoreDisabled: false
         }
     }
 
@@ -64,34 +64,22 @@ class Thread extends React.Component {
     }
 
     handleShowReport = () => {
-        this.setState({ showReport: true });
+        this.setState({ showReport: !this.state.showReport });
     }
 
-    handleCloseReport = () => {
-        this.setState({ showReport: false });
+    handleShowDelete = (e) => {
+        this.setState({ showDelete: !this.state.showDelete });
     }
 
-    handleShowDelete = () => {
-        this.setState({ showDelete: true });
-    }
-
-    handleCloseDelete = () => {
-        this.setState({ showDelete: false });
-    }
-
-    handleEditPost = () => {
-        this.setState({ showEdit: true });
-    }
-
-    handleCloseEdit = () => {
-        this.setState({ showEdit: false });
+    handleShowEdit = () => {
+        this.setState({ showEdit: !this.state.showEdit });
     }
 
     handleUpdatePost = (updatedPost) => {
         this.setState({ post: updatedPost });
     }
 
-    handleReportImage = async () => {
+    handleReportPost = async () => {
         const response = await fetch(`/post/${this.state.post._id}/report`, {
             method: "POST",
             headers: {
@@ -241,10 +229,10 @@ class Thread extends React.Component {
                     <h6>Quick Actions</h6>
                     <ButtonGroup>
                         {showDelete &&
-                            <Button onClick={this.handleShowDelete} variant="danger">Delete</Button>
+                            <Button onClick={this.handleShowDelete} name="delete" variant="danger">Delete</Button>
                         }
                         {showEdit &&
-                            <Button onClick={this.handleEditPost} variant="info">Replace Image</Button>
+                            <Button onClick={this.handleShowEdit} variant="info">Replace Image</Button>
                         }
                         {showApprove &&
                             <ImageActionsButton {...this.props} {...this.state} />
@@ -325,59 +313,39 @@ class Thread extends React.Component {
                     <Navbar {...this.props} />
                     {this.renderThread()};
 
-                    <Modal show={this.state.showDelete} onHide={this.handleCloseDelete}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Delete Post</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>{deleteMessage}</Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={this.handleCloseDelete}>
-                                Cancel
-                        </Button>
-                            <Button variant="danger" onClick={this.handleDeletePost}>
-                                Delete
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
+                    <ActionModal
+                        show={this.state.showDelete}
+                        handleShowModal={this.handleShowDelete}
+                        title={"Delete Post"}
+                        handleModalAction={this.handleDeletePost}
+                        modalActionText={"Delete"}
+                    >
+                        {deleteMessage}
+                    </ActionModal>
 
-                    <Modal show={this.state.showEdit} onHide={this.handleCloseEdit}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Edit Post</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <h5>Select an image to replace your post</h5>
-                            <UploadImageForm
-                                currentUser={this.props.currentUser}
-                                post={this.state.post}
-                                handleUpdatePost={this.handleUpdatePost}
-                            />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="primary" onClick={this.handleCloseEdit}>
-                                Close
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
+                    <ActionModal
+                        show={this.state.showEdit}
+                        handleShowModal={this.handleShowEdit}
+                        title={"Edit Post"}
+                    >
+                        <h5>Select an image to replace your post</h5>
+                        <UploadImageForm
+                            currentUser={this.props.currentUser}
+                            post={this.state.post}
+                            handleUpdatePost={this.handleUpdatePost}
+                        />
+                    </ActionModal>
 
-                    <Modal show={this.state.showReport} onHide={this.handleCloseReport}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Report Post</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <h5>Are you sure you want to proceed?</h5>
-                            <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <ButtonGroup>
-                                <Button variant="secondary" onClick={this.handleCloseEdit}>
-                                    Cancel
-                                </Button>
-                                <Button variant="danger" onClick={this.handleReportImage}>
-                                    Report
-                                </Button>
-                            </ButtonGroup>
-                        </Modal.Footer>
-                    </Modal>
+                    <ActionModal
+                        show={this.state.showReport}
+                        handleShowModal={this.handleShowReport}
+                        title={"Report Post"}
+                        handleModalAction={this.handleReportPost}
+                        modalActionText={"Report"}
+                    >
+                        <h5>Are you sure you want to proceed?</h5>
+                        <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
+                    </ActionModal>
                 </div>
             );
         }

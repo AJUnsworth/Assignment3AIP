@@ -61,7 +61,7 @@ class ImageGrid extends React.Component {
 
     render() {
         const posts = this.props.posts && this.props.posts.map((post, index) => {
-            return <ImageFrame key={index} post={post} />
+            return <ImageFrame key={post._id} post={post} />
         });
 
         return (

@@ -10,8 +10,7 @@ function authenticate(ComponentToProtect) {
             super();
             this.state = {
                 loading: true,
-                redirectLogin: false,
-                redirectHome: false
+                redirectTo: ""
             };
         }
 
@@ -21,9 +20,9 @@ function authenticate(ComponentToProtect) {
                     if (res.status === 200) {
                         this.setState({ loading: false });
                     } else if (res.status === 403) {
-                        this.setState({ loading: false, redirectHome: true });
+                        this.setState({ loading: false, redirectTo: "/" });
                     } else {
-                        this.setState({ loading: false, redirectLogin: true });
+                        this.setState({ loading: false, redirectTo: "/login" });
                     }
                 });
         }
@@ -33,12 +32,8 @@ function authenticate(ComponentToProtect) {
                 return <FontAwesomeIcon id="loading" className="fa-5x loadingPostIcon" icon={faSpinner} spin />;
             }
 
-            if (this.state.redirectLogin) {
-                return <Redirect to="/login" />
-            }
-
-            if (this.state.redirectHome) {
-                return <Redirect to="/" />
+            if (this.state.redirectTo) {
+                return <Redirect to={this.state.redirectTo} />
             }
 
             return (

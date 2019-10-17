@@ -31,20 +31,19 @@ class Home extends React.Component {
             if (!refresh) {
                 this.setState(prevState => ({
                     posts: [...prevState.posts, ...data.results],
-                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount,
-                    loading: false
+                    isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
                 this.setState({
                     posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10,
-                    loading: false
+                    isShowMoreDisabled: data.results.length < 10
                 });
             }
         } else {
             showError(data.error);
-            this.setState({ loading: false });
         }
+
+        this.setState({ loading: false });
     }
 
     render() {

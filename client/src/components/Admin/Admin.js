@@ -29,13 +29,13 @@ class Admin extends React.Component {
         if (response.status === 200) {
             this.setState(prevState => ({
                 posts: [...prevState.posts, ...data.posts],
-                isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount,
-                loading: false
+                isShowMoreDisabled: prevState.posts.length + data.posts.length === data.postCount
             }));
         } else {
             showError(data.error);
-            this.setState({ loading: false });
         }
+        
+        this.setState({ loading: false });
     }
 
     render() {
