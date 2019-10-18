@@ -34,7 +34,7 @@ class LoginForm extends React.Component {
         this.setState({ loading: true });
 
         const response = await fetch("/users/login", {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify(this.state),
             headers: {
                 "Content-Type": "application/json"

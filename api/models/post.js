@@ -82,7 +82,7 @@ postSchema.virtual("totalReplies", {
 });
 
 //Returns the total amount of reactions on a post
-postSchema.virtual("totalReactions").get(() => {
+postSchema.virtual("totalReactions").get(function () {
     return this.reactions.like 
         + this.reactions.laugh 
         + this.reactions.love 

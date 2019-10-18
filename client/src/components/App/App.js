@@ -14,10 +14,7 @@ import MissingPage from "../MissingPage/MissingPage";
 class App extends React.Component {
     constructor() {
         super();
-        this.state = {
-            currentUser: null,
-            loading: false
-        };
+        this.state = { currentUser: null };
     }
 
 
@@ -30,8 +27,6 @@ class App extends React.Component {
             if (response.status === 200) {
                 const data = await response.json();
                 this.setUser(data);
-            } else if (response.status === 401) {
-                this.props.history.push("/login");
             }
         }
     }
@@ -41,15 +36,11 @@ class App extends React.Component {
     }
 
     logout = async () => {
-        this.setState({ loading: true });
         await fetch("/users/logout", {
-            method: "POST"
+            method: "GET"
         });
 
-        this.setState({
-            currentUser: null,
-            loading: false
-        });
+        this.setState({ currentUser: null });
     };
 
 

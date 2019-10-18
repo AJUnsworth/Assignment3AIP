@@ -1,13 +1,10 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
 
 import ActionModal from "../../ActionModal/ActionModal";
 import "./Button.css";
-
-//Based on Modal tutorial from React-Bootstrap
-//See https://react-bootstrap.github.io/components/modal/
 
 //Enables logged in users to logout
 //Button not shown for guest users
@@ -19,10 +16,7 @@ function LogoutButton(props) {
     const handleLogout = () => {
         handleShowLogout();
         props.logout();
-    }
-
-    if (props.loading) {
-        return <FontAwesomeIcon id="loading" className="fa-3x loadingPostIcon" icon={faSpinner} spin />;
+        props.history.push("/");
     }
 
     return (
@@ -42,4 +36,8 @@ function LogoutButton(props) {
     );
 };
 
-export default LogoutButton;
+LogoutButton.propTypes = {
+    logout: PropTypes.func.isRequired
+};
+
+export default withRouter(LogoutButton);

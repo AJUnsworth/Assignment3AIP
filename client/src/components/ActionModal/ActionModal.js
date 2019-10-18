@@ -3,7 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import PropTypes from 'prop-types';
 
-const ActionModal = props => {
+//Based on Modal tutorial from React-Bootstrap
+//See https://react-bootstrap.github.io/components/modal/
+function ActionModal(props) {
     return (
         <Modal show={props.show} onHide={props.handleShowModal}>
             <Modal.Header closeButton>

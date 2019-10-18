@@ -88,7 +88,7 @@ class Thread extends React.Component {
     //After 20 reports, the post is flagged and users will be directed to home page if they try to view
     handleReportPost = async () => {
         const response = await fetch(`/posts/${this.state.post._id}/report`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             }
@@ -133,7 +133,7 @@ class Thread extends React.Component {
         });
 
         const response = await fetch(`/posts/${this.state.post._id}/delete`, {
-            method: "POST",
+            method: "DELETE",
             body: requestBody,
             headers: {
                 "Content-Type": "application/json"
