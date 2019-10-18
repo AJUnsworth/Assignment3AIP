@@ -32,12 +32,12 @@ class ImageGrid extends React.Component {
 
     //Clears and refreshes posts on page to match new sorting method
     handleNewPosts = () => {
-        this.props.displayPosts(true, this.state.sortBy);
+        this.props.getPosts(true, this.state.sortBy);
     }
 
     //Retains already displayed posts and adds additional posts onto the imageGrid
     handleShowMore = () => {
-        this.props.displayPosts(false, this.state.sortBy);
+        this.props.getPosts(false, this.state.sortBy);
     }
 
     handleSortBy = (sortingMethod) => {

@@ -31,26 +31,34 @@ class Thread extends React.Component {
         }
     }
 
-    //Displays requested post on thread page. 
+    componentDidMount() {
+        this.getPost();
+    }
+
+    //Gets requested post on thread page
     //If post does not exist, redirects user to home page
-    async componentDidMount() {
+    async getPost() {
         const { postId } = this.props.match.params;
 
         const response = await fetch(`/api/posts/${postId}`, {
             method: "GET"
         });
 
+        const data = await response.json();
         if (response.status === 404) {
             this.props.history.push("/");
-        } else {
-            const data = await response.json();
+        } else if (response.status === 200) {
 
             if (data.flagged) {
                 this.checkAdmin();
             }
 
-            this.setState({ post: data, loading: false });
+            this.setState({ post: data });
+        } else {
+            showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     //If post is flagged, only admin can view. 
@@ -78,8 +86,9 @@ class Thread extends React.Component {
         }));
     }
 
-    //Displays replies to the post
-    displayReplies = async (refresh, method) => {
+    //Gets a specified (limit) amount of post replies by latest or popular (method)
+    //Includes replies, but does not include flagged posts
+    getReplies = async (refresh, method) => {
         let skippedPosts;
         const limit = 10;
         const { postId } = this.props.match.params;
@@ -102,6 +111,7 @@ class Thread extends React.Component {
                     isShowMoreDisabled: prevState.replies.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
+                //Resets array of posts for when swapping sorting methods when refresh is true
                 this.setState({
                     replies: data.results,
                     isShowMoreDisabled: data.results.length < limit
@@ -115,7 +125,7 @@ class Thread extends React.Component {
     }
 
     //Display warning text to admin to note if a post has been flagged
-    displayFlagged = () => {
+    renderFlagged = () => {
         if (this.state.post.flagged) {
             return (
                 <h5 className="text-danger">Note: This post has been flagged as it contains text or inappropriate content</h5>
@@ -141,6 +151,8 @@ class Thread extends React.Component {
             return <FontAwesomeIcon id="loading" className="fa-10x loadIconColor" icon={faSpinner} spin />;
         } else {
             const user = this.state.post.user;
+            console.log(this.state.post);
+            console.log(user);
             return (
                 <div className="content">
                     <Row xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -158,7 +170,7 @@ class Thread extends React.Component {
                                 </Link>
                             </h1>
                             <ReactionGrid className="reactionGrid" post={this.state.post} {...this.props} handleReactionUpdate={this.handleReactionUpdate} />
-                            {this.displayFlagged()}
+                            {this.renderFlagged()}
                             <QuickActionButtons {...this.props} post={this.state.post} handleUpdatePost={this.handleUpdatePost} />
                         </Col>
                     </Row>
@@ -167,7 +179,7 @@ class Thread extends React.Component {
                             <div className="comments">
                                 <h2 className="commentLabel">Comments</h2>
                                 <ImageGrid
-                                    displayPosts={this.displayReplies}
+                                    getPosts={this.getReplies}
                                     sortBy="latest"
                                     replyTo={this.state.post}
                                     posts={this.state.replies}

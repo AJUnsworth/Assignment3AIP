@@ -22,9 +22,13 @@ class User extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.getUser();
+    }
+
     //Loads user's details for the page
     //If user is not found, redirects back to home page
-    async componentDidMount() {
+    getUser = async () => {
         const { userId } = this.props.match.params;
 
         const response = await fetch(`/api/users/${userId}`, {
@@ -44,21 +48,20 @@ class User extends React.Component {
         this.setState({ loadingContent: false });
     }
 
-    //Displays a specified (limit) amount of requested users posts by latest or popular (method)
+    //Gets a specified (limit) amount of requested users posts by latest or popular (method)
     //Includes replies, but does not include flagged posts
-    displayPosts = async (refresh, method) => {
+    getPosts = async (refresh, method) => {
         let skippedPosts;
         const limit = 10;
         const { userId } = this.props.match.params;
         this.setState({ loading: true });
 
-        //Resets array of posts for when swapping methods
         if (!refresh) {
             skippedPosts = this.state.posts.length;
         } else {
             skippedPosts = 0;
         }
-        
+
         const response = await fetch(`/api/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
 
         const data = await response.json();
@@ -70,6 +73,7 @@ class User extends React.Component {
                     isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
+                //Resets array of posts for when swapping sorting methods when refresh is true
                 this.setState({
                     posts: data.results,
                     isShowMoreDisabled: data.results.length < limit
@@ -131,9 +135,9 @@ class User extends React.Component {
                     </div>
 
                     <div className="myPosts">
-                        <h2 className="myPostsText">{this.state.user.username}"s Posts</h2>
+                        <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
                         <ImageGrid
-                            displayPosts={this.displayPosts}
+                            getPosts={this.getPosts}
                             sortBy="latest"
                             showUpload={showUpload}
                             {...this.state}

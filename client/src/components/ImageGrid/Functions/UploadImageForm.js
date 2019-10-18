@@ -10,7 +10,6 @@ import { showError } from "../../../errors";
 
 // Upload image component is built on top of a component found online
 // Source: https://mdbootstrap.com/docs/react/forms/file-input/
-
 class UploadImageForm extends React.Component {
     constructor() {
         super()
@@ -47,11 +46,11 @@ class UploadImageForm extends React.Component {
             formData.append("depth", this.props.replyTo.depth + 1);
         }
 
-        this.createPost(formData);
+        this.uploadPost(formData);
     }
 
-    //Creates/edits a post depending on if a post is received as a prop
-    async createPost(formData) {
+    //Uploads post to S3 bucket and creates/edits a post depending on if a post is received as a prop
+    async uploadPost(formData) {
         this.setState({ loading: true });
         
         const isEdit = this.props.post ? true : false;

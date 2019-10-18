@@ -5,13 +5,13 @@ import PropTypes from "prop-types";
 
 //Displays image on a post, or a placeholder if the image has been deleted
 function ThreadImage(props) {
-        return (
-            <div className="threadImageContainer">
-                {/* eslint-disable-next-line */}
-                <img src={props.imageUrl ? props.imageUrl : PlaceholderImage} className="threadImage" />
-            </div>
+    return (
+        <div className="threadImageContainer">
+            {/* eslint-disable-next-line */}
+            <img src={props.imageUrl ? props.imageUrl : PlaceholderImage} className="threadImage" />
+        </div>
 
-        );
+    );
 }
 
 ThreadImage.propTypes = {

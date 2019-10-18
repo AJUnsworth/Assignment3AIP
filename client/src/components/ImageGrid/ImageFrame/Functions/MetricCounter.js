@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import { showError } from "../../../../errors";
 import "./MetricCounter.css";
 
-
 class MetricCounter extends React.Component {
     constructor(props) {
         super(props);
@@ -19,18 +18,18 @@ class MetricCounter extends React.Component {
     }
 
     componentDidMount() {
-        this.loadMetrics();
+        this.getMetrics();
     }
 
     componentDidUpdate(prevProps) {
         //Update metrics when changing between sorting methods
         if (prevProps.post !== this.props.post) {
-            this.loadMetrics();
+            this.getMetrics();
         }
     }
 
     //Gets total reactions and total replies (that are not flagged)
-    async loadMetrics() {
+    async getMetrics() {
         this.setState({ loading: true });
 
         const response = await fetch(`/api/posts/${this.props.post._id}/metrics`, {

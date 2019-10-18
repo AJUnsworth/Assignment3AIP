@@ -239,7 +239,6 @@ exports.post_metrics = async (req, res) => {
         if (!post) {
             return res.status(404).json({ error: errors.POST_NOT_FOUND });
         } else {
-            console.log(post);
             return res.json({
                 totalReactions: post.totalReactions,
                 totalReplies: post.totalReplies

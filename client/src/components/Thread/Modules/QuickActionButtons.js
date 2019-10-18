@@ -9,6 +9,7 @@ import { showError } from "../../../errors";
 import ActionModal from "../../ActionModal/ActionModal";
 import ApproveButton from "./ApproveButton";
 import UploadImageForm from "../../ImageGrid/Functions/UploadImageForm";
+import "./QuickActionButtons.css";
 
 class QuickActionButtons extends React.Component {
     constructor() {

@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 
-
 import { showError } from "../../../errors";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import "./ReplyBreadcrumb.css";

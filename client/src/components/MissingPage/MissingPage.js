@@ -9,12 +9,10 @@ import Navbar from "../Navbar/Navbar";
 import "../MissingPage/MissingPage.css"
 
 //Generic page shown for non-existent URLS or URLs that could not be found
-class User extends React.Component {
-
-    render() {
+function MissingPage (props) {
         return (
             <div>
-                <Navbar {...this.props} />
+                <Navbar {...props} />
                 <Row className="align-items-center">
                 <Col className="verticalColPadding textCentred">
                     <img src={ErrorImage} alt="error" className="errorImage"></img>
@@ -23,7 +21,6 @@ class User extends React.Component {
                 </Row>
             </div>
         );
-    }
 }
 
-export default User;
+export default MissingPage;

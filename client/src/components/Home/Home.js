@@ -16,12 +16,11 @@ class Home extends React.Component {
 
     // Displays set amount of posts (limit) that are not flagged or replies
     // 'Method' determines whether posts are sorted by latest or popular
-    displayPosts = async (refresh, method) => {
+    getPosts = async (refresh, method) => {
         let skippedPosts;
         const limit = 10;
         this.setState({ loading: true });
 
-        //
         if (!refresh) {
             skippedPosts = this.state.posts.length;
         } else {
@@ -38,6 +37,7 @@ class Home extends React.Component {
                     isShowMoreDisabled: prevState.posts.length + data.results.length === data.metadata[0].totalCount
                 }));
             } else {
+                //Resets array of posts for when swapping sorting methods when refresh is true
                 this.setState({
                     posts: data.results,
                     isShowMoreDisabled: data.results.length < limit
@@ -54,7 +54,7 @@ class Home extends React.Component {
         return (
             <div>
                 <Navbar {...this.props} />
-                <HomeContent displayPosts={this.displayPosts} {...this.state} {...this.props} />
+                <HomeContent getPosts={this.getPosts} {...this.state} {...this.props} />
             </div>
         );
     }

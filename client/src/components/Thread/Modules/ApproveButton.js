@@ -23,7 +23,7 @@ class ImageActionsButton extends React.Component {
     }
 
     //Removes flagged status and clears reports on a post, making them visible to any user
-    handleApprove = async () => {
+    handleApprovePost = async () => {
         this.setState({ showApprove: false });
 
         const response = await fetch(`/api/posts/${this.props.post._id}/approve`, {
@@ -51,7 +51,7 @@ class ImageActionsButton extends React.Component {
                     show={this.state.showApprove}
                     handleShowModal={this.handleShowApprove}
                     title={"Confirm Approval"}
-                    handleModalAction={this.handleApprove}
+                    handleModalAction={this.handleApprovePost}
                     modalActionText={"Approve"}
                 >
                     Is this post clear of text and inappropriate content?

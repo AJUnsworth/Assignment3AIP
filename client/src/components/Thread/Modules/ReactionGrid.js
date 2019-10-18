@@ -14,7 +14,7 @@ class ReactionGrid extends React.Component {
         super(props);
         this.state = {
             activeReaction: "None selected",
-            loading: true,
+            loading: false,
             showSuggestLogin: false
         };
     }
@@ -23,12 +23,12 @@ class ReactionGrid extends React.Component {
         if (this.props.currentUser) {
             this.getUserReaction();
         }
-
-        this.setState({ loading: false });
     }
 
     //Find user's reaction to post and set it as active if they have previously reacted to the image
     async getUserReaction() {
+        this.setState({ loading: true });
+
         const response = await fetch(`/api/users/${this.props.currentUser.id}/reaction?post_id=${this.props.post._id}`, {
             method: "GET"
         });
@@ -40,12 +40,14 @@ class ReactionGrid extends React.Component {
         } else {
             showError(data.error);
         }
+
+        this.setState({ loading: false });
     }
 
     //Creates new reaction if user has not reacted to the post
     //Toggles a user's reaction if they have already reacted to the post
     //Removes a reaction if they select their active reaction 
-    react = async e => {
+    handleReact = async e => {
         //User's cannot reply to a placeholder post
         if (!this.props.post.imageUrl) {
             NotificationManager.warning(
@@ -111,29 +113,29 @@ class ReactionGrid extends React.Component {
                     <tbody>
                         <tr>
                             <td>
-                                <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="like" icon={faThumbsUp} className={this.state.activeReaction === "like" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.like}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="laugh" icon={faGrinSquint} className={this.state.activeReaction === "laugh" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.laugh}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="love" icon={faGrinHearts} className={this.state.activeReaction === "love" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.love}</h1>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="wow" icon={faSurprise} className={this.state.activeReaction === "wow" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.wow}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="tears" icon={faSadCry} className={this.state.activeReaction === "tears" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.tears}</h1>
                             </td>
                             <td>
-                                <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.react} />
+                                <FontAwesomeIcon id="angry" icon={faAngry} className={this.state.activeReaction === "angry" ? "fa-3x reaction active" : "reaction fa-3x"} onClick={this.handleReact} />
                                 <h1 className="reactionCount">{reactions.angry}</h1>
                             </td>
                         </tr>
