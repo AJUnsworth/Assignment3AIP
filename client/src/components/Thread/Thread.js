@@ -1,24 +1,19 @@
 import React from "react";
-import { NotificationManager } from "react-notifications";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 
 import { showError } from "../../errors";
-import ActionModal from "../ActionModal/ActionModal";
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./Modules/ThreadImage";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import ReactionGrid from "./Modules/ReactionGrid";
-import "./Thread.css";
 import ReplyBreadcrumb from "./Modules/ReplyBreadcrumb";
-import UploadImageForm from "../ImageGrid/Functions/UploadImageForm";
-import ApproveButton from "./Modules/ApproveButton";
+import QuickActionButtons from "./Modules/QuickActionButtons";
+import "./Thread.css";
 
 
 class Thread extends React.Component {
@@ -68,54 +63,9 @@ class Thread extends React.Component {
         }
     }
 
-    //Show/close report modal
-    handleShowReport = () => {
-        this.setState({ showReport: !this.state.showReport });
-    }
-
-    //Show/close delete modal
-    handleShowDelete = () => {
-        this.setState({ showDelete: !this.state.showDelete });
-    }
-
-    //Show/close edit modal
-    handleShowEdit = () => {
-        this.setState({ showEdit: !this.state.showEdit });
-    }
-
     //Update post after being edited
     handleUpdatePost = (updatedPost) => {
         this.setState({ post: updatedPost });
-    }
-
-    //Gives users ability to report posts
-    //After 20 reports, the post is flagged and users will be directed to home page if they try to view
-    handleReportPost = async () => {
-        const response = await fetch(`/api/posts/${this.state.post._id}/report`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (response.status === 200) {
-            const contentType = response.headers.get("content-type");
-            if (contentType.includes("application/json")) {
-                const data = await response.json();
-                if (data.flagged) {
-                    this.props.history.push("/");
-                    NotificationManager.success("Post has been been flagged for containing text or innapropriate content", "Post reported");
-                }
-            } else {
-                NotificationManager.success("The post has been reported successfully", "Post Reported");
-            }
-        }
-        else {
-            const data = await response.json();
-            showError(data.error);
-        }
-
-        this.setState({ showReport: false });
     }
 
     //Update posts reactions whenever the reaction is used I.e. Liking a post
@@ -126,41 +76,6 @@ class Thread extends React.Component {
                 reactions: reactions
             }
         }));
-    }
-
-    // Deletes post and redirects to home page if there are no reactions/replies
-    // Removes imageUrl if post is deleted with reactions/replies
-    handleDeletePost = async () => {
-        this.setState({ showDelete: false });
-
-        const requestBody = JSON.stringify({
-            postId: this.state.post._id
-        });
-
-        const response = await fetch(`/api/posts/${this.state.post._id}/delete`, {
-            method: "DELETE",
-            body: requestBody,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (response.status === 200) {
-            //Code to check if response is JSON
-            //See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Headers
-            const contentType = response.headers.get("content-type");
-            if (contentType.includes("application/json")) {
-                const data = await response.json()
-                this.setState({ post: data });
-                NotificationManager.success("Post image removed successfully", "Post image deleted");
-            } else {
-                NotificationManager.success("Post removed successfully", "Post deleted");
-                this.props.history.push("/");
-            }
-        } else {
-            const data = await response.json();
-            showError(data.error);
-        }
     }
 
     //Displays replies to the post
@@ -218,53 +133,6 @@ class Thread extends React.Component {
         }
     }
 
-    //Renders buttons to react and report to image. Users who created the image can also delete or replace the image.
-    renderQuickActions() {
-        const post = this.state.post;
-        const currentUser = this.props.currentUser;
-
-        if (currentUser && post.imageUrl) {
-            let showApprove = false;
-            let showDelete = false;
-            let showEdit = false;
-            let showReport = false;
-
-            if (post.user._id === currentUser.id) {
-                showDelete = true;
-                showEdit = !post.totalReplies
-                    && post.reactions.like === 0
-                    && post.reactions.love === 0
-                    && post.reactions.tears === 0
-                    && post.reactions.angry === 0
-                    && post.reactions.laugh === 0
-                    && post.reactions.wow === 0;
-            } else {
-                showReport = !currentUser.isAdmin;
-            }
-            showApprove = post.flagged && currentUser.isAdmin;
-
-            return (
-                <div className="quickActions">
-                    <h6>Quick Actions</h6>
-                    <ButtonGroup>
-                        {showDelete &&
-                            <Button onClick={this.handleShowDelete} name="delete" variant="danger">Delete</Button>
-                        }
-                        {showEdit &&
-                            <Button onClick={this.handleShowEdit} variant="info">Replace Image</Button>
-                        }
-                        {showApprove &&
-                            <ApproveButton {...this.props} {...this.state} />
-                        }
-                        {showReport &&
-                            <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
-                        }
-                    </ButtonGroup>
-                </div>
-            );
-        }
-    }
-
     //Renders the post itself in the thread.
     renderThread() {
         const showUpload = this.state.post.imageUrl ? true : false;
@@ -284,10 +152,14 @@ class Thread extends React.Component {
                         </Col>
                         <Col xs={12} sm={12} md={12} lg={4} xl={4} className="threadActions">
                             <h1 className="profileName">Post by</h1>
-                            <h1 className="profileName"><Link to={"/user/" + user._id}>{user.username}</Link></h1>
-                            <ReactionGrid post={this.state.post} currentUser={this.props.currentUser} className="reactionGrid" handleReactionUpdate={this.handleReactionUpdate} />
+                            <h1 className="profileName">
+                                <Link to={"/user/" + user._id}>
+                                    {user.username}
+                                </Link>
+                            </h1>
+                            <ReactionGrid className="reactionGrid" post={this.state.post} {...this.props} handleReactionUpdate={this.handleReactionUpdate} />
                             {this.displayFlagged()}
-                            {this.renderQuickActions()}
+                            <QuickActionButtons {...this.props} post={this.state.post} handleUpdatePost={this.handleUpdatePost} />
                         </Col>
                     </Row>
                     <Row>
@@ -313,14 +185,6 @@ class Thread extends React.Component {
     }
 
     render() {
-        let deleteMessage;
-        //Render delete message for modal depending on whether it can be fully deleted, or if it has replies and can only be replaced with a placeholder
-        if (this.state.post.totalReplies) {
-            deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
-        } else {
-            deleteMessage = "Are you sure you want to delete this post? This action cannot be reversed.";
-        }
-
         if (this.state.loading) {
             return (
                 <div>
@@ -332,41 +196,7 @@ class Thread extends React.Component {
             return (
                 <div>
                     <Navbar {...this.props} />
-                    {this.renderThread()};
-
-                    <ActionModal
-                        show={this.state.showDelete}
-                        handleShowModal={this.handleShowDelete}
-                        title={"Delete Post"}
-                        handleModalAction={this.handleDeletePost}
-                        modalActionText={"Delete"}
-                    >
-                        {deleteMessage}
-                    </ActionModal>
-
-                    <ActionModal
-                        show={this.state.showEdit}
-                        handleShowModal={this.handleShowEdit}
-                        title={"Edit Post"}
-                    >
-                        <h5>Select an image to replace your post</h5>
-                        <UploadImageForm
-                            currentUser={this.props.currentUser}
-                            post={this.state.post}
-                            handleUpdatePost={this.handleUpdatePost}
-                        />
-                    </ActionModal>
-
-                    <ActionModal
-                        show={this.state.showReport}
-                        handleShowModal={this.handleShowReport}
-                        title={"Report Post"}
-                        handleModalAction={this.handleReportPost}
-                        modalActionText={"Report"}
-                    >
-                        <h5>Are you sure you want to proceed?</h5>
-                        <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
-                    </ActionModal>
+                    {this.renderThread()}
                 </div>
             );
         }

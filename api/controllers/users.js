@@ -128,7 +128,7 @@ exports.user_login = async (req, res) => {
 
 //Removes users token on logout
 exports.user_logout = (req, res) => {
-    return res.clearCookie("token").sendStatus(200);
+    return res.clearCookie("token").sendStatus(204);
 };
 
 //Returns user details from a valid decoded token

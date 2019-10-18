@@ -130,7 +130,7 @@ exports.post_delete = async (req, res) => {
             return res.json(populatedPost);
         } else {
             await post.remove();
-            return res.sendStatus(200);
+            return res.sendStatus(204);
         }
     } catch {
         return res.status(500).json({ error: errors.SERVER_ERROR });
@@ -170,7 +170,7 @@ exports.post_report = async (req, res) => {
             return res.json(updatedPost);
         }
         else {
-            return res.sendStatus(200);
+            return res.sendStatus(204);
         }
     } catch {
         return res.status(500).json({ error: errors.SERVER_ERROR });

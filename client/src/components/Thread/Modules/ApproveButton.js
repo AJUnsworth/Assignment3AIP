@@ -33,7 +33,7 @@ class ImageActionsButton extends React.Component {
             }
         });
 
-        if (response.status === 200) {
+        if (response.status === 204) {
             NotificationManager.success("Post has been approved successfully", "Approved");
             this.props.history.push("/admin");
         } else {

@@ -6,7 +6,7 @@ const errors = require("../services/errors");
 //Checks if a decoded user token is an administrator, otherwise returns a 403 error
 exports.admin_check = (req, res) => {
     if (req.decoded.isAdmin) {
-        return res.sendStatus(200);
+        return res.sendStatus(204);
     } else {
         return res.status(403).json({ error: errors.INVALID_PERMISSIONS });
     }
@@ -36,7 +36,7 @@ exports.post_approve = async (req, res) => {
         post.reports = 0;
         await post.save();
 
-        return res.sendStatus(200);
+        return res.sendStatus(204);
     } catch {
         return res.status(500).json({ error: errors.SERVER_ERROR });
     }
