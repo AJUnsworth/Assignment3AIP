@@ -40,8 +40,36 @@ router.post("/create", authenticate, PostsController.post_create);
  */ 
 router.get("/flagged", authenticate, AdminController.posts_flagged_get);
 
+/**
+ * Gets posts sorted by most recent createdAt date 
+ * 
+ * Path: post/latest
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns posts sorted by most recent createdAt date
+ *      500: Issue while getting posts
+ */ 
 router.get("/latest", PostsController.posts_latest_get);
 
+/**
+ * Gets posts sorted by most rections
+ * 
+ * Path: post/popular
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns posts sorted by most reactions 
+ *      500: Issue while getting posts
+ */ 
 router.get("/popular", PostsController.posts_popular_get);
 
 /**
@@ -112,6 +140,21 @@ router.post("/:postId/delete", authenticate, PostsController.post_delete);
  */ 
 router.get("/:postId/metrics", PostsController.post_metrics);
 
+/**
+ * Gets parent posts of a requested reply post
+ * 
+ * Path: post/:postId/parents
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      postId: Id of the requested reply
+ * 
+ * Response:
+ *      200: Returns parent posts of the requested post
+ *      404: Requested post not found OR Requested post is not a reply
+ *      500: Issue while getting parent posts
+ */ 
 router.get("/:postId/parents", PostsController.post_reply_parents_get);
 
 /**
@@ -172,8 +215,38 @@ router.post("/:postId/report", authenticate, PostsController.post_report);
  */ 
 router.post("/:postId/approve", authenticate, AdminController.post_approve);
 
+/**
+ * Gets replies sorted by most recent createdAt date
+ * 
+ * Path: post/:postId/latest
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      postId: Id of requested post
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns replies sorted by most recent createdAt date 
+ *      500: Issue while getting replies
+ */ 
 router.get("/:postId/latest", PostsController.posts_replies_latest_get);
 
+/**
+ * Gets replies sorted by most reactions
+ * 
+ * Path: post/:postId/popular
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      postId: Id of requested post
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns replies sorted by most reactions
+ *      500: Issue while getting posts
+ */ 
 router.get("/:postId/popular", PostsController.posts_replies_popular_get);
 
 module.exports = router;

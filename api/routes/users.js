@@ -132,8 +132,38 @@ router.get("/:userId", UsersController.user_get);
  */ 
 router.get("/:userId/reaction", authenticate, UsersController.user_reaction_get);
 
+/**
+ * Gets users posts sorted by most recent created date 
+ * 
+ * Path: users/:userId/latest
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      userId: userId of specific user
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns users posts sorted by most recent created date 
+ *      500: Issue while getting posts
+ */ 
 router.get("/:userId/latest", UsersController.user_latest_get);
 
+/**
+ * Gets user posts sorted by most reaction count 
+ * 
+ * Path: users/:userId/popular
+ * 
+ * Method: Get
+ * 
+ * Parameters: 
+ *      userId: userId of specific user
+ *      skippedPosts: number of posts the Show More button skips
+ * 
+ * Response:
+ *      200: Returns users posts sorted by most reaction count
+ *      500: Issue while getting posts
+ */ 
 router.get("/:userId/popular", UsersController.user_popular_get);
 
 module.exports = router;
