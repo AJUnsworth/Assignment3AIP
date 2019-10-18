@@ -1,8 +1,8 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const app = require("../../api/app");
-const should = chai.should();
 const User = require("../../api/models/user");
+const should = chai.should();
 
 chai.use(chaiHttp);
 
