@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { showError } from "../../../errors";
 
@@ -36,7 +36,7 @@ class UploadImageForm extends React.Component {
     }
 
     //Form to handle browsed file upload. 
-    //If the upload is a reply, the form sends through the postId of what it's replying to and the depth of replies.
+    //If the upload is a reply, the form sends the postId of what its replying to and the depth of replies.
     handleFileUpload = () => {
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
@@ -56,14 +56,17 @@ class UploadImageForm extends React.Component {
         
         const isEdit = this.props.post ? true : false;
 
-        let requestUrl;
+        let requestUrl, requestMethod;
         if (isEdit) {
             requestUrl = `${this.props.post._id}/edit`;
+            requestMethod = "PUT";
         } else {
-            requestUrl = `create`;
+            requestUrl = "create";
+            requestMethod = "POST";
         }
 
         const response = await fetch(`/posts/${requestUrl}`, {
+            method: requestMethod,
             body: formData
         });
 

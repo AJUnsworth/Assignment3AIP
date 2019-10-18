@@ -2,7 +2,7 @@ import React from "react";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Col from "react-bootstrap/Col";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 //Renders toggleable buttons between latest and popular sorting methods
 function SortImageButtons(props) {

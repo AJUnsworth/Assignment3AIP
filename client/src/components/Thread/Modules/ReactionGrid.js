@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { NotificationManager } from "react-notifications";
 import { withRouter } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import ActionModal from "../../ActionModal/ActionModal";
 import { showError } from "../../../errors";
@@ -42,13 +42,14 @@ class ReactionGrid extends React.Component {
         }
     }
 
-    //Allows logged in users to react to a post
-    //Either creates a new reaction, toggles a user's reactionType or removes a reaction 
+    //Creates new reaction if user has not reacted to the post
+    //Toggles a user's reaction if they have already reacted to the post
+    //Removes a reaction if they select their active reaction 
     react = async e => {
         //User's cannot reply to a placeholder post
         if (!this.props.post.imageUrl) {
             NotificationManager.warning(
-                "Since this post is deleted, it can't be reacted to",
+                "Since this post is deleted, it cannot be reacted to",
                 "Cannot react to post",
                 5000
             );

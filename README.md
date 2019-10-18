@@ -1,5 +1,41 @@
 # SceneIt
 SceneIt is a web-based MERN stack appliucation that allows users to upload images and interact with other posts. 
+It was created as part of the Advanced Internet Programming subject at UTS. (Subject Coordinator - Benjamin Johnston)
+
+# Libraries
+The following libraries have primarily been used during the process of creating this application:
+* React
+* React-Bootstrap 
+* Mongoose
+* Express
+* Mocha - Server Testing
+* Cypress - Client Testing
+
+# File Structure
+The file structure for this project can be broken up as follows:
+* api/
+    * controllers/ - Business logic for API calls that interact with the database
+    * models/ - Database schemas for MongoDB collections
+    * routes/ - API routes which link up to controllers
+    * services/ - Utilities or logic for accessing external services such as S3 or Google Cloud Vision API
+    * validation/ - Input validation for login and registration
+* client/
+    * public/ - Contains automatically generated react files such as index.html or the favicon
+    * src/
+        * components/ - All components used within the project
+        * images/ - All images used throughout the project that were not user generated
+* test/
+    * client/ - Frontend functional tests
+    * api/ - Backend unit tets
+
+# .env and Credential access
+Any sensitive information has been stored securely in a .env file that has not been included in this repository for security reasons. 
+Additionally, access to credentials for deployment are also contained in a separate file that has not been included in this repository.
+
+For access to either of these files, please contact the following developers:
+* Andrew Unsworth
+* Joshua Chan
+* Chloe Dizon
 
 # Installation and Running the Project
 * In the root folder (/Assignment3AIP), install all dependencies by running the command - npm install
@@ -40,3 +76,9 @@ SceneIt is a web-based MERN stack appliucation that allows users to upload image
 * Always attribute code if taken from an external source using comments
 * Always use const static variables and let for dynamic variables
 * Use async/await instead of JavaScript Promises to make error handling simpler
+
+# Credits
+The following developers (JAC Tech) were reponsible for creating this web application.
+* Andrew Unsworth - 12876797
+* Joshua Chan - 12876811
+* Chloe Dizon - 12876304

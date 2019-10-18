@@ -1,12 +1,12 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const app = require("../api/app");
+const app = require("../../api/app");
 const should = chai.should();
-const User = require("../api/models/user");
+const User = require("../../api/models/user");
 
 chai.use(chaiHttp);
 
-describe('User', function () {
+describe("User", function () {
 
     afterEach((done) => {
         User.deleteMany({ username: new RegExp("test") }, (_error) => {
@@ -14,8 +14,8 @@ describe('User', function () {
         });
     });
 
-    describe('Registration', function () {
-        it('should create a new user when details are valid', function (done) {
+    describe("Registration", function () {
+        it("should create a new user when details are valid", function (done) {
             let user = {
                 "username": "test123",
                 "email": "test@testers123.com",
@@ -24,7 +24,7 @@ describe('User', function () {
             };
 
             chai.request(app)
-                .post('/users/register')
+                .post("/users/register")
                 .send(user)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -32,7 +32,7 @@ describe('User', function () {
                 });
         });
 
-        it('should not create a new user when email already exists in the database', function (done) {
+        it("should not create a new user when email already exists in the database", function (done) {
             let user = {
                 "username": "test123",
                 "email": "test@testers123.com",
@@ -48,10 +48,10 @@ describe('User', function () {
             };
 
             chai.request(app)
-                .post('/users/register')
+                .post("/users/register")
                 .send(user)
                 .end(function (err, res) {
-                    chai.request(app).post('/users/register')
+                    chai.request(app).post("/users/register")
                         .send(user2)
                         .end(function (err, res) {
                             res.should.have.status(400);
@@ -61,7 +61,7 @@ describe('User', function () {
                 });
         });
 
-        it('should not create a new user when username already exists in the database', function (done) {
+        it("should not create a new user when username already exists in the database", function (done) {
             let user = {
                 "username": "test123",
                 "email": "test@testers123.com",
@@ -77,10 +77,10 @@ describe('User', function () {
             };
 
             chai.request(app)
-                .post('/users/register')
+                .post("/users/register")
                 .send(user)
                 .end(function (err, res) {
-                    chai.request(app).post('/users/register')
+                    chai.request(app).post("/users/register")
                         .send(user2)
                         .end(function (err, res) {
                             res.should.have.status(400);

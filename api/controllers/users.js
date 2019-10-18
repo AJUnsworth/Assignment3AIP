@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const Post = require("../models/post")
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -75,7 +75,7 @@ exports.user_login = async (req, res) => {
         //Find users ipAddress and login time for checking if the account is a potential sock puppet
         //Based on user topkek's answer on how to get a user's IP address in Node
         //See https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-        const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const lastIpAddress = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
         if (!(user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) || !user.isAdmin) {
             const users = await User.find({ lastIpAddress: lastIpAddress }).where("_id").ne(user._id);
@@ -195,8 +195,8 @@ exports.user_latest_get = async (req, res) => {
 
     try {
         const posts = await Post.aggregate([
-            { '$match': { 'user': userId, 'flagged': false } },
-            { '$sort': { 'createdAt': -1 } },
+            { "$match": { "user": userId, "flagged": false } },
+            { "$sort": { "createdAt": -1 } },
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],
@@ -220,11 +220,11 @@ exports.user_popular_get = async (req, res) => {
 
     try {
         const posts = await Post.aggregate([
-            { '$match': { 'user': userId, 'flagged': false } },
+            { "$match": { "user": userId, "flagged": false } },
             {
-                '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+                "$addFields": { "totalReactions": { "$sum": ["$reactions.like", "$reactions.wow", "$reactions.tears", "$reactions.laugh", "$reactions.love", "$reactions.angry"] } }
             },
-            { '$sort': { 'totalReactions': -1 } },
+            { "$sort": { "totalReactions": -1 } },
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],

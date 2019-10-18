@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments, faHeart, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Badge from "react-bootstrap/Badge";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { showError } from "../../../../errors";
 import "./MetricCounter.css";

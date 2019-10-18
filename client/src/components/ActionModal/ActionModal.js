@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 //Based on Modal tutorial from React-Bootstrap
 //See https://react-bootstrap.github.io/components/modal/

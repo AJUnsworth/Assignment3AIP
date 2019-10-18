@@ -59,7 +59,10 @@ const postSchema = new Schema({
         type: Boolean,
         default: false
     },
-    reactions: reactionsSchema
+    reactions: {
+        type: reactionsSchema,
+        default: reactionsSchema
+    }
 }, {
         timestamps: true,
 });

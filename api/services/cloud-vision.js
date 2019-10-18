@@ -1,6 +1,6 @@
-const vision = require('@google-cloud/vision');
+const vision = require("@google-cloud/vision");
 const client = new vision.ImageAnnotatorClient();
-const fetch = require('fetch-base64');
+const fetch = require("fetch-base64");
 
 //Check if image is appropriate
 //Returns true if any text, adult content or violence is detected in image

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faComments, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { showError } from "../../errors";
 import Navbar from "../Navbar/Navbar";
@@ -22,7 +22,7 @@ class User extends React.Component {
         }
     }
 
-    //Loads user's details
+    //Loads user's details for the page
     //If user is not found, redirects back to home page
     async componentDidMount() {
         const { userId } = this.props.match.params;
@@ -131,10 +131,10 @@ class User extends React.Component {
                     </div>
 
                     <div className="myPosts">
-                        <h2 className="myPostsText">{this.state.user.username}'s Posts</h2>
+                        <h2 className="myPostsText">{this.state.user.username}"s Posts</h2>
                         <ImageGrid
                             displayPosts={this.displayPosts}
-                            sortBy='latest'
+                            sortBy="latest"
                             showUpload={showUpload}
                             {...this.state}
                             {...this.props}

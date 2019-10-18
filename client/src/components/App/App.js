@@ -20,7 +20,7 @@ class App extends React.Component {
 
 
     async componentDidMount() {
-        //Gets a user's details on login if there is none currently set
+        //Gets a user"s details on login if there is none currently set
         //Does not set currentUser if token does not exist or is invalid
         if (!this.state.currentUser) {
             const response = await fetch("/users/current", {
@@ -38,7 +38,7 @@ class App extends React.Component {
         this.setState({ currentUser: userData });
     }
 
-    //Removes user's token/cookie and clears currentUser
+    //Removes user"s token/cookie and clears currentUser
     logout = async () => {
         await fetch("/users/logout", {
             method: "GET"

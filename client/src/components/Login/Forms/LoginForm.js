@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { showError, getError } from "../../../errors";
 import Logo from "../../../../src/images/Seenit Logo_white.png";
@@ -30,7 +30,7 @@ class LoginForm extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    //Submit user's details, which are validated in the backend and any validation errors are returned, including if a user is a sockpuppet
+    //Submit user details, which are validated in the backend and any validation errors are returned, including if a user is a sockpuppet
     //Upon successful login, a user's IP address and last login time are stored to check for potential sockpuppet accounts
     handleSubmit = async e => {
         e.preventDefault();

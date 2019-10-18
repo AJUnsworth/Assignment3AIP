@@ -14,15 +14,14 @@ class Home extends React.Component {
         }
     }
 
-    /* Displays set amount of posts (limit) depending on refresh and sort by method.
-     * 'Refresh' is used to determine if there are more posts to display, and if not the 'Show More' button will disable.
-     * 'Method' is used to determine if posts are sorted by createdAt date or by number of reactions  
-     */
+    // Displays set amount of posts (limit) that are not flagged or replies
+    // 'Method' determines whether posts are sorted by latest or popular
     displayPosts = async (refresh, method) => {
         let skippedPosts;
         const limit = 10;
         this.setState({ loading: true });
 
+        //
         if (!refresh) {
             skippedPosts = this.state.posts.length;
         } else {

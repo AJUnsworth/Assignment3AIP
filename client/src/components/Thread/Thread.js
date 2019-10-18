@@ -7,7 +7,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import { showError } from "../../errors";
 import ActionModal from "../ActionModal/ActionModal";
@@ -100,7 +100,7 @@ class Thread extends React.Component {
 
         if (response.status === 200) {
             const contentType = response.headers.get("content-type");
-            if (contentType.includes('application/json')) {
+            if (contentType.includes("application/json")) {
                 const data = await response.json();
                 if (data.flagged) {
                     this.props.history.push("/");
@@ -149,7 +149,7 @@ class Thread extends React.Component {
             //Code to check if response is JSON
             //See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Headers
             const contentType = response.headers.get("content-type");
-            if (contentType.includes('application/json')) {
+            if (contentType.includes("application/json")) {
                 const data = await response.json()
                 this.setState({ post: data });
                 NotificationManager.success("Post image removed successfully", "Post image deleted");
@@ -296,7 +296,7 @@ class Thread extends React.Component {
                                 <h2 className="commentLabel">Comments</h2>
                                 <ImageGrid
                                     displayPosts={this.displayReplies}
-                                    sortBy='latest'
+                                    sortBy="latest"
                                     replyTo={this.state.post}
                                     posts={this.state.replies}
                                     currentUser={this.props.currentUser}

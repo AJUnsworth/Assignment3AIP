@@ -16,7 +16,7 @@ const Errors = {
     },
     INVALID_PERMISSIONS: {
         title: "Insufficient permissions",
-        message: "It appears you don't have the right to access this page"
+        message: "It appears you do not have the right to access this page"
     },
     INVALID_USER: {
         title: "Cannot complete action",
@@ -28,7 +28,7 @@ const Errors = {
     },
     POST_ALREADY_REPORTED: {
         title: "Post already reported",
-        message: "It appears you've already reported this post before"
+        message: "It appears you have already reported this post before"
     },
     POTENTIAL_SOCKPUPPET: {
         title: "Too many logins",
@@ -84,7 +84,7 @@ const Errors = {
     }
 }
 
-//Locates error message from dictionary of tokens
+//Locates error message from dictionary of error types
 const getError = errorType => {
     const error = Errors[errorType];
 
@@ -95,6 +95,7 @@ const getError = errorType => {
     return error;
 }
 
+//Displays error message and title from dictionary in a notification
 const showError = errorType => {
     const error = getError(errorType);
 

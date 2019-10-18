@@ -2,7 +2,7 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import { NotificationManager } from "react-notifications";
 import { withRouter } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import ActionModal from "../../ActionModal/ActionModal";
 import { showError } from "../../../errors";

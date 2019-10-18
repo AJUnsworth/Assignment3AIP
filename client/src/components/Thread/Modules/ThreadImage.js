@@ -1,7 +1,7 @@
 import React from "react";
 import "./ThreadImage.css";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 //Displays image on a post, or a placeholder if the image has been deleted
 function ThreadImage(props) {

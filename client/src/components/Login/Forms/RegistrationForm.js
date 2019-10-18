@@ -32,7 +32,7 @@ class RegistrationForm extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    //Submit user's details, which are validated in the backend and any validation errors are returned, including if a user is a sockpuppet
+    //Submit user details, which are validated in the backend and any validation errors are returned, including if a user is a sockpuppet
     //Upon successful login, a user's IP address and last login time are stored to check for potential sockpuppet accounts
     handleSubmit = async e => {
         e.preventDefault();

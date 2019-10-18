@@ -1,7 +1,7 @@
 const Post = require("../models/post");
 const User = require("../models/user");
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { uploadImage, deleteImage } = require("../services/s3");
 const checkImageAppropriateness = require("../services/cloud-vision");
 const errors = require("../services/errors");
@@ -11,7 +11,7 @@ const singleUpload = uploadImage.single("image");
 /* Allows user to upload a post, and is based off a tutorial from Medium.com that can no longer be located
 * A similar tutorial can be seen here: https://medium.com/@paulrohan/file-upload-to-aws-s3-bucket-in-a-node-react-mongo-app-and-using-multer-72884322aada
 * 
-* Also checks an images' appropriateness and flags the post if it contains sensitive content
+* Also checks if image is appropriate and flags the post if it contains sensitive content or text
 */
 exports.post_create = (req, res) => {
     //Upload image to S3 bucket then create a new post if successful
@@ -37,7 +37,7 @@ exports.post_create = (req, res) => {
                 newPost.depth = req.body.depth;
             }
 
-            //Check if file contains adult content or violence and returns true if found, or false if not
+            //Check if file contains adult content, text or violence and returns true if found, or false if not
             const isFlagged = await checkImageAppropriateness(req.file.location);
             newPost.flagged = isFlagged;
 
@@ -239,6 +239,7 @@ exports.post_metrics = async (req, res) => {
         if (!post) {
             return res.status(404).json({ error: errors.POST_NOT_FOUND });
         } else {
+            console.log(post);
             return res.json({
                 totalReactions: post.totalReactions,
                 totalReplies: post.totalReplies
@@ -258,12 +259,12 @@ exports.posts_latest_get = async (req, res) => {
     try {
         const posts = await Post.aggregate([
             {
-                '$match': {
-                    'replyTo': { '$exists': false },
-                    'flagged': false
+                "$match": {
+                    "replyTo": { "$exists": false },
+                    "flagged": false
                 }
             }, {
-                '$sort': { 'createdAt': -1 }
+                "$sort": { "createdAt": -1 }
             },
 
             {
@@ -288,13 +289,13 @@ exports.posts_popular_get = async (req, res) => {
     try {
         const posts = await Post.aggregate([
             {
-                '$match': { 'replyTo': { '$exists': false }, 'flagged': false }
+                "$match": { "replyTo": { "$exists": false }, "flagged": false }
             },
             {
-                '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+                "$addFields": { "totalReactions": { "$sum": ["$reactions.like", "$reactions.wow", "$reactions.tears", "$reactions.laugh", "$reactions.love", "$reactions.angry"] } }
             },
             {
-                '$sort': { 'totalReactions': -1 }
+                "$sort": { "totalReactions": -1 }
             },
             {
                 $facet: {
@@ -319,8 +320,8 @@ exports.posts_replies_latest_get = async (req, res) => {
 
     try {
         const posts = await Post.aggregate([
-            { '$match': { 'replyTo': postId, 'flagged': false } },
-            { '$sort': { 'createdAt': -1 } },
+            { "$match": { "replyTo": postId, "flagged": false } },
+            { "$sort": { "createdAt": -1 } },
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],
@@ -344,11 +345,11 @@ exports.posts_replies_popular_get = async (req, res) => {
 
     try {
         const posts = await Post.aggregate([
-            { '$match': { 'replyTo': postId, 'flagged': false } },
+            { "$match": { "replyTo": postId, "flagged": false } },
             {
-                '$addFields': { 'totalReactions': { '$sum': ['$reactions.like', '$reactions.wow', '$reactions.tears', '$reactions.laugh', '$reactions.love', '$reactions.angry'] } }
+                "$addFields": { "totalReactions": { "$sum": ["$reactions.like", "$reactions.wow", "$reactions.tears", "$reactions.laugh", "$reactions.love", "$reactions.angry"] } }
             },
-            { '$sort': { 'totalReactions': -1 } },
+            { "$sort": { "totalReactions": -1 } },
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],
