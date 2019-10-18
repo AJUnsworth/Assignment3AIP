@@ -8,6 +8,8 @@ import { showError } from "../../errors";
 import LeaderboardMember from "./Members/LeaderboardMember";
 import "./Leaderboard.css";
 
+//Fetches top users based on reaction counts for the leaderboard
+//Able to change how many top users are shown with 'limit'
 class Leaderboard extends React.Component {
     constructor(props) {
         super(props)

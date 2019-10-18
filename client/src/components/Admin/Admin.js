@@ -19,6 +19,7 @@ class Admin extends React.Component {
         }
     }
 
+    //Displays flagged posts on admin page
     displayPosts = async () => {
         const skippedPosts = this.state.posts.length;
         this.setState({ loading: true });

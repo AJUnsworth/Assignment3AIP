@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import "./LeaderboardMember.css";
 
+//Displays each top users username and number of received reactions on the leaderboard
 class LeaderboardMember extends React.Component {
     render() {
         return (

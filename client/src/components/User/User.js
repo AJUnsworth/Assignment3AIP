@@ -21,6 +21,8 @@ class User extends React.Component {
         }
     }
 
+    //Goes to requested users' page
+    //If user is not found, redirects back to home page
     async componentDidMount() {
         const { userId } = this.props.match.params;
 
@@ -41,6 +43,7 @@ class User extends React.Component {
         this.setState({ loadingContent: false });
     }
 
+    //Displays requested users posts
     displayPosts = async (refresh, method) => {
         let skippedPosts;
         const { userId } = this.props.match.params;

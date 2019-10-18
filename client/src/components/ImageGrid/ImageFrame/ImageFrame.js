@@ -4,6 +4,8 @@ import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import MetricCounter from "./Functions/MetricCounter";
 import "./ImageFrame.css";
 
+//Displays each image in ImageFrame.
+//If there is not imageUrl (e.g. post with replies has been deleted), a placeholder image is shown instead
 class ImageFrame extends React.Component {
     render() {
         return (

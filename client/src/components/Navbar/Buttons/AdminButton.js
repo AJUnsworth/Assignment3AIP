@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 
 import "./Button.css";
 
+//Directs admin users to admin page
 function AdminButton(props) {
     return (
         <Link to="/admin/">

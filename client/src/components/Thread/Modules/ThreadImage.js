@@ -2,6 +2,7 @@ import React from "react";
 import "./ThreadImage.css";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 
+//Displays the actual post as an image
 function ThreadImage(props) {
         return (
             <div className="threadImageContainer">

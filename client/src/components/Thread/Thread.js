@@ -35,6 +35,8 @@ class Thread extends React.Component {
         }
     }
 
+    //Displays requested post on thread page. 
+    //If post does not exist, redirects user to home page
     async componentDidMount() {
         const { postId } = this.props.match.params;
 
@@ -55,6 +57,8 @@ class Thread extends React.Component {
         }
     }
 
+    //If post is flagged, only admin can view. 
+    //If non-admin views flagged post, redirect to home
     async checkAdmin() {
         const response = await fetch("/users/checkAdmin");
 
@@ -79,6 +83,8 @@ class Thread extends React.Component {
         this.setState({ post: updatedPost });
     }
 
+    //Gives users ability to report posts
+    //After 20 reports, the post is flagged and users will be directed to home page if they try to view
     handleReportPost = async () => {
         const response = await fetch(`/post/${this.state.post._id}/report`, {
             method: "POST",
@@ -116,6 +122,8 @@ class Thread extends React.Component {
         }));
     }
 
+    // Deletes post and redirects to home page if there are no reactions/replies
+    // Removes imageUrl if post is deleted with reactions/replies
     handleDeletePost = async () => {
         this.setState({ showDelete: false });
 
@@ -149,6 +157,7 @@ class Thread extends React.Component {
         }
     }
 
+    //Displays replies to the post
     displayReplies = async (refresh, method) => {
         let skippedPosts;
         const { postId } = this.props.match.params;
@@ -191,6 +200,7 @@ class Thread extends React.Component {
         }
     }
 
+    //Renders Breadcrumb that displays parent threads of posts
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
             return (
@@ -199,6 +209,7 @@ class Thread extends React.Component {
         }
     }
 
+    //Renders buttons to react and report to image. Users who created the image can also delete or replace the image.
     renderQuickActions() {
         const post = this.state.post;
         const currentUser = this.props.currentUser;
@@ -245,6 +256,7 @@ class Thread extends React.Component {
         }
     }
 
+    //Renders the post itself in the thread.
     renderThread() {
         const showUpload = this.state.post.imageUrl ? true : false;
 

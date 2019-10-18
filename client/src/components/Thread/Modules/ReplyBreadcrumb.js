@@ -7,6 +7,7 @@ import { showError } from "../../../errors";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import "./ReplyBreadcrumb.css";
 
+//Displays the parent posts of the reply
 class ReplyBreadcrumb extends React.Component {
     constructor(props) {
         super(props);

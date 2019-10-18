@@ -8,6 +8,9 @@ import "./Button.css";
 
 //Based on Modal tutorial from React-Bootstrap
 //See https://react-bootstrap.github.io/components/modal/
+
+//Enables logged in users to logout
+//Button not shown for guest users
 function LogoutButton(props) {
     const [showLogout, setShowLogout] = React.useState(false);
 

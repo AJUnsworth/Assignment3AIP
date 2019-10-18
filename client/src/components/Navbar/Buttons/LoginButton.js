@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 
 import "./Button.css";
 
+//Directs guests to login/register page
 function LoginButton(props) {
     return (
         <Link to="/login/">

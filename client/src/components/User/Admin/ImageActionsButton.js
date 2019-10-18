@@ -6,6 +6,8 @@ import { withRouter } from "react-router-dom";
 
 import { showError } from "../../../errors";
 
+//Allows admins to approve flagged posts
+//Once post is approved, it can be displayed on the home page
 class ImageActionsButton extends React.Component {
     constructor(props) {
         super(props);

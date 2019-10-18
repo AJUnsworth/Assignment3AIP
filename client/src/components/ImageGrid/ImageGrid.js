@@ -11,6 +11,12 @@ import UploadImageForm from "./Functions/UploadImageForm";
 import ImageFrame from "./ImageFrame/ImageFrame";
 import "./ImageGrid.css";
 
+
+/** Displays image grid posts in most recent createdAt date order.
+ * Handles sort by methods and show more buttons. 
+ * Renders upload button if user is logged in.
+*/
+
 class ImageGrid extends React.Component {
     constructor(props) {
         super(props)

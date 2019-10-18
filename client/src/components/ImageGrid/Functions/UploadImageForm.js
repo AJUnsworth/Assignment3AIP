@@ -22,6 +22,7 @@ class UploadImageForm extends React.Component {
         this.state = this.initialState;
     }
 
+    //Handles user browsing for an image. Displays filename without filepath.
     handleFileBrowse = e => {
         e.preventDefault();
         // eslint-disable-next-line
@@ -33,6 +34,8 @@ class UploadImageForm extends React.Component {
         }
     }
 
+    //Form to handle browsed file upload. 
+    //If the upload is a reply, the form sends through the postID of what it's replying to and the depth of replies.
     handleFileUpload = () => {
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
@@ -86,6 +89,7 @@ class UploadImageForm extends React.Component {
         }
     }
 
+    //Displays upload button as loading icon when image upload is processing
     renderUploadText() {
         if (this.state.loading) {
             return <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>;

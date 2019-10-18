@@ -11,6 +11,7 @@ import "./HomeContent.css";
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
 
+/* Displays welcome message for current user, the leaderboard and the image grid. */
 function HomeContent(props) {
     return (
         <Container className="homeContent">

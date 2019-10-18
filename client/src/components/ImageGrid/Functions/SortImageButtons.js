@@ -3,6 +3,7 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Col from "react-bootstrap/Col";
 
+// Displays buttons for sorting by latest (most recent createdAt date) or popular (most reactions) 
 function SortImageButtons(props) {
         return (
             <Col xs={12} sm={12} md={12} lg={5} xl={5}>

@@ -9,6 +9,7 @@ import ViewProfileButton from "./Buttons/ViewProfileButton";
 
 import "./Navbar.css";
 
+//Navigation bar that enables users to login, logout, view their profile, and view the admin page if user is an admin
 class Navbar extends React.Component {
     renderNavButtons() {
         if (this.props.currentUser) {

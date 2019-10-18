@@ -14,6 +14,10 @@ class Home extends React.Component {
         }
     }
 
+    /* Displays posts depending on refresh and sort by method.
+     * 'Refresh' is used to determine if there are more posts to display, and if not the 'Show More' button will disable.
+     * 'Method' is used to determine if posts are sorted by createdAt date or by number of reactions  
+     */
     displayPosts = async (refresh, method) => {
         let skippedPosts;
         this.setState({ loading: true });
