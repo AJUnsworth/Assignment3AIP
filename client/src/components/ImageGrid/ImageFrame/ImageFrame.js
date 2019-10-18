@@ -11,7 +11,7 @@ function ImageFrame(props) {
     return (
         //Using 'a' instead of 'Link' so page refreshes when visiting replies from a parent thread
         //Otherwise, the page does not reload the component
-        <a href={`/thread/ + ${props.post._id}`}>
+        <a href={`/thread/${props.post._id}`}>
             <div className="imageFrame">
                 <MetricCounter post={props.post} />
                 {/* eslint-disable-next-line */}

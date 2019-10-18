@@ -151,8 +151,6 @@ class Thread extends React.Component {
             return <FontAwesomeIcon id="loading" className="fa-10x loadIconColor" icon={faSpinner} spin />;
         } else {
             const user = this.state.post.user;
-            console.log(this.state.post);
-            console.log(user);
             return (
                 <div className="content">
                     <Row xs={12} sm={12} md={12} lg={12} xl={12}>
