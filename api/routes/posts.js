@@ -10,7 +10,7 @@ const PostsController = require("../controllers/posts");
  * Allows user create a post/reply
  * Requires an authenticated token.
  * 
- * Path: post/create
+ * Path: posts/create
  * 
  * Method: Post
  * 
@@ -30,7 +30,7 @@ router.post("/create", authenticate, PostsController.post_create);
  * Find and returns flagged posts
  * Requires an authenticated token.
  * 
- * Path: post/flagged
+ * Path: posts/flagged
  * 
  * Method: Get
  * 
@@ -43,7 +43,7 @@ router.get("/flagged", authenticate, AdminController.posts_flagged_get);
 /**
  * Gets posts sorted by most recent createdAt date 
  * 
- * Path: post/latest
+ * Path: posts/latest
  * 
  * Method: Get
  * 
@@ -59,7 +59,7 @@ router.get("/latest", PostsController.posts_latest_get);
 /**
  * Gets posts sorted by most rections
  * 
- * Path: post/popular
+ * Path: posts/popular
  * 
  * Method: Get
  * 
@@ -75,7 +75,7 @@ router.get("/popular", PostsController.posts_popular_get);
 /**
  * Gets detail of specified post
  * 
- * Path: post/:postId
+ * Path: posts/:postId
  * 
  * Method: Get
  *
@@ -89,7 +89,7 @@ router.get("/:postId", PostsController.post_get);
  * Allows user edit their own post/reply
  * Requires an authenticated token.
  * 
- * Path: post/edit
+ * Path: posts/edit
  * 
  * Method: Post
  * 
@@ -109,7 +109,7 @@ router.post("/:postId/edit", authenticate, PostsController.post_edit);
  * Allows user delete their own post/reply
  * Requires an authenticated token.
  * 
- * Path: post/delete
+ * Path: posts/delete
  * 
  * Method: Post
  * 
@@ -127,7 +127,7 @@ router.post("/:postId/delete", authenticate, PostsController.post_delete);
 /**
  * Find and returns reactions and replies for a post
  * 
- * Path: post/metrics
+ * Path: posts/metrics
  * 
  * Method: Get
  * 
@@ -143,7 +143,7 @@ router.get("/:postId/metrics", PostsController.post_metrics);
 /**
  * Gets parent posts of a requested reply post
  * 
- * Path: post/:postId/parents
+ * Path: posts/:postId/parents
  * 
  * Method: Get
  * 
@@ -161,7 +161,7 @@ router.get("/:postId/parents", PostsController.post_reply_parents_get);
  * Allows user to react, edit reaction or delete reaction on a post
  * Requires an authenticated token.
  * 
- * Path: post/react
+ * Path: posts/react
  * 
  * Method: Post
  * 
@@ -180,7 +180,7 @@ router.post("/:postId/react", authenticate, PostsController.post_react);
  * Allows user to report a post
  * Requires an authenticated token.
  * 
- * Path: post/report
+ * Path: posts/report
  * 
  * Method: Post
  * 
@@ -200,7 +200,7 @@ router.post("/:postId/report", authenticate, PostsController.post_report);
  * Allows an admin to approve a flagged post
  * Requires an authenticated token.
  * 
- * Path: post/approve
+ * Path: posts/approve
  * 
  * Method: Post
  * 
@@ -218,7 +218,7 @@ router.post("/:postId/approve", authenticate, AdminController.post_approve);
 /**
  * Gets replies sorted by most recent createdAt date
  * 
- * Path: post/:postId/latest
+ * Path: posts/:postId/latest
  * 
  * Method: Get
  * 
@@ -235,7 +235,7 @@ router.get("/:postId/latest", PostsController.posts_replies_latest_get);
 /**
  * Gets replies sorted by most reactions
  * 
- * Path: post/:postId/popular
+ * Path: posts/:postId/popular
  * 
  * Method: Get
  * 

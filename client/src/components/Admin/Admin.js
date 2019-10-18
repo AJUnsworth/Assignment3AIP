@@ -24,7 +24,7 @@ class Admin extends React.Component {
         const skippedPosts = this.state.posts.length;
         this.setState({ loading: true });
 
-        const response = await fetch(`/post/flagged?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/posts/flagged?skippedPosts=${skippedPosts}`);
         const data = await response.json();
 
         if (response.status === 200) {

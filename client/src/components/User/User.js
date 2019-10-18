@@ -55,7 +55,7 @@ class User extends React.Component {
             skippedPosts = 0;
         }
         
-        const response = await fetch(`/users/${userId}/${method}?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 

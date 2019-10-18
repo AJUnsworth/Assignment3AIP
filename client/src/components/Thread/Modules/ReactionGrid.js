@@ -57,7 +57,7 @@ class ReactionGrid extends React.Component {
 
             this.setState({ loading: true });
 
-            const response = await fetch(`/post/${this.props.post._id}/react`, {
+            const response = await fetch(`/posts/${this.props.post._id}/react`, {
                 method: "POST",
                 body: requestBody,
                 headers: {

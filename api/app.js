@@ -6,7 +6,7 @@ const path = require("path");
 
 require("dotenv").config();
 
-const postRouter = require("./routes/post");
+const postRouter = require("./routes/posts");
 const usersRouter = require("./routes/users");
 
 const app = express();
@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../client/build")));
 
-app.use("/post", postRouter);
-app.use("/users", usersRouter);
+app.use("/api/posts", postRouter);
+app.use("/api/users", usersRouter);
 
 //For static website hosting
 app.get("/*", (req, res) => {

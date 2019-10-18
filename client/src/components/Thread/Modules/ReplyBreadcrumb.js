@@ -23,7 +23,7 @@ class ReplyBreadcrumb extends React.Component {
 
     async getReplyThread() {
         if (this.props.post.replyTo) {
-            const response = await fetch(`/post/${this.props.post._id}/parents`, {
+            const response = await fetch(`/posts/${this.props.post._id}/parents`, {
                 method: "GET"
             });
 

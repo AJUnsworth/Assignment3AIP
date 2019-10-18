@@ -40,7 +40,7 @@ class Thread extends React.Component {
     async componentDidMount() {
         const { postId } = this.props.match.params;
 
-        const response = await fetch(`/post/${postId}`, {
+        const response = await fetch(`/posts/${postId}`, {
             method: "GET"
         });
 
@@ -86,7 +86,7 @@ class Thread extends React.Component {
     //Gives users ability to report posts
     //After 20 reports, the post is flagged and users will be directed to home page if they try to view
     handleReportPost = async () => {
-        const response = await fetch(`/post/${this.state.post._id}/report`, {
+        const response = await fetch(`/posts/${this.state.post._id}/report`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -131,7 +131,7 @@ class Thread extends React.Component {
             postId: this.state.post._id
         });
 
-        const response = await fetch(`/post/${this.state.post._id}/delete`, {
+        const response = await fetch(`/posts/${this.state.post._id}/delete`, {
             method: "POST",
             body: requestBody,
             headers: {
@@ -169,7 +169,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/post/${postId}/${method}?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/posts/${postId}/${method}?skippedPosts=${skippedPosts}`);
 
         const data = await response.json();
 

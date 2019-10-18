@@ -61,7 +61,7 @@ class UploadImageForm extends React.Component {
             requestUrl = `create`;
         }
 
-        const response = await fetch(`/post/${requestUrl}`, {
+        const response = await fetch(`/posts/${requestUrl}`, {
             method: 'POST',
             body: formData
         });
