@@ -33,14 +33,13 @@ const deleteImage = async (imageUrl) => {
         Key: key
     };
 
-    //Delete image to save space in S3 Bucket, then remove the actual image
-    s3.deleteObject(params, function (err, data) {
-        if (err) {
-            return err;
-        } else {
-            return;
-        }
-    });
+    try {
+        //Delete image to save space in S3 Bucket
+        await s3.deleteObject(params).promise();
+        return;
+    } catch {
+        throw new Error(err);
+    }
 }
 
 module.exports = { uploadImage, deleteImage };
