@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { showError } from "../../../errors";
-import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
+import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import "./ReplyBreadcrumb.css";
 
 class ReplyBreadcrumb extends React.Component {
