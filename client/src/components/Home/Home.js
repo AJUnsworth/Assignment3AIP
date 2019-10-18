@@ -28,7 +28,7 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
+        const response = await fetch(`/api/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
         const data = await response.json();
 
         if (response.status === 200) {

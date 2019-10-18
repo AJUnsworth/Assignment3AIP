@@ -38,7 +38,7 @@ class RegistrationForm extends React.Component {
         e.preventDefault();
         this.setState({ loading: true });
 
-        const response = await fetch("/users/register", {
+        const response = await fetch("/api/users/register", {
             method: "POST",
             body: JSON.stringify(this.state),
             headers: {

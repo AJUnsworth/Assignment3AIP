@@ -27,7 +27,7 @@ class User extends React.Component {
     async componentDidMount() {
         const { userId } = this.props.match.params;
 
-        const response = await fetch(`/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             method: "GET"
         });
 
@@ -59,7 +59,7 @@ class User extends React.Component {
             skippedPosts = 0;
         }
         
-        const response = await fetch(`/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
+        const response = await fetch(`/api/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
 
         const data = await response.json();
 

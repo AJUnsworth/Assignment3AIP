@@ -70,7 +70,7 @@ For access to either of these files, please contact the following developers:
 * If code can be resused elsewhere, it should be made as a component or separate method
 * Tabs must be equal to 4 spaces
 * Use double quotes for strings not in fetch requests
-* Use back-ticks (``) in fetch requests to allow for use of template literals 
+* Use template literals through back-ticks (``) in fetch requests only if using URI query string or parameters
 * Break up import statements by external imports (e.g. Packages) then internal imports (e.g. Custom components)
 * Use arrow functions wherever possible
 * Always attribute code if taken from an external source using comments

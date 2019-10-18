@@ -33,7 +33,7 @@ class MetricCounter extends React.Component {
     async loadMetrics() {
         this.setState({ loading: true });
 
-        const response = await fetch(`/posts/${this.props.post._id}/metrics`, {
+        const response = await fetch(`/api/posts/${this.props.post._id}/metrics`, {
             method: "GET"
         });
 
