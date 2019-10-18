@@ -1,6 +1,6 @@
 import React from "react";
 
-import PlaceholderImage from "../../../images/imageremovedplaceholder.png";
+import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import MetricCounter from "./Functions/MetricCounter";
 import "./ImageFrame.css";
 

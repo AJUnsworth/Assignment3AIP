@@ -10,7 +10,7 @@ exports.leaderboard_get = (req, res) => {
     }, {
       '$match': { 'totalReactions': { '$gt': 0 } }
     }, {
-      '$group': { '_id': '$userId', 'totalUserReactions': { '$sum': '$totalReactions' } }
+      '$group': { '_id': '$user', 'totalUserReactions': { '$sum': '$totalReactions' } }
     }, {
       '$sort': { 'totalUserReactions': -1 }
     }, {
