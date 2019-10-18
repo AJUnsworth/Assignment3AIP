@@ -27,7 +27,7 @@ class Leaderboard extends React.Component {
     displayLeaderboard = async limit => {
         this.setState({ loading: true });
 
-        const response = await fetch(`/users/leaderboard?limit=${limit}`);
+        const response = await fetch(`/api/users/leaderboard?limit=${limit}`);
 
         const data = await response.json();
 

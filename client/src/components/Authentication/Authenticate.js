@@ -17,7 +17,7 @@ function authenticate(ComponentToProtect) {
         async componentDidMount() {
             //Checks if the current user is an admin
             //Redirects to login if user is not logged in, or or home if they are not an admin 
-            const response = await fetch("/users/checkAdmin");
+            const response = await fetch("/api/users/checkAdmin");
             if (response.status === 403) {
                 this.setState({ redirectTo: "/" });
             } else if (response.status === 404 || response.status === 500) {

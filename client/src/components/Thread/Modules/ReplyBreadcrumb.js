@@ -26,7 +26,7 @@ class ReplyBreadcrumb extends React.Component {
     //Placeholder images will be rendered for any flagged or deleted posts
     async getReplyThread() {
         if (this.props.post.replyTo) {
-            const response = await fetch(`/posts/${this.props.post._id}/parents`, {
+            const response = await fetch(`/api/posts/${this.props.post._id}/parents`, {
                 method: "GET"
             });
 

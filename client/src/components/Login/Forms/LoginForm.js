@@ -36,7 +36,7 @@ class LoginForm extends React.Component {
         e.preventDefault();
         this.setState({ loading: true });
 
-        const response = await fetch("/users/login", {
+        const response = await fetch("/api/users/login", {
             method: "PUT",
             body: JSON.stringify(this.state),
             headers: {

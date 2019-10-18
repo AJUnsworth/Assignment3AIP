@@ -29,7 +29,7 @@ class ReactionGrid extends React.Component {
 
     //Find user's reaction to post and set it as active if they have previously reacted to the image
     async getUserReaction() {
-        const response = await fetch(`/users/${this.props.currentUser.id}/reaction?post_id=${this.props.post._id}`, {
+        const response = await fetch(`/api/users/${this.props.currentUser.id}/reaction?post_id=${this.props.post._id}`, {
             method: "GET"
         });
 
@@ -62,7 +62,7 @@ class ReactionGrid extends React.Component {
 
             this.setState({ loading: true });
 
-            const response = await fetch(`/posts/${this.props.post._id}/react`, {
+            const response = await fetch(`/api/posts/${this.props.post._id}/react`, {
                 method: "PUT",
                 body: requestBody,
                 headers: {

@@ -41,7 +41,7 @@ class Thread extends React.Component {
     async componentDidMount() {
         const { postId } = this.props.match.params;
 
-        const response = await fetch(`/posts/${postId}`, {
+        const response = await fetch(`/api/posts/${postId}`, {
             method: "GET"
         });
 
@@ -61,7 +61,7 @@ class Thread extends React.Component {
     //If post is flagged, only admin can view. 
     //If non-admin views flagged post, redirect to home
     async checkAdmin() {
-        const response = await fetch("/users/checkAdmin");
+        const response = await fetch("/api/users/checkAdmin");
 
         if (response.status !== 200) {
             this.props.history.push("/");
@@ -91,7 +91,7 @@ class Thread extends React.Component {
     //Gives users ability to report posts
     //After 20 reports, the post is flagged and users will be directed to home page if they try to view
     handleReportPost = async () => {
-        const response = await fetch(`/posts/${this.state.post._id}/report`, {
+        const response = await fetch(`/api/posts/${this.state.post._id}/report`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -137,7 +137,7 @@ class Thread extends React.Component {
             postId: this.state.post._id
         });
 
-        const response = await fetch(`/posts/${this.state.post._id}/delete`, {
+        const response = await fetch(`/api/posts/${this.state.post._id}/delete`, {
             method: "DELETE",
             body: requestBody,
             headers: {
@@ -176,7 +176,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/posts/${postId}/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
+        const response = await fetch(`/api/posts/${postId}/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
 
         const data = await response.json();
 
