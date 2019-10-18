@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faComments, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../errors";
 import Navbar from "../Navbar/Navbar";
@@ -150,5 +151,10 @@ class User extends React.Component {
         );
     }
 }
+
+User.propTypes = {
+    currentUser: PropTypes.object
+};
+
 
 export default User;

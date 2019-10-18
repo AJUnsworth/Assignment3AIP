@@ -2,7 +2,7 @@
 SceneIt is a web-based MERN stack appliucation that allows users to upload images and interact with other posts. 
 
 # Installation and Running the Project
-In the root folder (/Assignment3AIP), install all dependencies by running the command - npm install
+* In the root folder (/Assignment3AIP), install all dependencies by running the command - npm install
 * To launch the dev environment and start both the backend (:4000) and frontend (:3000), run the command - npm run dev
 * To start the backend server only - npm run start:server
 * To start the frontend only - npm run start:client

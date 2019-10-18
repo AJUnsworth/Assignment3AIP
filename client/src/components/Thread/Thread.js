@@ -7,6 +7,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../errors";
 import ActionModal from "../ActionModal/ActionModal";
@@ -362,5 +363,10 @@ class Thread extends React.Component {
         }
     }
 }
+
+Thread.propTypes = {
+    currentUser: PropTypes.object,
+    logout: PropTypes.func
+};
 
 export default Thread;

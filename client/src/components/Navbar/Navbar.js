@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import Logo from "../../images/Seenit Logo_white.png";
 import AdminButton from "./Buttons/AdminButton";
@@ -43,5 +44,11 @@ class Navbar extends React.Component {
         );
     }
 }
+
+Navbar.propTypes = {
+    currentUser: PropTypes.object,
+    logout: PropTypes.func,
+    loading: PropTypes.bool
+};
 
 export default Navbar;

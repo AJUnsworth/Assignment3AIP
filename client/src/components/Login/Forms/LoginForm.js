@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import PropTypes from 'prop-types';
 
 import { showError, getError } from "../../../errors";
 import Logo from "../../../../src/images/Seenit Logo_white.png";
@@ -110,5 +111,10 @@ class LoginForm extends React.Component {
         );
     };
 }
+
+LoginForm.propTypes = {
+    setUser: PropTypes.func,
+    logout: PropTypes.func
+};
 
 export default withRouter(LoginForm);

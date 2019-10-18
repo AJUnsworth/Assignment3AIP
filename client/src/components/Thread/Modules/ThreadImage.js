@@ -1,6 +1,7 @@
 import React from "react";
 import "./ThreadImage.css";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
+import PropTypes from 'prop-types';
 
 //Displays the actual post as an image
 function ThreadImage(props) {
@@ -12,5 +13,9 @@ function ThreadImage(props) {
 
         );
 }
+
+ThreadImage.propTypes = {
+    imageUrl: PropTypes.string
+};
 
 export default ThreadImage;

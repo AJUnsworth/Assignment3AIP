@@ -5,6 +5,7 @@ import { NotificationManager } from "react-notifications";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { withRouter } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../../errors";
 import "./ReactionGrid.css";
@@ -156,5 +157,11 @@ class ReactionGrid extends React.Component {
         );
     }
 }
+
+ReactionGrid.propTypes = {
+    currentUser: PropTypes.object,
+    handleReactionUpdate: PropTypes.func,
+    post: PropTypes.object.isRequired
+};
 
 export default withRouter(ReactionGrid);

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../errors";
 import authenticate from "../Authentication/Authenticate";
@@ -71,5 +72,9 @@ class Admin extends React.Component {
         );
     }
 }
+
+Admin.propTypes = {
+    currentUser: PropTypes.object
+};
 
 export default authenticate(Admin);

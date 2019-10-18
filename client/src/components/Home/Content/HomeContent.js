@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PropTypes from 'prop-types';
 
 import Leaderboard from "../../Leaderboard/Leaderboard";
 import ImageGrid from "../../ImageGrid/ImageGrid";
@@ -40,5 +41,10 @@ function HomeContent(props) {
         </Container>
     );
 }
+
+HomeContent.propTypes = {
+    currentUser: PropTypes.object
+};
+
 
 export default HomeContent;

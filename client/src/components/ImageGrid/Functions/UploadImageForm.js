@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import Form from "react-bootstrap/Form";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../../errors";
 
@@ -131,5 +132,13 @@ class UploadImageForm extends React.Component {
     }
 
 }
+
+UploadImageForm.propTypes = {
+    handleNewPosts: PropTypes.func,
+    currentUser: PropTypes.object,
+    post: PropTypes.object,
+    handleUpdatePost: PropTypes.func
+};
+
 
 export default withRouter(UploadImageForm);

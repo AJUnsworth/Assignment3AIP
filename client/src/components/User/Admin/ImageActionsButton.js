@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { NotificationManager } from "react-notifications";
 import { withRouter } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../../errors";
 
@@ -68,5 +69,9 @@ class ImageActionsButton extends React.Component {
 
     };
 }
+
+ImageActionsButton.propTypes = {
+    post: PropTypes.object.isRequired
+};
 
 export default withRouter(ImageActionsButton);

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import MetricCounter from "./Functions/MetricCounter";
@@ -21,5 +22,9 @@ class ImageFrame extends React.Component {
         );
     }
 }
+
+ImageFrame.propTypes = {
+    post: PropTypes.object.isRequired
+};
 
 export default ImageFrame;

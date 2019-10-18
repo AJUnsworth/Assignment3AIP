@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -30,5 +31,10 @@ class LeaderboardMember extends React.Component {
         );
     }
 }
+
+LeaderboardMember.propTypes = {
+    position: PropTypes.number.isRequired, 
+    member: PropTypes.object.isRequired
+};
 
 export default LeaderboardMember;

@@ -2,6 +2,8 @@ import React from "react";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from 'prop-types';
+
 
 import { showError } from "../../../errors";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
@@ -64,5 +66,9 @@ class ReplyBreadcrumb extends React.Component {
         );
     }
 }
+
+ReplyBreadcrumb.propTypes = {
+    post: PropTypes.object.isRequired
+};
 
 export default ReplyBreadcrumb;

@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Masonry from 'react-masonry-css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from 'prop-types';
 
 import SortImageButtons from "./Functions/SortImageButtons";
 import UploadImageForm from "./Functions/UploadImageForm";
@@ -108,5 +109,17 @@ ImageGrid.defaultProps = {
     showFilters: true,
     showUpload: true
 };
+
+ImageGrid.propTypes = {
+    displayPosts: PropTypes.func.isRequired,
+    showFilters: PropTypes.bool,
+    showUpload: PropTypes.bool,
+    sortBy: PropTypes.string,
+    replyTo: PropTypes.object,
+    posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+    currentUser: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    isShowMoreDisabled: PropTypes.bool                          
+}
 
 export default ImageGrid;

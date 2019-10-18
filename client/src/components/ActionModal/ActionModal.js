@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import PropTypes from 'prop-types';
 
 const ActionModal = props => {
     return (
@@ -24,5 +25,14 @@ const ActionModal = props => {
         </Modal>
     );
 }
+
+ActionModal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    handleShowModal: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    handleModalAction: PropTypes.func,
+    modalActionText: PropTypes.string
+};
+
 
 export default ActionModal;

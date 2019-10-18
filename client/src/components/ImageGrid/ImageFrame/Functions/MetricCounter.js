@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments, faHeart, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Badge from "react-bootstrap/Badge";
+import PropTypes from 'prop-types';
 
 import { showError } from "../../../../errors";
 import "./MetricCounter.css";
@@ -65,5 +66,9 @@ class MetricCounter extends React.Component {
         );
     }
 }
+
+MetricCounter.propTypes = {
+    post: PropTypes.object.isRequired
+};
 
 export default MetricCounter;

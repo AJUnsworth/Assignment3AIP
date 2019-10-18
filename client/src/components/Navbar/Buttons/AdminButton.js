@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import PropTypes from 'prop-types';
 
 import "./Button.css";
 
@@ -14,5 +15,9 @@ function AdminButton(props) {
         </Link>
     );
 }
+
+AdminButton.propTypes = {
+    currentUser: PropTypes.object
+};
 
 export default AdminButton;
