@@ -9,12 +9,16 @@ const errors = require("../services/errors");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-//Register and login routes are based on a tutorial by Rishi Prasad
-//See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
+
+/* Creates a new user account
+*
+* Create and login routes are based on a tutorial by Rishi Prasad
+* See https://blog.bitsrc.io/build-a-login-auth-app-with-mern-stack-part-1-c405048e3669
+*/
 exports.user_create = async (req, res) => {
+    //Checks if user input contains any validation errors
     const { validationErrors, isValid } = await validateRegisterInput(req.body);
 
-    // Check validation
     if (!isValid) {
         return res.status(400).json(validationErrors);
     }
@@ -39,10 +43,11 @@ exports.user_create = async (req, res) => {
     }
 };
 
+//Returns a signed token in a cookie to a user who logs in
 exports.user_login = async (req, res) => {
+    //Checks if user input contains any validation errors
     const { validationErrors, isValid } = validateLoginInput(req.body);
 
-    // Check validation
     if (!isValid) {
         return res.status(400).json(validationErrors);
     }
@@ -99,7 +104,6 @@ exports.user_login = async (req, res) => {
             isAdmin: user.isAdmin
         };
 
-        // Sign token
         const token = jwt.sign(
             payload,
             process.env.SECRET_OR_KEY,
@@ -122,14 +126,17 @@ exports.user_login = async (req, res) => {
     }
 };
 
+//Removes users token on logout
 exports.user_logout = (req, res) => {
     return res.clearCookie("token").sendStatus(200);
 };
 
+//Returns user details from a valid decoded token
 exports.user_get_current = (req, res) => {
     return res.json(req.decoded);
 };
 
+//Returns a users reaction on a specified post
 exports.user_reaction_get = async (req, res) => {
     const postId = req.query.post_id;
     const userId = req.params.userId;
@@ -143,7 +150,7 @@ exports.user_reaction_get = async (req, res) => {
         const likedPosts = user.likedPosts;
         const indexOfPost = likedPosts.findIndex(likedPost => likedPost.post == postId);
 
-        //Only return reactionType when a likedPost exists for a user
+        //Only return reaction when a likedPost exists for a user
         if (indexOfPost != -1) {
             return res.json(likedPosts[indexOfPost].reactionType);
         }
@@ -156,19 +163,20 @@ exports.user_reaction_get = async (req, res) => {
     }
 }
 
+//Returns a specified user with the total posts they have created, and reactions earned on posts
 exports.user_get = async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        const user = await User.findOne({ _id: userId }).populate({ path: "posts" });
+        const user = await User.findOne({ _id: userId }).populate("posts");
         if (!user) {
             return res.status(404).json({ error: errors.USER_NOT_FOUND });
         }
 
-        var reactionCount = 0;
+        let reactionCount = 0;
         const postCount = user.posts.length;
 
-        for (var post of user.posts) {
+        for (let post of user.posts) {
             reactionCount += post.totalReactions;
         }
 
@@ -178,8 +186,11 @@ exports.user_get = async (req, res) => {
     }
 };
 
+//Gets a specified amount of user posts in order of newest to oldest
+//Shows replies, but does not show flagged posts
 exports.user_latest_get = async (req, res) => {
-    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
     const userId = mongoose.Types.ObjectId(req.params.userId);
 
     try {
@@ -189,9 +200,10 @@ exports.user_latest_get = async (req, res) => {
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],
-                    results: [{ $skip: skippedPosts }, { $limit: 10 }]
+                    results: [{ $skip: skippedPosts }, { $limit: limit }]
                 }
-            }]);
+            }
+        ]);
 
         return res.json(posts[0]);
     } catch {
@@ -199,8 +211,11 @@ exports.user_latest_get = async (req, res) => {
     }
 };
 
+//Gets a specified amount of user posts in order of most reactions to least
+//Shows replies, but does not show flagged posts
 exports.user_popular_get = async (req, res) => {
-    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
     const userId = mongoose.Types.ObjectId(req.params.userId);
 
     try {
@@ -213,7 +228,7 @@ exports.user_popular_get = async (req, res) => {
             {
                 $facet: {
                     metadata: [{ $count: "totalCount" }],
-                    results: [{ $skip: skippedPosts }, { $limit: 10 }]
+                    results: [{ $skip: skippedPosts }, { $limit: limit }]
                 }
             }
         ]);

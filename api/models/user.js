@@ -50,6 +50,7 @@ const userSchema = new Schema({
     timestamps: true
 });
 
+//Virtual populate for getting posts created by a user
 userSchema.virtual("posts", {
     ref: "Post",
     localField: "_id",

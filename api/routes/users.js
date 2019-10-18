@@ -15,10 +15,10 @@ const UsersController = require("../controllers/users");
  * Method: Post
  * 
  * Parameters: 
- *      username: new account name
- *      email: users email address
- *      password: password of the user
- *      passwordConf: password confirmation
+ *      username: New account name
+ *      email: Users email address
+ *      password: Password of the user
+ *      passwordConf: Password confirmation field
  * 
  * Response:
  *      200: Account created successfully 
@@ -29,33 +29,33 @@ const UsersController = require("../controllers/users");
 router.post("/register", UsersController.user_create);
 
 /**
- * Allows user to log in to their account
+ * Allows user to log into their account, updates lastLoggedIn and lastIPAddress of account
  * 
  * Path: users/login
  * 
- * Method: Post
+ * Method: Put
  * 
  * Parameters: 
- *      username: username of the user
- *      password: password of the user
+ *      username: Username of the user
+ *      password: Password of the user
  * 
  * Response:
  *      200: Returns authenticated token and users details
  *      400: Validation errors
  */ 
-router.post("/login", UsersController.user_login);
+router.put("/login", UsersController.user_login);
 
 /**
- * Allows user to log out of their account
+ * Allows user to log out of their account by removing their token
  * 
  * Path: users/logout
  * 
- * Method: Post
+ * Method: Get
  * 
  * Response:
  *      200: Deletes token
  */ 
-router.post("/logout", UsersController.user_logout);
+router.get("/logout", UsersController.user_logout);
 
 /**
  * Checks if admin is a user. Requires an authenticated token.
@@ -107,6 +107,9 @@ router.get("/leaderboard", LeaderboardController.leaderboard_get);
  * Path: user/:userId
  * 
  * Method: Get
+ * 
+ * Parameters:
+ *      userId: Id of the specified user
  *
  * Response:
  *      200: Returns user details
@@ -122,8 +125,9 @@ router.get("/:userId", UsersController.user_get);
  * 
  * Method: Get
  * 
- * * Parameters:
- *      postId: the ID of the current post
+ * Parameters:
+ *      userId: Id of the current user
+ *      postId: Id of the current post
  * 
  * Response:
  *      200: Returns reaction type
@@ -140,8 +144,9 @@ router.get("/:userId/reaction", authenticate, UsersController.user_reaction_get)
  * Method: Get
  * 
  * Parameters: 
- *      userId: userId of specific user
- *      skippedPosts: number of posts the Show More button skips
+ *      userId: Id of specific user
+ *      skippedPosts: Number of posts skipped
+ *      limit: Number of posts to get
  * 
  * Response:
  *      200: Returns users posts sorted by most recent created date 
@@ -157,8 +162,9 @@ router.get("/:userId/posts/latest", UsersController.user_latest_get);
  * Method: Get
  * 
  * Parameters: 
- *      userId: userId of specific user
- *      skippedPosts: number of posts the Show More button skips
+ *      userId: Id of specific user
+ *      skippedPosts: Number of posts skipped
+ *      limit: Number of posts to get
  * 
  * Response:
  *      200: Returns users posts sorted by most reaction count

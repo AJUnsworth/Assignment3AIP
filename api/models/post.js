@@ -5,26 +5,32 @@ const reactionsSchema = new Schema({
     like: {
         type: Number,
         required: true,
+        default: 0
     },
     laugh: {
         type: Number,
         required: true,
+        default: 0
     },
     love: {
         type: Number,
         required: true,
+        default: 0
     },
     wow: {
         type: Number,
         required: true,
+        default: 0
     },
     tears: {
         type: Number,
         required: true,
+        default: 0
     },
     angry: {
         type: Number,
         required: true,
+        default: 0
     }
 });
 
@@ -58,7 +64,7 @@ const postSchema = new Schema({
         timestamps: true,
 });
 
-//Allows for population without writing to MongoDB
+//Virutal populate for getting all replies to a post
 //Based on an example by Valeri Karpov
 //See https://thecodebarbarian.com/mongoose-virtual-populate
 postSchema.virtual("replies", {
@@ -67,6 +73,7 @@ postSchema.virtual("replies", {
     foreignField: "replyTo"
 });
 
+//Virtual populate for getting the count of replies on a post
 postSchema.virtual("totalReplies", {
     ref: "Post",
     localField: "_id",
@@ -74,7 +81,8 @@ postSchema.virtual("totalReplies", {
     count: true
 });
 
-postSchema.virtual("totalReactions").get(function () {
+//Returns the total amount of reactions on a post
+postSchema.virtual("totalReactions").get(() => {
     return this.reactions.like 
         + this.reactions.laugh 
         + this.reactions.love 

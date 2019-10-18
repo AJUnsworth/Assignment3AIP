@@ -3,6 +3,7 @@ const User = require("../models/user");
 
 const errors = require("../services/errors");
 
+//Checks if a decoded user token is an administrator, otherwise returns a 403 error
 exports.admin_check = (req, res) => {
     if (req.decoded.isAdmin) {
         return res.sendStatus(200);
@@ -11,6 +12,7 @@ exports.admin_check = (req, res) => {
     }
 };
 
+//Allows administrator to approve a flagged post and removes all reports, making it visible to all users
 exports.post_approve = async (req, res) => {
     const postId = req.params.postId;
     const userId = req.decoded.id;
@@ -40,14 +42,16 @@ exports.post_approve = async (req, res) => {
     }
 };
 
+//Retrieves a specified amount of latest flagged posts 
 exports.posts_flagged_get = async (req, res) => {
     let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    let limit = parseInt(req.query.limit, 10) || 10;
 
     try {
         const postCount = await Post.countDocuments({ flagged: true });
 
         const posts = await Post.find({ flagged: true })
-            .limit(10)
+            .limit(limit)
             .skip(skippedPosts)
             .sort({ createdAt: -1 });
 

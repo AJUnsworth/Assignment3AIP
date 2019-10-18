@@ -14,6 +14,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
+//Upload image to S3 bucket
 const uploadImage = multer({
     storage: multerS3({
         s3: s3,
@@ -25,7 +26,9 @@ const uploadImage = multer({
     })
 });
 
+//Remove image from S3 bucket
 const deleteImage = async (imageUrl) => {
+    //Image key is after ".com/" in the url
     const key = imageUrl.split(".com/")[1];
 
     const params = {
@@ -34,7 +37,6 @@ const deleteImage = async (imageUrl) => {
     };
 
     try {
-        //Delete image to save space in S3 Bucket
         await s3.deleteObject(params).promise();
         return;
     } catch {

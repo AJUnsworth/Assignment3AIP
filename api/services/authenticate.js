@@ -17,6 +17,7 @@ const authenticate = (req, res, next) => {
         return res.status(404).json({ error: errors.TOKEN_NOT_FOUND });
     } else {
         try {
+            //Verifies token and returns decoded payload
             const decoded = jwt.verify(token, process.env.SECRET_OR_KEY);
             req.decoded = decoded;
             next();

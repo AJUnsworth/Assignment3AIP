@@ -2,6 +2,8 @@ const vision = require('@google-cloud/vision');
 const client = new vision.ImageAnnotatorClient();
 const fetch = require('fetch-base64');
 
+//Check if image is appropriate
+//Returns true if any text, adult content or violence is detected in image
 checkImageAppropriateness = async imageUrl => {
     //Format request for Google Cloud Vision API
     const request = {
@@ -37,7 +39,7 @@ checkImageAppropriateness = async imageUrl => {
         }
 
         return false;
-    } catch (error) {
+    } catch {
         throw new Error(error);
     }
 }

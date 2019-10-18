@@ -8,6 +8,8 @@ const errors = require("../services/errors");
 //Based on tutorial from Rishi Prasad on Medium.com
 //See https://medium.com/@faizanv/authentication-for-your-react-and-express-application-w-json-web-tokens-923515826e0
 
+//Validates if user input is correct from registration
+//Returns any errors found and if the input is valid
 module.exports = async function validateRegisterInput(data) {
     let validationErrors = {};
 
