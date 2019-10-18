@@ -26,19 +26,18 @@ class ImageGrid extends React.Component {
     };
 
     componentDidMount() {
+        //Load first set of posts
         this.handleNewPosts();
     }
 
-    handlePosts = (shouldRefresh) => {
-        this.props.displayPosts(shouldRefresh, this.state.sortBy);
-    }
-
+    //Clears and refreshes posts on page to match new sorting method
     handleNewPosts = () => {
-        this.handlePosts(true);
+        this.props.displayPosts(true, this.state.sortBy);
     }
 
+    //Retains already displayed posts and adds additional posts onto the imageGrid
     handleShowMore = () => {
-        this.handlePosts(false);
+        this.props.displayPosts(false, this.state.sortBy);
     }
 
     handleSortBy = (sortingMethod) => {
@@ -46,6 +45,7 @@ class ImageGrid extends React.Component {
     }
 
     renderFileUpload() {
+        //Display upload only if a user is logged in, or a component does not permit uploading
         if (this.props.currentUser && this.props.showUpload) {
             return (
                 <UploadImageForm {...this.props} handleNewPosts={this.handleNewPosts} />
@@ -76,8 +76,8 @@ class ImageGrid extends React.Component {
                 <div className="imageGrid">
                     <Container className="noPadding">
                         <Row>
-                            {/*Render upload button only if there is a current user set*/}
                             {this.renderFileUpload()}
+                            {/*Only show filters if a component requires them*/}
                             {
                                 this.props.showFilters &&
                                 <SortImageButtons {...this.state} {...this.props} handleSortBy={this.handleSortBy} />

@@ -12,7 +12,6 @@ import "./HomeContent.css";
 // Containment Function - taken from React.js.org documentation
 // https://reactjs.org/docs/composition-vs-inheritance.html
 
-/* Displays welcome message for current user, the leaderboard and the image grid. */
 function HomeContent(props) {
     return (
         <Container className="homeContent">
@@ -20,6 +19,8 @@ function HomeContent(props) {
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                     <h1 className="welcomeMessage">
                         Welcome&nbsp;
+
+                        {/*Link to current user's page when they are logged in*/}
                         <Link to={props.currentUser ? "/user/" + props.currentUser.id : "/login"}>
                             {props.currentUser ? props.currentUser.username : ""}
                         </Link>

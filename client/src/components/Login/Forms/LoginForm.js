@@ -25,10 +25,13 @@ class LoginForm extends React.Component {
         };
     }
 
+    //Updates field's corresponding state as user enters details
     handleChange = e => {
         this.setState({ [e.target.id]: e.target.value });
     }
 
+    //Submit user's details, which are validated in the backend and any validation errors are returned, including if a user is a sockpuppet
+    //Upon successful login, a user's IP address and last login time are stored to check for potential sockpuppet accounts
     handleSubmit = async e => {
         e.preventDefault();
         this.setState({ loading: true });
@@ -50,6 +53,7 @@ class LoginForm extends React.Component {
 
             this.setState({ errors: errors });
         } else if (response.status === 200) {
+            //Set the current user throughout the application and push the user to the homepage
             this.props.setUser(data);
             this.props.history.push("/");
         } else {

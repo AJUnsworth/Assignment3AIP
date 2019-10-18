@@ -14,12 +14,13 @@ class Home extends React.Component {
         }
     }
 
-    /* Displays posts depending on refresh and sort by method.
+    /* Displays set amount of posts (limit) depending on refresh and sort by method.
      * 'Refresh' is used to determine if there are more posts to display, and if not the 'Show More' button will disable.
      * 'Method' is used to determine if posts are sorted by createdAt date or by number of reactions  
      */
     displayPosts = async (refresh, method) => {
         let skippedPosts;
+        const limit = 10;
         this.setState({ loading: true });
 
         if (!refresh) {
@@ -28,7 +29,7 @@ class Home extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/posts/${method}?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
         const data = await response.json();
 
         if (response.status === 200) {
@@ -40,7 +41,7 @@ class Home extends React.Component {
             } else {
                 this.setState({
                     posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10
+                    isShowMoreDisabled: data.results.length < limit
                 });
             }
         } else {

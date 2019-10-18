@@ -3,7 +3,7 @@ import "./ThreadImage.css";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import PropTypes from 'prop-types';
 
-//Displays the actual post as an image
+//Displays image on a post, or a placeholder if the image has been deleted
 function ThreadImage(props) {
         return (
             <div className="threadImageContainer">

@@ -23,11 +23,13 @@ class MetricCounter extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        //Update metrics when changing between sorting methods
         if (prevProps.post !== this.props.post) {
             this.loadMetrics();
         }
     }
 
+    //Gets total reactions and total replies (that are not flagged)
     async loadMetrics() {
         this.setState({ loading: true });
 

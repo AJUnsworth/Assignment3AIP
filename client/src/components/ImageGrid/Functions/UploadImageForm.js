@@ -36,7 +36,7 @@ class UploadImageForm extends React.Component {
     }
 
     //Form to handle browsed file upload. 
-    //If the upload is a reply, the form sends through the postID of what it's replying to and the depth of replies.
+    //If the upload is a reply, the form sends through the postId of what it's replying to and the depth of replies.
     handleFileUpload = () => {
         var formData = new FormData();
         formData.append("image", this.state.imgFile);
@@ -50,6 +50,7 @@ class UploadImageForm extends React.Component {
         this.createPost(formData);
     }
 
+    //Creates/edits a post depending on if a post is received as a prop
     async createPost(formData) {
         this.setState({ loading: true });
         

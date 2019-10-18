@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 //Based on Modal tutorial from React-Bootstrap
 //See https://react-bootstrap.github.io/components/modal/
 function ActionModal(props) {
+    //Skeleton Modal for rendering after button press
     return (
         <Modal show={props.show} onHide={props.handleShowModal}>
             <Modal.Header closeButton>

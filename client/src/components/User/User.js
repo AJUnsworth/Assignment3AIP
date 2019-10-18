@@ -22,7 +22,7 @@ class User extends React.Component {
         }
     }
 
-    //Goes to requested users' page
+    //Loads user's details
     //If user is not found, redirects back to home page
     async componentDidMount() {
         const { userId } = this.props.match.params;
@@ -44,19 +44,22 @@ class User extends React.Component {
         this.setState({ loadingContent: false });
     }
 
-    //Displays requested users posts
+    //Displays a specified (limit) amount of requested users posts by latest or popular (method)
+    //Includes replies, but does not include flagged posts
     displayPosts = async (refresh, method) => {
         let skippedPosts;
+        const limit = 10;
         const { userId } = this.props.match.params;
         this.setState({ loading: true });
 
+        //Resets array of posts for when swapping methods
         if (!refresh) {
             skippedPosts = this.state.posts.length;
         } else {
             skippedPosts = 0;
         }
         
-        const response = await fetch(`/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/users/${userId}/posts/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
 
         const data = await response.json();
 
@@ -69,7 +72,7 @@ class User extends React.Component {
             } else {
                 this.setState({
                     posts: data.results,
-                    isShowMoreDisabled: data.results.length < 10
+                    isShowMoreDisabled: data.results.length < limit
                 });
             }
         } else {

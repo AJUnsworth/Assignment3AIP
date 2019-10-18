@@ -8,7 +8,7 @@ import ErrorImage from "../../images/404.png";
 import Navbar from "../Navbar/Navbar";
 import '../MissingPage/MissingPage.css'
 
-//Generic page shown for not found URLs
+//Generic page shown for non-existent URLS or URLs that could not be found
 class User extends React.Component {
 
     render() {

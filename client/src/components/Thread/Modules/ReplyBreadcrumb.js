@@ -9,7 +9,6 @@ import { showError } from "../../../errors";
 import PlaceholderImage from "../../../images/ImageRemovedPlaceholder.png";
 import "./ReplyBreadcrumb.css";
 
-//Displays the parent posts of the reply
 class ReplyBreadcrumb extends React.Component {
     constructor(props) {
         super(props);
@@ -23,6 +22,8 @@ class ReplyBreadcrumb extends React.Component {
         this.getReplyThread();
     }
 
+    //Gets all parents to the current comment when viewing a reply to a post
+    //Placeholder images will be rendered for any flagged or deleted posts
     async getReplyThread() {
         if (this.props.post.replyTo) {
             const response = await fetch(`/posts/${this.props.post._id}/parents`, {

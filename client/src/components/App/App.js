@@ -14,11 +14,14 @@ import MissingPage from "../MissingPage/MissingPage";
 class App extends React.Component {
     constructor() {
         super();
-        this.state = { currentUser: null };
+        this.state = { 
+            currentUser: null };
     }
 
 
     async componentDidMount() {
+        //Gets a user's details on login if there is none currently set
+        //Does not set currentUser if token does not exist or is invalid
         if (!this.state.currentUser) {
             const response = await fetch("/users/current", {
                 method: "GET"
@@ -35,6 +38,7 @@ class App extends React.Component {
         this.setState({ currentUser: userData });
     }
 
+    //Removes user's token/cookie and clears currentUser
     logout = async () => {
         await fetch("/users/logout", {
             method: "GET"
@@ -46,10 +50,10 @@ class App extends React.Component {
 
     render() {
         return (
-
-            <Router>
+            < Router >
                 <Switch>
-                    {/*Code for passing props to routes is based on an example by Tyler McGinnis. 
+                    {/*Router for website, sends current user and logout to specified routes
+                        Code for passing props to routes is based on an example by Tyler McGinnis. 
                         See https://tylermcginnis.com/react-router-pass-props-to-components/*/}
                     <Route path="/" exact render={(props) => <Home {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                     <Route path="/admin" render={(props) => <Admin {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
@@ -59,7 +63,7 @@ class App extends React.Component {
                     <Route render={(props) => <MissingPage {...props} currentUser={this.state.currentUser} logout={this.logout} />} />
                 </Switch>
                 <NotificationContainer />
-            </Router>
+            </Router >
         );
     }
 }

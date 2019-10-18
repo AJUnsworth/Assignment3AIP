@@ -68,18 +68,22 @@ class Thread extends React.Component {
         }
     }
 
+    //Show/close report modal
     handleShowReport = () => {
         this.setState({ showReport: !this.state.showReport });
     }
 
-    handleShowDelete = (e) => {
+    //Show/close delete modal
+    handleShowDelete = () => {
         this.setState({ showDelete: !this.state.showDelete });
     }
 
+    //Show/close edit modal
     handleShowEdit = () => {
         this.setState({ showEdit: !this.state.showEdit });
     }
 
+    //Update post after being edited
     handleUpdatePost = (updatedPost) => {
         this.setState({ post: updatedPost });
     }
@@ -114,6 +118,7 @@ class Thread extends React.Component {
         this.setState({ showReport: false });
     }
 
+    //Update posts reactions whenever the reaction is used I.e. Liking a post
     handleReactionUpdate = (reactions) => {
         this.setState(prevState => ({
             post: {
@@ -161,6 +166,7 @@ class Thread extends React.Component {
     //Displays replies to the post
     displayReplies = async (refresh, method) => {
         let skippedPosts;
+        const limit = 10;
         const { postId } = this.props.match.params;
         this.setState({ loadingReplies: true });
 
@@ -170,7 +176,7 @@ class Thread extends React.Component {
             skippedPosts = 0;
         }
 
-        const response = await fetch(`/posts/${postId}/${method}?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/posts/${postId}/${method}?skippedPosts=${skippedPosts}&limit=${limit}`);
 
         const data = await response.json();
 
@@ -183,7 +189,7 @@ class Thread extends React.Component {
             } else {
                 this.setState({
                     replies: data.results,
-                    isShowMoreDisabled: data.results.length < 10
+                    isShowMoreDisabled: data.results.length < limit
                 });
             }
         } else {
@@ -193,6 +199,7 @@ class Thread extends React.Component {
         this.setState({ loadingReplies: false });
     }
 
+    //Display warning text to admin to note if a post has been flagged
     displayFlagged = () => {
         if (this.state.post.flagged) {
             return (
@@ -201,7 +208,8 @@ class Thread extends React.Component {
         }
     }
 
-    //Renders Breadcrumb that displays parent threads of posts
+    //Renders Breadcrumb that displays parent threads of the current post
+    //Only renders if the post is a reply
     renderBreadcrumb() {
         if (this.state.post.replyTo) {
             return (
@@ -306,6 +314,7 @@ class Thread extends React.Component {
 
     render() {
         let deleteMessage;
+        //Render delete message for modal depending on whether it can be fully deleted, or if it has replies and can only be replaced with a placeholder
         if (this.state.post.totalReplies) {
             deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
         } else {

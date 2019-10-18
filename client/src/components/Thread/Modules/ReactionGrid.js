@@ -2,11 +2,10 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGrinHearts, faGrinSquint, faSadCry, faSurprise, faAngry, faThumbsUp, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { NotificationManager } from "react-notifications";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 
+import ActionModal from "../../ActionModal/ActionModal";
 import { showError } from "../../../errors";
 import "./ReactionGrid.css";
 
@@ -28,6 +27,7 @@ class ReactionGrid extends React.Component {
         this.setState({ loading: false });
     }
 
+    //Find user's reaction to post and set it as active if they have previously reacted to the image
     async getUserReaction() {
         const response = await fetch(`/users/${this.props.currentUser.id}/reaction?post_id=${this.props.post._id}`, {
             method: "GET"
@@ -42,7 +42,10 @@ class ReactionGrid extends React.Component {
         }
     }
 
+    //Allows logged in users to react to a post
+    //Either creates a new reaction, toggles a user's reactionType or removes a reaction 
     react = async e => {
+        //User's cannot reply to a placeholder post
         if (!this.props.post.imageUrl) {
             NotificationManager.warning(
                 "Since this post is deleted, it can't be reacted to",
@@ -73,20 +76,25 @@ class ReactionGrid extends React.Component {
                     activeReaction: reactionType,
                     loading: false
                 });
+
+                //Update reactions in parent component (thread)
                 this.props.handleReactionUpdate(data);
             } else {
                 this.setState({ loading: false });
                 showError(data.error);
             }
         } else {
-            this.setState({ showSuggestLogin: true });
+            //Suggests users login if trying to react without being logged in
+            this.handleShowSuggestLogin();
         }
     }
 
+    //Show/close modal suggesting that user should login
     handleCloseSuggestLogin = () => {
-        this.setState({ showSuggestLogin: false });
+        this.setState({ showSuggestLogin: !this.state.showSuggestLogin });
     }
 
+    //Send users to login page if they wish to log into the system
     handleLogin = () => {
         this.props.history.push("/login");
     }
@@ -139,20 +147,15 @@ class ReactionGrid extends React.Component {
             <div className="reactionGrid">
                 {this.renderGrid()}
 
-                <Modal show={this.state.showSuggestLogin} onHide={this.handleCloseSuggestLogin}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Log in</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>You must be logged in to react to posts. Would you like to log in?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleCloseSuggestLogin}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={this.handleLogin}>
-                            Login
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <ActionModal
+                    show={this.state.showSuggestLogin}
+                    handleShowModal={this.handleShowSuggestLogin}
+                    title={"Log in"}
+                    handleModalAction={this.handleLogin}
+                    modalActionText={"Login"}
+                >
+                    You must be logged in to react to posts. Would you like to log in?
+                </ActionModal>
             </div>
         );
     }

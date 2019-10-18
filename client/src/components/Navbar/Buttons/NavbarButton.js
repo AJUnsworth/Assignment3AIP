@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import "./Button.css";
 
-//Directs guests to login/register page
-function NavbarButton(props) {
+//Generic Navbar button for any link-based buttons
+function NavbarButton(props) { 
     const navigateTo = () => props.history.push(props.linkTo);
 
     return (
