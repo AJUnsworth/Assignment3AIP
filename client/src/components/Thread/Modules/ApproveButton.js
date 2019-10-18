@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import { NotificationManager } from "react-notifications";
 import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
@@ -18,11 +17,7 @@ class ImageActionsButton extends React.Component {
     }
 
     handleShowApprove = () => {
-        this.setState({ showApprove: true });
-    }
-
-    handleCloseApprove = () => {
-        this.setState({ showApprove: false });
+        this.setState({ showApprove: !this.state.showApprove });
     }
 
     handleApprove = async () => {
@@ -47,23 +42,17 @@ class ImageActionsButton extends React.Component {
     render() {
         return (
             <>
-                {this.props.post.flagged &&
-                    <Button variant="secondary" onClick={this.handleShowApprove}>Approve</Button>}
+                <Button variant="secondary" onClick={this.handleShowApprove}>Approve</Button>
 
-                <Modal show={this.state.showApprove} onHide={this.handleCloseApprove}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Confirm Approval</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Is this post clear of text and inappropriate content?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleCloseShow}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={this.handleApprove}>
-                            Approve
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <ActionModal
+                    show={this.state.showApprove}
+                    handleShowModal={this.handleShowApprove}
+                    title={"Confirm Approval"}
+                    handleModalAction={this.handleApprove}
+                    modalActionText={"Approve"}
+                >
+                    Is this post clear of text and inappropriate content?
+                    </ActionModal>
             </>
         );
 

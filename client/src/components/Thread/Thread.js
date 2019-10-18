@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 
 import { showError } from "../../errors";
 import ActionModal from "../ActionModal/ActionModal";
-import ImageActionsButton from "../User/Admin/ImageActionsButton";
 import Navbar from "../Navbar/Navbar";
 import ThreadImage from "./Modules/ThreadImage";
 import ImageGrid from "../ImageGrid/ImageGrid";
@@ -19,6 +18,7 @@ import ReactionGrid from "./Modules/ReactionGrid";
 import "./Thread.css";
 import ReplyBreadcrumb from "./Modules/ReplyBreadcrumb";
 import UploadImageForm from "../ImageGrid/Functions/UploadImageForm";
+import ApproveButton from "./Modules/ApproveButton";
 
 
 class Thread extends React.Component {
@@ -246,7 +246,7 @@ class Thread extends React.Component {
                             <Button onClick={this.handleShowEdit} variant="info">Replace Image</Button>
                         }
                         {showApprove &&
-                            <ImageActionsButton {...this.props} {...this.state} />
+                            <ApproveButton {...this.props} {...this.state} />
                         }
                         {showReport &&
                             <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
