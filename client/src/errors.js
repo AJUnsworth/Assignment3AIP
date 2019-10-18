@@ -46,9 +46,9 @@ const Errors = {
         title: "Username exists",
         message: "Username already exists"
     },
-    PASSWORD_EXISTS: {
-        title: "Password exists",
-        message: "Password already exists"
+    EMAIL_EXISTS: {
+        title: "Email exists",
+        message: "Email already exists"
     },
     PASSWORDS_MUST_MATCH: {
         title: "Passwords must match",

@@ -2,7 +2,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const app = require("../../api/app");
 const User = require("../../api/models/user");
-const should = chai.should();
+const errors = require("../../api/services/errors");
 
 chai.use(chaiHttp);
 
@@ -24,7 +24,7 @@ describe("User", function () {
             };
 
             chai.request(app)
-                .post("/users/register")
+                .post("/api/users/register")
                 .send(user)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -48,14 +48,14 @@ describe("User", function () {
             };
 
             chai.request(app)
-                .post("/users/register")
+                .post("/api/users/register")
                 .send(user)
                 .end(function (err, res) {
-                    chai.request(app).post("/users/register")
+                    chai.request(app).post("/api/users/register")
                         .send(user2)
                         .end(function (err, res) {
                             res.should.have.status(400);
-                            res.body.email.should.be.eql("Email address is already registered");
+                            res.body.email.should.be.eql(errors.EMAIL_EXISTS);
                             done();
                         })
                 });
@@ -77,14 +77,14 @@ describe("User", function () {
             };
 
             chai.request(app)
-                .post("/users/register")
+                .post("/api/users/register")
                 .send(user)
                 .end(function (err, res) {
-                    chai.request(app).post("/users/register")
+                    chai.request(app).post("/api/users/register")
                         .send(user2)
                         .end(function (err, res) {
                             res.should.have.status(400);
-                            res.body.username.should.be.eql("Username is already registered");
+                            res.body.username.should.be.eql(errors.USERNAME_EXISTS);
                             done();
                         })
                 });
