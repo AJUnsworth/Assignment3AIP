@@ -111,7 +111,7 @@ ImageGrid.defaultProps = {
 };
 
 ImageGrid.propTypes = {
-    displayPosts: PropTypes.func.isRequired,
+    getPosts: PropTypes.func.isRequired,
     showFilters: PropTypes.bool,
     showUpload: PropTypes.bool,
     sortBy: PropTypes.string,

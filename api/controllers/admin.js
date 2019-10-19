@@ -44,8 +44,8 @@ exports.post_approve = async (req, res) => {
 
 //Retrieves a specified amount of latest flagged posts 
 exports.posts_flagged_get = async (req, res) => {
-    let skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
-    let limit = parseInt(req.query.limit, 10) || 10;
+    const skippedPosts = parseInt(req.query.skippedPosts, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     try {
         const postCount = await Post.countDocuments({ flagged: true });

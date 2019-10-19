@@ -6,9 +6,9 @@ import Col from "react-bootstrap/Col";
 import PropTypes from "prop-types";
 
 import { showError } from "../../errors";
-import authenticate from "../Authentication/Authenticate";
 import ImageGrid from "../ImageGrid/ImageGrid";
 import Navbar from "../Navbar/Navbar";
+import withAdmin from "../Wrappers/withAdmin";
 
 class Admin extends React.Component {
     constructor(props) {
@@ -20,12 +20,13 @@ class Admin extends React.Component {
         }
     }
 
-    //Displays only flagged posts on admin page
-    displayPosts = async () => {
+    //Gets only flagged posts on admin page
+    getPosts = async () => {
         const skippedPosts = this.state.posts.length;
+        const limit = 10;
         this.setState({ loading: true });
 
-        const response = await fetch(`/api/posts/flagged?skippedPosts=${skippedPosts}`);
+        const response = await fetch(`/api/posts/flagged?skippedPosts=${skippedPosts}&limit=${limit}`);
         const data = await response.json();
 
         if (response.status === 200) {
@@ -61,7 +62,7 @@ class Admin extends React.Component {
                             <ImageGrid
                                 {...this.props}
                                 {...this.state}
-                                displayPosts={this.displayPosts}
+                                getPosts={this.getPosts}
                                 showFilters={false}
                                 showUpload={false}
                             />
@@ -77,4 +78,4 @@ Admin.propTypes = {
     currentUser: PropTypes.object
 };
 
-export default authenticate(Admin);
+export default withAdmin(Admin);
