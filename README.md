@@ -8,7 +8,7 @@ The following libraries have primarily been used during the process of creating 
 * React-Bootstrap 
 * Mongoose
 * Express
-* Mocha - Server Testing
+* Chai - Server Testing
 * Cypress - Client Testing
 
 # File Structure
@@ -33,9 +33,9 @@ Any sensitive information has been stored securely in a .env file that has not b
 Additionally, access to credentials for deployment are also contained in a separate file that has not been included in this repository.
 
 For access to either of these files, please contact the following developers:
-* Andrew Unsworth
-* Joshua Chan
-* Chloe Dizon
+* Andrew Unsworth - 12876797
+* Joshua Chan - 12876811
+* Chloe Dizon - 12876304
 
 # Installation and Running the Project
 * In the root folder (/Assignment3AIP), install all dependencies by running the command - npm install
@@ -65,19 +65,17 @@ For access to either of these files, please contact the following developers:
 * If a line is too long, i.e. 100 characters long, separate it into multiple lines instead
 * Use typechecking with proptypes
 * Variables should be defined in lower camel case e.g. newUser
-* An export default statements must be located at the end of each component, not in the class or function definition
+* An export default statement must be located at the end of each component, not in the class or function definition
 * Component files must be separated into their categorised folder within the components folder 
     e.g. HomeContent component would be located in /Home/Content
-* Comments should only be used to explain code where necessary
+* Comments should be used to explain code where necessary
 * If code can be resused elsewhere, it should be made as a component or separate method
 * Tabs must be equal to 4 spaces
-* Use double quotes for strings not in fetch requests
-* Use template literals through back-ticks (``) in fetch requests only if using URI query string or parameters
+* Use double quotes for strings unless it requires a template literal, then use back-ticks (``)
 * Break up import statements by external imports (e.g. Packages) then internal imports (e.g. Custom components)
-* Use arrow functions wherever possible
 * Always attribute code if taken from an external source using comments
 * Always use const static variables and let for dynamic variables
-* Use async/await instead of JavaScript Promises to make error handling simpler
+* Use async/await instead of JavaScript Promises/Thenables to make error handling simpler and code more readable
 
 # Credits
 The following developers (JAC Tech) were reponsible for creating this web application.
