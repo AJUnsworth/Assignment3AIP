@@ -18,7 +18,7 @@ class ActionButton extends React.Component {
         this.setState({ showModal: !this.state.showModal });
     }
 
-    //Removes flagged status and clears reports on a post, making them visible to any user
+    //Handles actions sent through by parent component and hides modal
     handleModalAction = () => {
         this.props.handleButtonAction();
         this.setState({ showModal: false });
