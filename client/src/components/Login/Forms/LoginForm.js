@@ -51,16 +51,18 @@ class LoginForm extends React.Component {
             let errors = {};
             Object.keys(data).forEach(key => errors[key] = getError(data[key]).message);
 
-            this.setState({ errors: errors });
+            this.setState({ 
+                errors: errors,
+                loading: false
+            });
         } else if (response.status === 200) {
             //Set the current user throughout the application and push the user to the homepage
             this.props.setUser(data);
             this.props.history.push("/");
         } else {
+            this.setState({ loading: false });
             showError(data.error);
         }
-
-        this.setState({ loading: false });
     }
 
     render() {

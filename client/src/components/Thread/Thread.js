@@ -66,7 +66,7 @@ class Thread extends React.Component {
     async checkAdmin() {
         const response = await fetch("/api/users/checkAdmin");
 
-        if (response.status !== 200) {
+        if (response.status !== 204) {
             this.props.history.push("/");
         }
     }

@@ -1,41 +1,15 @@
 import React from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { NotificationManager } from "react-notifications";
 
 import { showError } from "../../../errors";
-import ActionModal from "../../ActionModal/ActionModal";
-import ApproveButton from "./ApproveButton";
+import ActionButton from "./ActionButton";
 import UploadImageForm from "../../ImageGrid/Functions/UploadImageForm";
 import "./QuickActionButtons.css";
 
 class QuickActionButtons extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            showDelete: false,
-            showEdit: false,
-            showReport: false
-        }
-    }
-
-    //Show/close report modal
-    handleShowReport = () => {
-        this.setState({ showReport: !this.state.showReport });
-    }
-
-    //Show/close delete modal
-    handleShowDelete = () => {
-        this.setState({ showDelete: !this.state.showDelete });
-    }
-
-    //Show/close edit modal
-    handleShowEdit = () => {
-        this.setState({ showEdit: !this.state.showEdit });
-    }
-
     //Gives users ability to report posts
     //After 20 reports, the post is flagged and users will be directed to home page if they try to view
     handleReportPost = async () => {
@@ -96,10 +70,38 @@ class QuickActionButtons extends React.Component {
         }
     }
 
+    //Removes flagged status and clears reports on a post, making them visible to any user
+    handleApprovePost = async () => {
+        this.setState({ showApprove: false });
+
+        const response = await fetch(`/api/posts/${this.props.post._id}/approve`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.status === 204) {
+            NotificationManager.success("Post has been approved successfully", "Approved");
+            this.props.history.push("/admin");
+        } else {
+            const data = await response.json();
+            showError(data.error);
+        }
+    }
+
     //Renders buttons for users depending on role and whether they own the post
     renderQuickActions() {
         const post = this.props.post;
         const currentUser = this.props.currentUser;
+
+        let deleteMessage;
+        //Render delete message for modal depending on whether it can be fully deleted, or if it has replies and can only be replaced with a placeholder
+        if (this.props.post.totalReplies) {
+            deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
+        } else {
+            deleteMessage = "Are you sure you want to delete this post? This action cannot be reversed.";
+        }
 
         if (currentUser && post.imageUrl) {
             let showApprove, showDelete, showEdit, showReport = false;
@@ -124,70 +126,44 @@ class QuickActionButtons extends React.Component {
             //Only render approve when the current user is an admin and the post has been flagged
             showApprove = post.flagged && currentUser.isAdmin;
 
-            return (
-                <div className="quickActions">
-                    <h6>Quick Actions</h6>
-                    <ButtonGroup>
-                        {showDelete &&
-                            <Button onClick={this.handleShowDelete} name="delete" variant="danger">Delete</Button>
-                        }
-                        {showEdit &&
-                            <Button onClick={this.handleShowEdit} variant="info">Replace Image</Button>
-                        }
-                        {showApprove &&
-                            <ApproveButton {...this.props} {...this.state} />
-                        }
-                        {showReport &&
-                            <Button onClick={this.handleShowReport} variant="danger">Report Image</Button>
-                        }
-                    </ButtonGroup>
-                </div>
-            );
+            if (showDelete || showApprove || showEdit || showReport) {
+                return (
+                    <div className="quickActions">
+                        <h6>Quick Actions</h6>
+                        <ButtonGroup>
+                            {showDelete &&
+                                <ActionButton handleButtonAction={this.handleDeletePost} title={"Delete"} variant={"danger"}>
+                                    {deleteMessage}
+                                </ActionButton>
+                            }
+                            {showEdit &&
+                                <ActionButton title={"Edit"} variant={"info"}>
+                                    <h5>Select an image to replace your post</h5>
+                                    <UploadImageForm {...this.props} />
+                                </ActionButton>
+                            }
+                            {showApprove &&
+                                <ActionButton handleButtonAction={this.handleApprovePost} title={"Approve"} variant={"secondary"}>
+                                    Is this post clear of text and inappropriate content?
+                            </ActionButton>
+                            }
+                            {showReport &&
+                                <ActionButton handleButtonAction={this.handleReportPost} title={"Report"} variant={"danger"}>
+                                    <h5>Are you sure you want to proceed?</h5>
+                                    <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
+                                </ActionButton>
+                            }
+                        </ButtonGroup>
+                    </div>
+                );
+            }
         }
     }
 
     render() {
-        let deleteMessage;
-        //Render delete message for modal depending on whether it can be fully deleted, or if it has replies and can only be replaced with a placeholder
-        if (this.props.post.totalReplies) {
-            deleteMessage = "This post will be replaced by a placeholder as there are existing replies. Are you sure you want to remove this image?";
-        } else {
-            deleteMessage = "Are you sure you want to delete this post? This action cannot be reversed.";
-        }
-
         return (
             <>
                 {this.renderQuickActions()}
-
-                <ActionModal
-                    show={this.state.showDelete}
-                    handleShowModal={this.handleShowDelete}
-                    title={"Delete Post"}
-                    handleModalAction={this.handleDeletePost}
-                    modalActionText={"Delete"}
-                >
-                    {deleteMessage}
-                </ActionModal>
-
-                <ActionModal
-                    show={this.state.showEdit}
-                    handleShowModal={this.handleShowEdit}
-                    title={"Edit Post"}
-                >
-                    <h5>Select an image to replace your post</h5>
-                    <UploadImageForm {...this.props} />
-                </ActionModal>
-
-                <ActionModal
-                    show={this.state.showReport}
-                    handleShowModal={this.handleShowReport}
-                    title={"Report Post"}
-                    handleModalAction={this.handleReportPost}
-                    modalActionText={"Report"}
-                >
-                    <h5>Are you sure you want to proceed?</h5>
-                    <p>Posts containing text, violent or sexual content are not permitted on this site. If this post is in violation of these standards, please click report.</p>
-                </ActionModal>
             </>
         );
     }
@@ -196,7 +172,7 @@ class QuickActionButtons extends React.Component {
 QuickActionButtons.propTypes = {
     currentUser: PropTypes.object,
     post: PropTypes.object.isRequired,
-    handleUpdate: PropTypes.func.isRequired
+    handleUpdatePost: PropTypes.func.isRequired
 };
 
 export default withRouter(QuickActionButtons);

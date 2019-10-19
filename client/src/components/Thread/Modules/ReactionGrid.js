@@ -93,7 +93,7 @@ class ReactionGrid extends React.Component {
     }
 
     //Show/close modal suggesting that user should login
-    handleCloseSuggestLogin = () => {
+    handleShowSuggestLogin = () => {
         this.setState({ showSuggestLogin: !this.state.showSuggestLogin });
     }
 
