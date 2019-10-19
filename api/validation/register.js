@@ -19,12 +19,12 @@ module.exports = async function validateRegisterInput(data) {
     data.password = !isEmpty(data.password) ? data.password : "";
     data.confirmPassword = !isEmpty(data.confirmPassword) ? data.confirmPassword : "";
 
-    if (validator.isEmpty(data.username)) {
-        validationErrors.username = errors.FIELD_REQUIRED;
-    }
-
     if (!validator.isAlphanumeric(data.username)) {
         validationErrors.username = errors.USERNAME_NOT_ALPHANUMERIC;
+    }
+
+    if (!validator.isLength(data.username, { min: 6, max: 16 })) {
+        validationErrors.username = errors.INVALID_USERNAME_LENGTH;
     }
 
     //Only check if username exists if no other username validation errors occur to reduce the amount of queries
@@ -33,10 +33,6 @@ module.exports = async function validateRegisterInput(data) {
         if (user) {
             validationErrors.username = errors.USERNAME_EXISTS;
         }
-    }
-
-    if (!validator.isLength(data.username, { min: 6, max: 16 })) {
-        validationErrors.username = errors.INVALID_USERNAME_LENGTH;
     }
 
     if (!validator.isEmail(data.email)) {
@@ -49,10 +45,6 @@ module.exports = async function validateRegisterInput(data) {
         if (user) {
             validationErrors.email = errors.EMAIL_EXISTS;
         }
-    }
-
-    if (validator.isEmpty(data.password)) {
-        validationErrors.password = errors.FIELD_REQUIRED;
     }
 
     if (!validator.isLength(data.password, { min: 6, max: 30 })) {

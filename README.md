@@ -44,8 +44,10 @@ For access to either of these files, please contact the following developers:
 * To start the frontend only - npm run start:client
 * To build the frontend of the project, run the command - npm run build
 * To start the server in production mode (:4000), run the command - npm start
+* To run all tests, run the command - npm test
 * To test the backend, run the command - npm run test:server
 * To test the frontend, run the command - npm run test:client
+* To run frontend tests without automatically starting the website - npm run cy
 
 # Deploying the Project
 1. Build the frontend in the root folder (/Assignment3AIP) by running the command - npm run build
