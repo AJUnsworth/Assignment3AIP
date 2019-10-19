@@ -21,6 +21,13 @@ class ReplyBreadcrumb extends React.Component {
         this.getReplyThread();
     }
 
+    componentDidUpdate(prevProps) {
+        //Update breadcrumb when a post has been edited
+        if (prevProps.post !== this.props.post) {
+            this.getReplyThread();
+        }
+    }
+
     //Gets all parents to the current comment when viewing a reply to a post
     //Placeholder images will be rendered for any flagged or deleted posts
     async getReplyThread() {

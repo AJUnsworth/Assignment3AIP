@@ -33,7 +33,7 @@ class ActionButton extends React.Component {
                     show={this.state.showModal}
                     handleShowModal={this.handleShowModal}
                     title={this.props.title}
-                    handleModalAction={this.handleModalAction}
+                    handleModalAction={this.props.handleButtonAction ? this.handleModalAction : undefined}
                     modalActionText={this.props.title}
                 >
                     {this.props.children}
