@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//Subdocument containing post that a user has liked and the reaction type
 const likedPostSchema = new Schema({
     post: {
         type: mongoose.Schema.Types.ObjectId,
@@ -11,6 +12,7 @@ const likedPostSchema = new Schema({
     }
 });
 
+//Subdocument containing post that a user has reported
 const reportedPostSchema = new Schema({
     reportedPost: {
         type: mongoose.Schema.Types.ObjectId,

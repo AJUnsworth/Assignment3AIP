@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//Subdocument containing reactions on a post
 const reactionsSchema = new Schema({
     like: {
         type: Number,

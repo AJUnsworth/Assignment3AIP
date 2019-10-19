@@ -109,7 +109,7 @@ router.get("/:postId", PostsController.post_get);
  *      200: Post edited successfully
  *      403: User is not authorised to edit post
  *      404: Cannot find post
- *      405: Unable to edit post as it has replies/reactions
+ *      409: Unable to edit post as it has replies/reactions
  *      500: Issue while editing post
  */ 
 router.put("/:postId/edit", authenticate, PostsController.post_edit);
@@ -200,7 +200,7 @@ router.put("/:postId/react", authenticate, PostsController.post_react);
  *      200: Post sucessfully reported
  *      400: Post not found
  *      404: Cannot find user
- *      405: Unable to report image that they have already reported
+ *      409: Unable to report image that they have already reported
  *      500: Issue while approving post
  */ 
 router.put("/:postId/report", authenticate, PostsController.post_report);

@@ -77,17 +77,17 @@ exports.user_login = async (req, res) => {
         //See https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
         const lastIpAddress = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-        if (!(user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) || !user.isAdmin) {
+        if (!(user.lastLoggedIn >= dayAgo && user.lastIpAddress === lastIpAddress) && !user.isAdmin) {
             const users = await User.find({ lastIpAddress: lastIpAddress }).where("_id").ne(user._id);
             let matchingUsersCount = 1;
 
             for (let i = 0; i < users.length; i++) {
 
-                //Flag potential sock puppets when account was last logged in less than a day ago
+                //Check how many users have logged in from the same location in the past 24h, and send an error if it is 3 or more
                 if (users[i].lastLoggedIn >= dayAgo) {
                     matchingUsersCount++;
                     if (matchingUsersCount >= 3) {
-                        return res.status(405).json({ error: errors.POTENTIAL_SOCKPUPPET });
+                        return res.status(409).json({ error: errors.POTENTIAL_SOCKPUPPET });
                     }
                 }
             }

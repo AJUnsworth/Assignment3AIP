@@ -34,15 +34,11 @@ class QuickActionButtons extends React.Component {
                 showError(data.error);
             }
         }
-
-        this.handleShowReport();
     }
 
     // Deletes post and redirects to home page if there are no reactions/replies
     // Removes imageUrl if post is deleted with reactions/replies
     handleDeletePost = async () => {
-        this.setState({ showDelete: false });
-
         const requestBody = JSON.stringify({
             postId: this.props.post._id
         });
@@ -72,8 +68,6 @@ class QuickActionButtons extends React.Component {
 
     //Removes flagged status and clears reports on a post, making them visible to any user
     handleApprovePost = async () => {
-        this.setState({ showApprove: false });
-
         const response = await fetch(`/api/posts/${this.props.post._id}/approve`, {
             method: "PUT",
             headers: {

@@ -23,7 +23,7 @@ const UsersController = require("../controllers/users");
  * Response:
  *      200: Account created successfully 
  *      400: Validation errors
- *      405: Potential sock puppet detected
+ *      409: Potential sock puppet detected
  *      500: Issue while saving new user
  */ 
 router.post("/register", UsersController.user_create);

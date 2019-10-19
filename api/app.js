@@ -26,7 +26,7 @@ app.get("/*", (req, res) => {
 });
 
 //Connect to testing database if in development or test environment
-const uri = process.env.NODE_ENV === "production" ? process.env.PROD_ATLAS_URI : process.env.ATLAS_URI;
+const uri = process.env.NODE_ENV === "production" ? process.env.ATLAS_URI_PROD : process.env.ATLAS_URI_DEV;
 
 //Connect to MongoDB Atlas
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })

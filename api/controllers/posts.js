@@ -92,7 +92,7 @@ exports.post_edit = async (req, res) => {
                 return res.json(populatedPost);
             });
         } else {
-            return res.status(405).json({ error: errors.CANNOT_EDIT_POST });
+            return res.status(409).json({ error: errors.CANNOT_EDIT_POST });
         }
     } catch {
         return res.status(500).json({ error: errors.SERVER_ERROR });
@@ -151,7 +151,7 @@ exports.post_report = async (req, res) => {
         //Check if user has already reported the current post
         const indexOfPost = user.reportedPosts.findIndex(reportedPost => reportedPost.reportedPost == postId);
         if (indexOfPost != -1) {
-            return res.status(405).json({ error: errors.POST_ALREADY_REPORTED });
+            return res.status(409).json({ error: errors.POST_ALREADY_REPORTED });
         }
 
         //Finds post and increments reports by 1
