@@ -181,7 +181,7 @@ exports.post_report = async (req, res) => {
 exports.post_react = async (req, res) => {
     const userId = req.decoded.id;
     const postId = req.params.postId;
-    const reactionType = req.body.reactionType;
+    let reactionType = req.body.reactionType;
 
     try {
         const user = await User.findOne({ _id: userId });
@@ -214,6 +214,9 @@ exports.post_react = async (req, res) => {
             if (originalReactionType === reactionType) {
                 likedPosts.splice(likedPost);
                 post.reactions[reactionType]--;
+
+                //Remove selected reaction type
+                reactionType = null;
             } else {
                 likedPost.reactionType = reactionType;
                 post.reactions[originalReactionType]--;
@@ -224,7 +227,10 @@ exports.post_react = async (req, res) => {
         await user.save();
 
         const updatedPost = await post.save();
-        return res.json(updatedPost.reactions);
+        return res.json({ 
+            reactions: updatedPost.reactions,
+            reactionType: reactionType
+        });
     } catch {
         return res.status(500).json({ error: errors.SERVER_ERROR });
     }

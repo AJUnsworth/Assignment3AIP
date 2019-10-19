@@ -13,7 +13,7 @@ class ReactionGrid extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeReaction: "None selected",
+            activeReaction: null,
             loading: false,
             showSuggestLogin: false
         };
@@ -76,12 +76,12 @@ class ReactionGrid extends React.Component {
 
             if (response.status === 200) {
                 this.setState({
-                    activeReaction: reactionType,
+                    activeReaction: data.reactionType,
                     loading: false
                 });
 
                 //Update reactions in parent component (thread)
-                this.props.handleReactionUpdate(data);
+                this.props.handleReactionUpdate(data.reactions);
             } else {
                 this.setState({ loading: false });
                 showError(data.error);
